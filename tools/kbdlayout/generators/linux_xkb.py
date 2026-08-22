@@ -13,9 +13,83 @@ cannot disagree with each other or with the Windows build.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from typing import Any
+
 from ..keys import READING_ORDER
-from ..keysyms import keysym
-from ..model import Layout, unicode_name
+from ..keysyms import keysym, keysym_value
+from ..model import FALLBACK_BASES, DeadKey, Layout, unicode_name
+
+#: The ``[layout.linux]`` table, and the ``[[dead_key]]`` field only Linux
+#: understands: the X11 keysym the key emits, which every Compose sequence for
+#: that dead key also starts with.
+CONFIG_TABLE = "linux"
+DEAD_KEY_FIELDS: tuple[str, ...] = ("xkb_leader",)
+
+
+@dataclass
+class LinuxConfig:
+    symbols_file: str
+    variant: str
+    description: str
+
+
+def parse_config(table: dict[str, Any]) -> LinuxConfig:
+    return LinuxConfig(**table)
+
+
+def leader(dead_key: DeadKey) -> str | None:
+    """The keysym this dead key leads with, or ``None`` if it declares none.
+
+    It is a ``dead_*`` name where one fits the diacritic, and otherwise the
+    ``U<hex>`` form of a code point nothing else in the layout produces.
+    """
+    return dead_key.extra.get("xkb_leader")
+
+
+def constraints(layout: Layout) -> list[str]:
+    """Check the keysym each dead key leads its Compose sequences with.
+
+    Compose matches on the keysym alone, so two dead keys sharing one -- or a
+    dead key sharing one with a character the layout types plainly -- makes
+    both unusable. Names are not enough to tell: ``dead_perispomeni`` and
+    ``dead_tilde`` are two names for keysym 0xFE53, so values are compared.
+    """
+    problems: list[str] = []
+    by_value: dict[int, str] = {}
+    for dead_key in layout.dead_keys:
+        name = leader(dead_key)
+        if name is None:
+            problems.append(
+                f"dead key U+{dead_key.root:04X} has no xkb_leader, so Linux has no "
+                "keysym to put on the key"
+            )
+            continue
+        value = keysym_value(name)
+        if value is None:
+            problems.append(f"dead key U+{dead_key.root:04X} uses the unknown keysym {name!r}")
+            continue
+        if value in by_value:
+            problems.append(
+                f"dead keys U+{dead_key.root:04X} and {by_value[value]} both resolve to "
+                f"keysym 0x{value:04X} ({name!r}); they would be indistinguishable"
+            )
+        by_value[value] = f"U+{dead_key.root:04X}"
+
+    for key in layout.keys:
+        for level in ("normal", "shift"):
+            output = key.outputs.get(level)
+            if output is None:
+                continue
+            value = keysym_value(keysym(output.code_point))
+            if value is not None and value in by_value:
+                problems.append(
+                    f"key {key.id} types U+{output.code_point:04X} plainly, but that is "
+                    f"also the Linux keysym of dead key {by_value[value]}; the plain "
+                    "character would start a dead key sequence"
+                )
+    return problems
+
 
 #: Levels of an XKB key, in order, and the layout level each one comes from.
 XKB_LEVELS = ("normal", "shift", "altgr", "altgr_shift")
@@ -32,13 +106,6 @@ XKB_LEVELS = ("normal", "shift", "altgr", "altgr_shift")
 #: level 4, which would be wrong on every key that has one.
 ALPHABETIC_TYPE = "FOUR_LEVEL_SEMIALPHABETIC"
 PLAIN_TYPE = "FOUR_LEVEL"
-
-#: The base characters a dead key can be followed by. Every base this layout
-#: uses is printable ASCII, and a sequence is generated for each of them so that
-#: an unmapped one falls back exactly the way it does on Windows -- the root
-#: character followed by the base character -- instead of resolving to whatever
-#: the system Compose table happens to define for a borrowed dead keysym.
-FALLBACK_BASES = tuple(range(0x20, 0x7F))
 
 #: Keys XKB configures elsewhere and that this layout does not need to change.
 #: The numeric keypad's decimal separator comes from the keypad configuration,
@@ -82,7 +149,7 @@ def _levels(layout: Layout, key_id: str) -> list[str] | None:
             continue
         dead_key = layout.dead_key(output.code_point) if output.dead else None
         if dead_key is not None:
-            symbols.append(dead_key.xkb_leader)
+            symbols.append(leader(dead_key))
         else:
             symbols.append(keysym(output.code_point))
     while symbols and symbols[-1] == NO_SYMBOL:
@@ -92,9 +159,10 @@ def _levels(layout: Layout, key_id: str) -> list[str] | None:
 
 def render_symbols(layout: Layout) -> str:
     """Return the XKB symbols file."""
-    name = layout.linux.symbols_file
+    linux: LinuxConfig = layout.config(CONFIG_TABLE)
+    name = linux.symbols_file
     header = [
-        f"// {layout.linux.description}",
+        f"// {linux.description}",
         "//",
         f"// {layout.name} {layout.version}",
         "// Generated from layout/us-intl-scientific.toml by tools/generate.py.",
@@ -123,12 +191,12 @@ def render_symbols(layout: Layout) -> str:
         *header,
         "",
         "default partial alphanumeric_keys modifier_keys",
-        f'xkb_symbols "{layout.linux.variant}" {{',
+        f'xkb_symbols "{linux.variant}" {{',
         "",
         '    include "us(basic)"',
         '    include "level3(ralt_switch)"',
         "",
-        f'    name[Group1] = "{layout.linux.description}";',
+        f'    name[Group1] = "{linux.description}";',
         "",
     ]
 
@@ -173,8 +241,8 @@ def render_compose(layout: Layout) -> str:
         "",
     ]
     for dead_key in layout.dead_keys:
-        leader = dead_key.xkb_leader
-        if leader is None:
+        name = leader(dead_key)
+        if name is None:
             raise ValueError(
                 f"dead key U+{dead_key.root:04X} has no xkb_leader; Linux needs a keysym "
                 "to put on the key and to lead its Compose sequences"
@@ -185,7 +253,7 @@ def render_compose(layout: Layout) -> str:
         )
         mapping = dead_key.mapping
         for base, composite in dead_key.entries:
-            lines.append(_sequence(leader, base, chr(composite), unicode_name(composite)))
+            lines.append(_sequence(name, base, chr(composite), unicode_name(composite)))
         unmapped = [base for base in FALLBACK_BASES if base not in mapping]
         if unmapped:
             lines.append(
@@ -193,21 +261,26 @@ def render_compose(layout: Layout) -> str:
                 f"{dead_key.root_char!r} and that character, as it does on Windows."
             )
             for base in unmapped:
-                lines.append(_sequence(leader, base, dead_key.root_char + chr(base), "fallback"))
+                lines.append(_sequence(name, base, dead_key.root_char + chr(base), "fallback"))
         lines.append("")
     return "\n".join(lines)
 
 
-def _sequence(leader: str, base: int, result: str, comment: str) -> str:
-    sequence = f"<{leader}> <{keysym(base)}>"
+def _sequence(leader_name: str, base: int, result: str, comment: str) -> str:
+    sequence = f"<{leader_name}> <{keysym(base)}>"
     escaped = result.replace("\\", "\\\\").replace('"', '\\"')
     code_points = " ".join(f"U{ord(char):04X}" for char in result)
     return f'{sequence:<48}: "{escaped}"\t{code_points}\t# {comment}'
 
 
+#: Where the two generated Linux files go. The name inside each comes from the
+#: layout's own ``symbols_file``, so only the directory is fixed here.
+OUTPUT_DIR = "dist/linux"
+
+
 def generate(layout: Layout) -> dict[str, str | bytes]:
-    prefix = "dist/linux"
+    name = layout.config(CONFIG_TABLE).symbols_file
     return {
-        f"{prefix}/symbols/{layout.linux.symbols_file}": render_symbols(layout),
-        f"{prefix}/{layout.linux.symbols_file}.XCompose": render_compose(layout),
+        f"{OUTPUT_DIR}/symbols/{name}": render_symbols(layout),
+        f"{OUTPUT_DIR}/{name}.XCompose": render_compose(layout),
     }

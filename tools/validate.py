@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
 """Run every layout consistency check.
 
-Usage::
-
-    python3 tools/validate.py [--strict]
+A shim onto ``kbdlayout check``, kept so the paths in CONTRIBUTING.md and
+CI keep working. Python puts this directory on ``sys.path`` itself, so the
+checks still run straight from a clone with nothing installed.
 """
 
-from __future__ import annotations
-
 import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from kbdlayout.cli import main
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(["check", *sys.argv[1:]]))

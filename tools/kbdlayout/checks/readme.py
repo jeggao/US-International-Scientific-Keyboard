@@ -11,9 +11,10 @@ import re
 import unicodedata
 from pathlib import Path
 
-from . import markdown as md
-from .model import LEVEL_NAMES, DeadKey, Key, Layout, unicode_name
-from .report import Reporter
+from .. import markdown as md
+from ..model import LEVEL_NAMES, DeadKey, Key, Layout, unicode_name
+from ..project import README
+from ..report import Reporter
 
 KBD_RE = re.compile(r"<kbd>(.*?)</kbd>")
 CODE_POINT_RE = re.compile(r"U\+([0-9A-F]{4,6})\b")
@@ -34,7 +35,11 @@ STRAY_CHARACTERS = {
 _MD_UNESCAPE = {"\\|": "|", "\\\\": "\\", "\\`": "`", "\\<": "<", "\\>": ">", "\\_": "_"}
 
 
-def check(readme_path: Path, layout: Layout, reporter: Reporter) -> None:
+def check(root: Path, layout: Layout, reporter: Reporter) -> None:
+    readme_path = root / README
+    if not readme_path.exists():
+        reporter.add("readme-missing", readme_path, 0, f"{README} is missing")
+        return
     lines = readme_path.read_text(encoding="utf-8").split("\n")
     tables = md.find_tables(lines)
     _check_stray_characters(readme_path, lines, reporter)

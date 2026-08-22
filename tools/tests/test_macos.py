@@ -12,10 +12,11 @@ import xml.etree.ElementTree as ET
 import pytest
 
 from kbdlayout import source
-from kbdlayout.cli import LAYOUT_SOURCE
 from kbdlayout.generators import linux_xkb, macos_keylayout
+from kbdlayout.generators.windows_klc import MAX_CODE_POINT
 from kbdlayout.keys import position
-from kbdlayout.model import MAX_CODE_POINT
+from kbdlayout.model import FALLBACK_BASES
+from kbdlayout.project import LAYOUT_SOURCE
 
 #: XML 1.0 forbids references to most C0 controls, and Python's parser applies
 #: 1.0 rules whatever the declaration says. Apple's layouts use them anyway, so
@@ -207,12 +208,12 @@ def test_every_composition_matches_the_layout(tree, layout):
     for dead_key in layout.dead_keys:
         state = macos_keylayout.state_id(dead_key.root)
         mapping = dead_key.mapping
-        for base in macos_keylayout.FALLBACK_BASES:
+        for base in FALLBACK_BASES:
             composite = mapping.get(base)
             expected = chr(composite) if composite is not None else dead_key.root_char + chr(base)
             assert compositions[state][chr(base)] == expected, (state, hex(base))
             checked += 1
-    assert checked == len(layout.dead_keys) * len(macos_keylayout.FALLBACK_BASES)
+    assert checked == len(layout.dead_keys) * len(FALLBACK_BASES)
 
 
 def test_macos_and_linux_agree_on_every_dead_key_result(layout):
@@ -229,10 +230,10 @@ def test_macos_and_linux_agree_on_every_dead_key_result(layout):
 
     for dead_key in layout.dead_keys:
         mapping = dead_key.mapping
-        for base in macos_keylayout.FALLBACK_BASES:
+        for base in FALLBACK_BASES:
             composite = mapping.get(base)
             expected = chr(composite) if composite is not None else dead_key.root_char + chr(base)
-            assert linux[(dead_key.xkb_leader, keysym(base))] == expected
+            assert linux[(linux_xkb.leader(dead_key), keysym(base))] == expected
 
 
 def test_every_output_is_inside_the_bmp(tree):

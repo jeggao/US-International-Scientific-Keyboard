@@ -1,7 +1,7 @@
 """Checks for the files under ``assets/``.
 
 The keyboard-layout-editor source and the SVG are generated, so they cannot
-disagree with the layout and :mod:`kbdlayout.checks_generated` already fails if
+disagree with the layout and :mod:`kbdlayout.checks.generated` already fails if
 either is out of date. What is left to check is the PNG, which is rasterised
 from the SVG by ``tools/render.py`` and therefore *can* be stale.
 """
@@ -11,9 +11,10 @@ from __future__ import annotations
 import struct
 from pathlib import Path
 
-from .generators import picture
-from .model import Layout
-from .report import Reporter
+from ..generators import picture
+from ..model import Layout
+from ..project import ASSETS
+from ..report import Reporter
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -26,8 +27,8 @@ def png_size(data: bytes) -> tuple[int, int] | None:
     return width, height
 
 
-def check(assets_dir: Path, layout: Layout, reporter: Reporter) -> None:
-    png = assets_dir / "keyboard-layout.png"
+def check(root: Path, layout: Layout, reporter: Reporter) -> None:
+    png = root / ASSETS / "keyboard-layout.png"
     if not png.exists():
         reporter.add(
             "assets-picture",

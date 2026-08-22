@@ -4,22 +4,22 @@
 loads it into a platform-neutral model (:mod:`kbdlayout.model`), generates the
 file each platform needs from that model (:mod:`kbdlayout.generators`), and
 checks that the documentation and the overview picture still describe the same
-layout (the ``checks_*`` modules).
+layout (:mod:`kbdlayout.checks`).
 """
 
 from __future__ import annotations
 
 __all__ = [
-    "checks_assets",
-    "checks_generated",
-    "checks_readme",
-    "checks_repo",
+    "build",
+    "checks",
+    "cli",
     "generators",
     "keys",
     "keysyms",
     "klc",
     "markdown",
     "model",
+    "project",
     "report",
     "source",
 ]

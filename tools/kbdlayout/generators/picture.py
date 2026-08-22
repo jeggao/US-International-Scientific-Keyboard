@@ -17,7 +17,23 @@ import unicodedata
 from dataclasses import dataclass, field
 
 from ..model import Layout
+from ..xml_text import escape_attribute, escape_content
 from ._picture_font import WOFF2_BASE64
+
+#: The picture draws itself from the layout alone, so it reads no config table
+#: and claims no dead key fields.
+CONFIG_TABLE: str | None = None
+DEAD_KEY_FIELDS: tuple[str, ...] = ()
+
+
+def parse_config(table: dict) -> None:  # pragma: no cover - never called
+    raise ValueError("the picture target takes no configuration")
+
+
+def constraints(layout: Layout) -> list[str]:
+    """Anything drawable is anything the model allows."""
+    return []
+
 
 # --------------------------------------------------------------------------
 # The palette, which README.md's legend describes
@@ -299,12 +315,6 @@ ANCHORS = {
     "bc": ("middle", "auto", 0.5, 1.0),
 }
 
-_XML_ESCAPES = {"&": "&amp;", "<": "&lt;", ">": "&gt;"}
-
-
-def _escape(text: str) -> str:
-    return "".join(_XML_ESCAPES.get(char, char) for char in text)
-
 
 def size(layout: Layout) -> tuple[int, int]:
     """The picture's size in pixels."""
@@ -323,8 +333,8 @@ def render_svg(layout: Layout) -> str:
         '<?xml version="1.0" encoding="UTF-8"?>',
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{pixel_width}"'
         f' height="{pixel_height}" viewBox="0 0 {pixel_width} {pixel_height}"'
-        f' role="img" aria-label="{_escape(layout.name)} keyboard layout">',
-        f"  <title>{_escape(layout.name)} {layout.version}</title>",
+        f' role="img" aria-label="{escape_attribute(layout.name)} keyboard layout">',
+        f"  <title>{escape_content(layout.name)} {layout.version}</title>",
         "  <defs><style>",
         "    @font-face {",
         '      font-family: "Keyboard";',
@@ -386,7 +396,7 @@ def _draw(cap: Cap, left: int, top: int) -> list[str]:
         colour = cap.colours.get(name, TEXT)
         out.append(
             f'    <text x="{x:.0f}" y="{y:.0f}" font-size="{size}" fill="{colour}"'
-            f' text-anchor="{anchor}" dominant-baseline="{baseline}">{_escape(text)}</text>'
+            f' text-anchor="{anchor}" dominant-baseline="{baseline}">{escape_content(text)}</text>'
         )
     out.append("  </g>")
     return out

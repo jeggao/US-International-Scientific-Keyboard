@@ -15,6 +15,7 @@ dll_name = "KBDTEST"
 locale_name = "en-US"
 locale_id = "00000409"
 language_name = "English (United States)"
+output_path = "Test.klc"
 
 [layout.linux]
 symbols_file = "test"
@@ -23,6 +24,7 @@ description = "Test"
 
 [layout.macos]
 id = -19999
+output_path = "dist/macos/Test.keylayout"
 
 [[key]]
 id = "AD01"

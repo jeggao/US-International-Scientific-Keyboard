@@ -19,6 +19,7 @@ dll_name = "KBDUSS7"
 locale_name = "en-US"
 locale_id = "00000409"
 language_name = "English (United States)"
+output_path = "US International Scientific.klc"
 klc_version = "1.0"
 
 [layout.linux]
@@ -28,6 +29,7 @@ description = "English (US, international scientific)"
 
 [layout.macos]
 id = -19001
+output_path = "dist/macos/US-International Scientific.keylayout"
 group = 126
 
 

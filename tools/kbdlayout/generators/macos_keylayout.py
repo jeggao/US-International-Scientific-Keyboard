@@ -26,10 +26,42 @@ Apple's documentation leaves to the implementation:
 
 from __future__ import annotations
 
-import unicodedata
+from dataclasses import dataclass
+from typing import Any
 
 from ..keys import READING_ORDER, position
-from ..model import Layout, unicode_name
+from ..model import FALLBACK_BASES, Layout, unicode_name
+from ..xml_text import escape_attribute
+
+#: The ``[layout.macos]`` table. macOS needs no per-dead-key data of its own.
+CONFIG_TABLE = "macos"
+DEAD_KEY_FIELDS: tuple[str, ...] = ()
+
+
+@dataclass
+class MacosConfig:
+    #: macOS identifies a layout by a signed 16-bit number; third-party layouts
+    #: use a negative one. Keep it fixed across releases, or macOS treats the
+    #: layout as a brand new input source.
+    id: int
+    #: Where the generated ``.keylayout`` is written.
+    output_path: str
+    group: int = 126
+
+
+def escape_numeric(text: str) -> str:
+    """Attribute escaping with numeric references, which is all this file uses."""
+    return escape_attribute(text, numeric_references=True)
+
+
+def parse_config(table: dict[str, Any]) -> MacosConfig:
+    return MacosConfig(**table)
+
+
+def constraints(layout: Layout) -> list[str]:
+    """macOS imposes none of its own that the model does not already cover."""
+    return []
+
 
 #: The five modifier combinations this layout distinguishes, in ``keyMap`` order.
 #: ``caps`` is a map of its own because a ``keyMapSelect`` that matches nothing
@@ -45,10 +77,6 @@ MODIFIER_MAPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("altgr", ("anyOption caps? command? anyControl?",)),
     ("altgr_shift", ("anyOption anyShift caps? command? anyControl?",)),
 )
-
-#: The bases a dead key gets an explicit entry for. Matching the Linux Compose
-#: file exactly keeps the two platforms' fallback behaviour identical.
-FALLBACK_BASES = tuple(range(0x20, 0x7F))
 
 #: Keys that carry no character from this layout but must still appear, because
 #: a key missing from a ``keyMap`` produces nothing at all.
@@ -119,32 +147,6 @@ FUNCTION_ROW: tuple[int, ...] = (
 FUNCTION_ROW_OUTPUT = 0x0010
 
 
-#: XML's own five, minus the apostrophe, which needs no escaping inside a
-#: double-quoted attribute.
-_XML_ESCAPES = {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}
-
-
-def escape(text: str) -> str:
-    """Escape one string for an XML attribute.
-
-    A character that is invisible or would not survive being pasted around is
-    written as a numeric reference -- the same rule the TOML source applies,
-    except that an ordinary space stays a space, because Apple's own layouts
-    write it that way and it reads better.
-    """
-    out: list[str] = []
-    for char in text:
-        if char in _XML_ESCAPES:
-            out.append(_XML_ESCAPES[char])
-        elif char == " ":
-            out.append(char)
-        elif unicodedata.category(char)[0] in ("C", "Z", "M"):
-            out.append(f"&#x{ord(char):04X};")
-        else:
-            out.append(char)
-    return "".join(out)
-
-
 def state_id(root: int) -> str:
     return f"dead{root:04X}"
 
@@ -180,7 +182,7 @@ def _cell(layout: Layout, key_id: str, level: str, bases: set[int]) -> str | Non
         return f'      <key code="{code}" action="{dead_action_id(output.code_point)}"/>'
     if output.code_point in bases:
         return f'      <key code="{code}" action="{base_action_id(output.code_point)}"/>'
-    return f'      <key code="{code}" output="{escape(output.char)}"/>'
+    return f'      <key code="{code}" output="{escape_numeric(output.char)}"/>'
 
 
 def _fixed_keys() -> list[str]:
@@ -189,7 +191,7 @@ def _fixed_keys() -> list[str]:
     for code, code_point, label in FUNCTION_KEYS:
         rows.append(f'      <key code="{code}" output="&#x{code_point:04X};"/>  <!-- {label} -->')
     for code, char, label in KEYPAD_KEYS:
-        rows.append(f'      <key code="{code}" output="{escape(char)}"/>  <!-- {label} -->')
+        rows.append(f'      <key code="{code}" output="{escape_numeric(char)}"/>  <!-- {label} -->')
     for index, code in enumerate(FUNCTION_ROW, start=1):
         rows.append(
             f'      <key code="{code}" output="&#x{FUNCTION_ROW_OUTPUT:04X};"/>  <!-- F{index} -->'
@@ -198,6 +200,7 @@ def _fixed_keys() -> list[str]:
 
 
 def render(layout: Layout) -> str:
+    macos: MacosConfig = layout.config(CONFIG_TABLE)
     bases = _base_characters(layout)
     base_set = set(bases)
     dead_keys = layout.dead_keys
@@ -221,8 +224,8 @@ def render(layout: Layout) -> str:
         "     AltGr is Option here, and Option+Shift for the fourth level."
         f" {len(dead_keys)} dead keys.",
         "-->",
-        f'<keyboard group="{layout.macos.group}" id="{layout.macos.id}"'
-        f' name="{escape(layout.description)}" maxout="{longest}">',
+        f'<keyboard group="{macos.group}" id="{macos.id}"'
+        f' name="{escape_numeric(layout.description)}" maxout="{longest}">',
         "",
         "  <layouts>",
         '    <layout first="0" last="255" modifiers="modifiers" mapSet="scientific"/>',
@@ -265,14 +268,14 @@ def render(layout: Layout) -> str:
 
     for code_point in bases:
         lines.append(f'    <action id="{base_action_id(code_point)}">')
-        lines.append(f'      <when state="none" output="{escape(chr(code_point))}"/>')
+        lines.append(f'      <when state="none" output="{escape_numeric(chr(code_point))}"/>')
         for dead_key in dead_keys:
             composite = dead_key.mapping.get(code_point)
             result = (
                 chr(composite) if composite is not None else dead_key.root_char + chr(code_point)
             )
             lines.append(
-                f'      <when state="{state_id(dead_key.root)}" output="{escape(result)}"/>'
+                f'      <when state="{state_id(dead_key.root)}" output="{escape_numeric(result)}"/>'
             )
         lines.append("    </action>")
     lines += ["  </actions>", "", "  <terminators>"]
@@ -280,7 +283,7 @@ def render(layout: Layout) -> str:
     for dead_key in dead_keys:
         lines.append(
             f'    <when state="{state_id(dead_key.root)}"'
-            f' output="{escape(dead_key.root_char)}"/>'
+            f' output="{escape_numeric(dead_key.root_char)}"/>'
             f"  <!-- U+{dead_key.root:04X} {unicode_name(dead_key.root)} -->"
         )
     lines += ["  </terminators>", "", "</keyboard>", ""]
@@ -288,4 +291,4 @@ def render(layout: Layout) -> str:
 
 
 def generate(layout: Layout) -> dict[str, str | bytes]:
-    return {f"dist/macos/{layout.name}.keylayout": render(layout)}
+    return {layout.config(CONFIG_TABLE).output_path: render(layout)}

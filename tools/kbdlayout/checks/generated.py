@@ -5,24 +5,9 @@ from __future__ import annotations
 import difflib
 from pathlib import Path
 
-from .generators import GENERATORS
-from .model import Layout
-from .report import Reporter
-
-
-def render_all(layout: Layout) -> dict[str, str | bytes]:
-    """Every file this layout generates, keyed by repository-relative path."""
-    files: dict[str, str | bytes] = {}
-    for target, generate in GENERATORS.items():
-        for path, content in generate(layout).items():
-            if path in files:
-                raise ValueError(f"{target} generates {path}, which another target also claims")
-            files[path] = content
-    return files
-
-
-def as_bytes(content: str | bytes) -> bytes:
-    return content if isinstance(content, bytes) else content.encode("utf-8")
+from ..build import as_bytes, render_all
+from ..model import Layout
+from ..report import Reporter
 
 
 def check(root: Path, layout: Layout, reporter: Reporter) -> None:

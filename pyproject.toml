@@ -1,5 +1,39 @@
 # Configuration for the repository's development tooling. The keyboard layout
-# itself is the `.klc` file; everything here supports the checks in `tools/`.
+# itself is `layout/us-intl-scientific.toml`; everything here supports the
+# generators and checks in `tools/`.
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kbdlayout"
+version = "1.0.0"
+description = "Generate and check the US-International Scientific keyboard layout"
+requires-python = ">=3.11"
+# The generators and the checks are pure standard library, deliberately: a
+# contributor can run them straight from a clone with nothing installed.
+dependencies = []
+
+[project.optional-dependencies]
+# Pinned, because these are also what CI installs.
+dev = ["pytest==9.0.2", "ruff==0.15.8", "codespell==2.4.3"]
+# Rasterising the SVG into the PNG that README.md shows.
+picture = ["pillow==12.3.0", "playwright==1.56.0"]
+# Rebuilding the font subset the picture embeds.
+font = ["fonttools==4.60.1", "brotli==1.1.0"]
+# Running assets/sandbox.ipynb.
+notebook = ["ipykernel==6.30.1", "nbclient==0.10.2", "nbformat==5.10.4"]
+
+[project.scripts]
+kbdlayout = "kbdlayout.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "tools" }
+
+[tool.setuptools.packages.find]
+where = ["tools"]
+include = ["kbdlayout*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tools/tests"]

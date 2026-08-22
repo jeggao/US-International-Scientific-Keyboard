@@ -11,15 +11,9 @@ from pathlib import Path
 
 import pytest
 
-from kbdlayout import (
-    checks_assets,
-    checks_generated,
-    checks_readme,
-    checks_repo,
-    source,
-)
-from kbdlayout.cli import LAYOUT_SOURCE
-from kbdlayout.report import Reporter
+from kbdlayout import source
+from kbdlayout.checks import CHECKS, run_checks
+from kbdlayout.project import LAYOUT_SOURCE
 
 KLC_NAME = "US International Scientific.klc"
 
@@ -34,13 +28,14 @@ def sandbox(tmp_path, repo_root):
 
 
 def run(root: Path) -> list[str]:
-    reporter = Reporter(root)
+    """Every finding, using the same orchestration the command line uses.
+
+    Going through :func:`run_checks` rather than calling the check modules by
+    hand is deliberate: a check that is registered but not wired up here would
+    otherwise leave every test in this file passing without running it.
+    """
     layout = source.load(root / LAYOUT_SOURCE)
-    checks_generated.check(root, layout, reporter)
-    checks_readme.check(root / "README.md", layout, reporter)
-    checks_assets.check(root / "assets", layout, reporter)
-    checks_repo.check(root, reporter)
-    return [f.format_text() for f in reporter.findings]
+    return [f.format_text() for f in run_checks(root, layout).findings]
 
 
 def edit(path: Path, old: str, new: str) -> None:
@@ -57,6 +52,18 @@ def edit_klc(path: Path, old: str, new: str) -> None:
 
 def test_repository_is_clean(repo_root):
     assert run(repo_root) == []
+
+
+def test_every_registered_check_runs(repo_root, monkeypatch):
+    """run_checks must call each entry in CHECKS, not a hand-written subset."""
+    called: list[str] = []
+    for name in CHECKS:
+        monkeypatch.setitem(
+            CHECKS, name, lambda _root, _layout, _reporter, n=name: called.append(n)
+        )
+    layout = source.load(repo_root / LAYOUT_SOURCE)
+    run_checks(repo_root, layout)
+    assert called == list(CHECKS)
 
 
 def test_wrong_code_point_in_a_key_table(sandbox):

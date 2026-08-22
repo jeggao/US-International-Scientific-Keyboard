@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .report import Reporter
+from ..model import Layout
+from ..report import Reporter
 
 #: Everything except the ``.klc``, which MSKLC writes as UTF-16 with CRLF.
 TEXT_GLOBS = (
@@ -33,7 +34,7 @@ def iter_text_files(root: Path):
             yield path
 
 
-def check(root: Path, reporter: Reporter) -> None:
+def check(root: Path, layout: Layout, reporter: Reporter) -> None:
     for path in iter_text_files(root):
         data = path.read_bytes()
         if not data:

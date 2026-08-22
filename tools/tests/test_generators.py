@@ -15,11 +15,12 @@ import pytest
 from kbdlayout import keysyms as keysyms_module
 from kbdlayout import klc as klc_parser
 from kbdlayout import source
-from kbdlayout.checks_generated import as_bytes, render_all
-from kbdlayout.cli import LAYOUT_SOURCE
+from kbdlayout.build import as_bytes, render_all
 from kbdlayout.generators import linux_xkb, windows_klc
 from kbdlayout.keys import BY_SCAN_CODE
 from kbdlayout.keysyms import LATIN1_KEYSYMS
+from kbdlayout.model import FALLBACK_BASES
+from kbdlayout.project import LAYOUT_SOURCE
 
 KLC_NAME = "US International Scientific.klc"
 STATE_TO_LEVEL = {0: "normal", 1: "shift", 2: "ctrl", 6: "altgr", 7: "altgr_shift"}
@@ -104,7 +105,7 @@ def parse_symbols(text: str) -> dict[str, tuple[str, list[str]]]:
 def test_xkb_lists_four_levels_in_the_documented_order(layout):
     keys = parse_symbols(linux_xkb.render_symbols(layout))
     reverse = {name: code for code, name in LATIN1_KEYSYMS.items()}
-    dead = {d.xkb_leader: d.root for d in layout.dead_keys if d.xkb_leader}
+    dead = {linux_xkb.leader(d): d.root for d in layout.dead_keys if linux_xkb.leader(d)}
 
     def resolve(symbol: str) -> int | None:
         if symbol in dead:
@@ -143,15 +144,15 @@ def test_xkb_uses_the_alphabetic_type_exactly_for_letter_keys(layout):
 def test_xkb_uses_a_dead_keysym_wherever_one_exists(layout):
     text = linux_xkb.render_symbols(layout)
     for dead_key in layout.dead_keys:
-        if dead_key.xkb_leader:
-            assert dead_key.xkb_leader in text, dead_key.xkb_leader
+        if linux_xkb.leader(dead_key):
+            assert linux_xkb.leader(dead_key) in text, linux_xkb.leader(dead_key)
 
 
 def test_compose_covers_every_dead_key_mapping(layout):
     text = linux_xkb.render_compose(layout)
     assert 'include "%L"' in text
     for dead_key in layout.dead_keys:
-        leader = dead_key.xkb_leader or LATIN1_KEYSYMS.get(dead_key.root)
+        leader = linux_xkb.leader(dead_key) or LATIN1_KEYSYMS.get(dead_key.root)
         assert leader, f"no leader keysym for U+{dead_key.root:04X}"
         for base, composite in dead_key.entries:
             sequence = f"<{leader}> <{LATIN1_KEYSYMS[base]}>"
@@ -195,10 +196,11 @@ def _compile(tmp_path, symbols: str, include: str | None = None) -> tuple[int, s
 def test_generated_xkb_compiles_as_cleanly_as_the_stock_us_layout(tmp_path, layout):
     include = tmp_path / "xkb"
     (include / "symbols").mkdir(parents=True)
-    name = layout.linux.symbols_file
+    linux = layout.config("linux")
+    name = linux.symbols_file
     (include / "symbols" / name).write_text(linux_xkb.render_symbols(layout))
 
-    code, log = _compile(tmp_path, f"{name}({layout.linux.variant})", str(include))
+    code, log = _compile(tmp_path, f"{name}({linux.variant})", str(include))
     assert code == 0, log
 
     baseline_code, baseline_log = _compile(tmp_path, "us")
@@ -228,8 +230,8 @@ def test_compose_matches_windows_for_every_printable_base(layout):
     missing, wrong = [], []
     for dead_key in layout.dead_keys:
         mapping = dead_key.mapping
-        for base in linux_xkb.FALLBACK_BASES:
-            key = (dead_key.xkb_leader, keysym(base))
+        for base in FALLBACK_BASES:
+            key = (linux_xkb.leader(dead_key), keysym(base))
             windows = chr(mapping[base]) if base in mapping else dead_key.root_char + chr(base)
             if key not in defined:
                 missing.append(key)
@@ -247,11 +249,11 @@ def test_every_dead_key_has_a_distinct_keysym_value(layout):
     """
     seen: dict[int, str] = {}
     for dead_key in layout.dead_keys:
-        assert dead_key.xkb_leader, f"U+{dead_key.root:04X} has no leader"
-        value = keysyms_module.keysym_value(dead_key.xkb_leader)
-        assert value is not None, dead_key.xkb_leader
+        assert linux_xkb.leader(dead_key), f"U+{dead_key.root:04X} has no leader"
+        value = keysyms_module.keysym_value(linux_xkb.leader(dead_key))
+        assert value is not None, linux_xkb.leader(dead_key)
         assert value not in seen, (
-            f"U+{dead_key.root:04X} ({dead_key.xkb_leader}) collides with "
+            f"U+{dead_key.root:04X} ({linux_xkb.leader(dead_key)}) collides with "
             f"{seen[value]} at keysym 0x{value:04X}"
         )
         seen[value] = f"U+{dead_key.root:04X}"
@@ -259,7 +261,9 @@ def test_every_dead_key_has_a_distinct_keysym_value(layout):
 
 def test_a_dead_key_never_shares_a_keysym_with_a_plain_character(layout):
     """`<` is typed plainly and is also a dead key root; they must differ on Linux."""
-    dead = {keysyms_module.keysym_value(dead_key.xkb_leader) for dead_key in layout.dead_keys}
+    dead = {
+        keysyms_module.keysym_value(linux_xkb.leader(dead_key)) for dead_key in layout.dead_keys
+    }
     for key in layout.keys:
         for level in ("normal", "shift"):
             output = key.outputs.get(level)
@@ -278,7 +282,7 @@ def test_a_combining_mark_is_never_used_where_a_dead_keysym_belongs(layout):
     dead key, and no Compose rule would ever fire.
     """
     for dead_key in layout.dead_keys:
-        leader = dead_key.xkb_leader
+        leader = linux_xkb.leader(dead_key)
         if leader.startswith("U"):
             code_point = int(leader[1:], 16)
             assert unicodedata.category(chr(code_point)) not in ("Mn", "Me", "Mc"), (
@@ -312,4 +316,4 @@ def test_no_compose_rule_is_a_prefix_of_another(layout):
         if match:
             assert match.group(1) not in sequences, f"duplicate rule {match.group(1)}"
             sequences.add(match.group(1))
-    assert len(sequences) == sum(len(linux_xkb.FALLBACK_BASES) for _ in layout.dead_keys)
+    assert len(sequences) == sum(len(FALLBACK_BASES) for _ in layout.dead_keys)

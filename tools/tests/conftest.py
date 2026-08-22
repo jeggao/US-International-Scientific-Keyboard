@@ -1,10 +1,14 @@
-import sys
+"""Shared fixtures.
+
+``tools/`` is put on ``sys.path`` by ``pythonpath`` in pyproject.toml, so no
+path juggling is needed here.
+"""
+
 from pathlib import Path
 
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT / "tools"))
 
 
 @pytest.fixture(scope="session")
