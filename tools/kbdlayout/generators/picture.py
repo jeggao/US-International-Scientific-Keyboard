@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import unicodedata
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from ..model import Layout
 from ..xml_text import escape_attribute, escape_content
@@ -23,6 +24,7 @@ from ._picture_font import WOFF2_BASE64
 #: The picture draws itself from the layout alone, so it reads no config table
 #: and claims no dead key fields.
 CONFIG_TABLE: str | None = None
+KEY_FIELDS: tuple[str, ...] = ()
 DEAD_KEY_FIELDS: tuple[str, ...] = ()
 
 
@@ -402,7 +404,7 @@ def _draw(cap: Cap, left: int, top: int) -> list[str]:
     return out
 
 
-def generate(layout: Layout) -> dict[str, str | bytes]:
+def generate(layout: Layout, root: Path) -> dict[str, str | bytes]:
     return {
         "assets/keyboard-layout.json": render_kle(layout),
         "assets/keyboard-layout.svg": render_svg(layout),

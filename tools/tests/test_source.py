@@ -31,12 +31,15 @@ id = "AD01"
 normal = "q"
 shift = "Q"
 altgr = "÷"
+altgr_doc = "Math: division."
 altgr_shift = { dead = "U+0301" }
+altgr_shift_doc = "**Dead key: acute accents.**"
 
 [[dead_key]]
 root = "U+0301"
 category = "Acute"
 xkb_leader = "dead_acute"
+doc_bases = ["a"]
 map = [["a", "á"], ["U+0020", "U+00B4"]]
 """
 

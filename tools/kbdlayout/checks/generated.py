@@ -11,7 +11,15 @@ from ..report import Reporter
 
 
 def check(root: Path, layout: Layout, reporter: Reporter) -> None:
-    for relative, content in render_all(layout).items():
+    try:
+        files = render_all(layout, root)
+    except ValueError as error:
+        # A target refused to produce its file at all -- a README whose
+        # generated blocks do not line up with the layout, say. That is a
+        # finding about the file, not a reason to abandon the whole run.
+        reporter.add("generated-unbuildable", root, 0, str(error))
+        return
+    for relative, content in files.items():
         path = root / relative
         expected = as_bytes(content)
         if not path.exists():

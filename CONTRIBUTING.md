@@ -20,7 +20,7 @@ either comes out of it or is checked against it:
 | `assets/keyboard-layout.svg` | **Generated.** The overview picture, self-contained | `tools/generate.py` |
 | `assets/keyboard-layout.json` | **Generated.** The same picture as [keyboard-layout-editor.com](http://www.keyboard-layout-editor.com/) source | `tools/generate.py` |
 | `assets/keyboard-layout.png` | **Built** from the SVG by a headless browser | `tools/render.py`, and CI |
-| `README.md` | Every key mapping and every dead key, with justifications | `tools/validate.py` |
+| `README.md` | **Partly generated.** Every key mapping and dead key table; the prose around them is written by hand | `tools/generate.py` |
 | `assets/sandbox.ipynb` | A scratch pad for looking at the layout's characters | executed in CI |
 
 Nothing generated should ever be edited by hand: `tools/generate.py --check`
@@ -30,26 +30,27 @@ fails the build if a generated file does not match what the source produces.
 
 ```sh
 $EDITOR layout/us-intl-scientific.toml
-python3 tools/generate.py     # rewrite every platform file and the picture source
+python3 tools/generate.py     # rewrite every platform file, the picture source and README's tables
 python3 tools/render.py       # redraw assets/keyboard-layout.png
-python3 tools/validate.py     # check the documentation still matches
+python3 tools/validate.py     # check what is left that is hand-written
 ```
 
-Then update the affected table in `README.md`. When the layout itself changes,
-bump `version` in the source; it is what users see on the Windows taskbar, and it
-appears in the `.klc` in two places that have to agree.
+Do not edit the tables in `README.md`: they are generated from the layout,
+including the `Description` column, which comes from `altgr_doc` and
+`altgr_shift_doc` in the source. When the layout itself changes, bump `version`
+in the source; it is what users see on the Windows taskbar, and it appears in
+the `.klc` in two places that have to agree.
 
 You do not have to run `tools/render.py` yourself — CI rebuilds the picture on
 every push and commits it back if it changed. It is only there so you can see
 the result before pushing.
 
-`tools/validate.py` reports, with file and line number, anything that has
-drifted: a `U+XXXX`, character name or sample character in a README table that
-no longer matches, a dead key whose documented bases and composites have fallen
-out of step, a key the layout provides but the README never mentions, a caption
-or a palette colour in the picture source that disagrees with the layout, and
-structural problems like broken Markdown tables or links to headings that do not
-exist.
+`tools/generate.py --check` reports any generated file that has drifted,
+README.md included. `tools/validate.py` covers what is left: the prose nothing
+generates. It reports, with file and line number, invisible characters that got
+in by accident, links to headings or files that do not exist, malformed tables,
+a picture that no longer matches the size the layout draws to, and text files
+with the wrong line endings.
 
 ## The layout file
 
@@ -59,12 +60,16 @@ id = "AD01"                    # AD01 is the Q key on any keyboard
 normal = "q"
 shift = "Q"
 altgr = "÷"
+altgr_doc = "Math: division."  # why it is here; README's Description column
 altgr_shift = { dead = "U+2261" }   # this shift state starts a dead key
+altgr_shift_doc = "**Dead key: equivalence symbols.**"
 
 [[dead_key]]
 root = "U+030C"                # the character the key stands for
 category = "Caron diacritic"   # the heading it is documented under
 xkb_leader = "dead_caron"      # the keysym Linux puts on the key
+doc_bases = ["n N"]            # how README lists the bases: see below
+notes = "..."                  # README's Notes row, if it has one
 map = [
   ["n", "ň"],
   ["U+0020", "U+02C7"],        # the space bar gives the default character
@@ -77,13 +82,20 @@ as `"U+XXXX"`. A shift state a key does not use is simply omitted. `caps` is
 derived from whether the unmodified and Shift characters are a case pair, and
 only needs writing out to override that.
 
-Constraints the loader enforces, so that a layout that cannot be built never
-reaches a generator: every character must be in the BMP (U+0000–U+FFFF), every
-dead key root and base must be U+0FFF or below (both are
-[MSKLC 1.4 limits](README.md#notes-on-msklc-14)), every dead key needs a U+0020
-entry, and no two dead keys may share a Linux keysym.
+`doc_bases` is a list of *lines*. Spaces inside a line separate groups, and the
+lines themselves are stacked with `<br>`; most dead keys are one line, and the
+three with a great many bases read better broken up. The composites are looked
+up from `map`, so they cannot fall out of step with it.
 
-That last one is easy to get wrong. X11 has several names for the same keysym —
+Constraints the loader enforces, so that a layout that cannot be built never
+reaches a generator: every dead key needs a U+0020 entry, no key may be defined
+twice, and every dead key must be reachable. Each target then adds its own:
+Windows rejects anything outside the BMP and any dead key root or base above
+U+0FFF (both are [MSKLC 1.4 limits](README.md#notes-on-msklc-14)); Linux rejects
+two dead keys sharing a keysym; the documentation rejects a mapping with no
+prose to justify it, or a `doc_bases` that does not match `map` exactly.
+
+The Linux one is easy to get wrong. X11 has several names for the same keysym —
 `dead_perispomeni` **is** `dead_tilde`, and `dead_small_schwa` **is**
 `dead_schwa` — so two dead keys can collide even though their names differ. The
 check compares values, not names.
@@ -100,16 +112,23 @@ python3 tools/validate.py --strict  # does the documentation still match?
 To work on the tools themselves:
 
 ```sh
-pip install -r tools/requirements-dev.txt
+pip install -e ".[dev]"           # pytest, ruff, codespell
+pip install -e ".[dev,picture,font,notebook]"   # everything CI installs
 pytest                    # parser, generators, and every check
 ruff check tools          # lint
 ruff format tools         # format
 ```
 
+Installing also puts a `kbdlayout` command on the path, which is what the
+scripts under `tools/` are shims onto: `kbdlayout generate`, `check`, `render`
+and `subset-font`. `python3 -m kbdlayout` works too.
+
 Some tests compile the generated XKB file with `xkbcomp` and compare the result
 against the stock `us` layout; they skip themselves when it is not installed
-(`apt install x11-xkb-utils xkb-data`). `.github/workflows/ci.yml` runs
-everything on every push and pull request.
+(`apt install x11-xkb-utils xkb-data`). CI sets `KBDLAYOUT_REQUIRE_XKBCOMP=1`,
+which turns that skip into a failure, so the compile cannot quietly stop
+running. `.github/workflows/ci.yml` runs everything on every push and pull
+request.
 
 ## The picture
 
@@ -154,13 +173,26 @@ into TOML, which is what proves the move lost nothing.
 
 ## Adding a platform
 
-A back end is one module in `tools/kbdlayout/generators/` exposing
-`generate(layout) -> {path: content}`, plus one entry in `GENERATORS`. `str`
-content is written as UTF-8 with LF endings, `bytes` verbatim. Everything a
-platform needs is already in the model; what belongs in the module rather than
-in the layout file is the platform's own vocabulary — Windows scan codes and
-virtual key names, X11 keysyms — because that is a property of keyboards, not of
-this layout.
+A back end is one module in `tools/kbdlayout/generators/`, plus one entry in
+`TARGETS`. That really is all of it: the model, the loader and the command line
+all work off the registry, so nothing else has to be told the platform exists.
+The module provides:
+
+| Name | What it is |
+|------|------------|
+| `CONFIG_TABLE` | the `[layout.<name>]` table it reads, or `None` |
+| `KEY_FIELDS`, `DEAD_KEY_FIELDS` | `[[key]]` and `[[dead_key]]` fields only it understands; the loader puts them in `Key.extra` and `DeadKey.extra` |
+| `parse_config(table)` | turn that table into whatever object it wants |
+| `constraints(layout)` | every reason this layout could not be built *for this platform* |
+| `generate(layout, root)` | `{path: content}`; `str` is written as UTF-8 with LF endings, `bytes` verbatim |
+
+`constraints` is the important one. A limit of one file format must never
+become a limit of the model — the MSKLC code-point ceilings live in
+`windows_klc.py`, the X11 keysym rules in `linux_xkb.py` — so `model.py` holds
+only what is true of any layout on any system. What else belongs in the module
+rather than in the layout file is the platform's own vocabulary: Windows scan
+codes and virtual key names, X11 keysyms, because that is a property of
+keyboards, not of this layout.
 
 **macOS** is implemented, in `generators/macos_keylayout.py`, but has never been
 loaded by macOS. What the tests establish is that the file is well formed, that

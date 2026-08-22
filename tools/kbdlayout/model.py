@@ -88,6 +88,10 @@ class Key:
     #: Set on the few keys whose source file pins the value rather than letting
     #: it be derived from the unmodified/Shift pair.
     caps_override: bool | None = None
+    #: Per-target data this key carries, keyed by the field name the target
+    #: declares. As with :attr:`DeadKey.extra`, the model ascribes it no
+    #: meaning.
+    extra: dict[str, Any] = field(default_factory=dict)
 
     def output(self, level: str) -> Output | None:
         return self.outputs.get(level)

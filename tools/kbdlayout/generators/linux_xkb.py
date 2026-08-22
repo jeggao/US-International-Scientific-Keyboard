@@ -14,6 +14,7 @@ cannot disagree with each other or with the Windows build.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from ..keys import READING_ORDER
@@ -24,6 +25,7 @@ from ..model import FALLBACK_BASES, DeadKey, Layout, unicode_name
 #: understands: the X11 keysym the key emits, which every Compose sequence for
 #: that dead key also starts with.
 CONFIG_TABLE = "linux"
+KEY_FIELDS: tuple[str, ...] = ()
 DEAD_KEY_FIELDS: tuple[str, ...] = ("xkb_leader",)
 
 
@@ -278,7 +280,7 @@ def _sequence(leader_name: str, base: int, result: str, comment: str) -> str:
 OUTPUT_DIR = "dist/linux"
 
 
-def generate(layout: Layout) -> dict[str, str | bytes]:
+def generate(layout: Layout, root: Path) -> dict[str, str | bytes]:
     name = layout.config(CONFIG_TABLE).symbols_file
     return {
         f"{OUTPUT_DIR}/symbols/{name}": render_symbols(layout),

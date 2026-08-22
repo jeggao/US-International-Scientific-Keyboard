@@ -27,6 +27,7 @@ Apple's documentation leaves to the implementation:
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from ..keys import READING_ORDER, position
@@ -35,6 +36,7 @@ from ..xml_text import escape_attribute
 
 #: The ``[layout.macos]`` table. macOS needs no per-dead-key data of its own.
 CONFIG_TABLE = "macos"
+KEY_FIELDS: tuple[str, ...] = ()
 DEAD_KEY_FIELDS: tuple[str, ...] = ()
 
 
@@ -290,5 +292,5 @@ def render(layout: Layout) -> str:
     return "\n".join(lines)
 
 
-def generate(layout: Layout) -> dict[str, str | bytes]:
+def generate(layout: Layout, root: Path) -> dict[str, str | bytes]:
     return {layout.config(CONFIG_TABLE).output_path: render(layout)}

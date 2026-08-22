@@ -18,7 +18,7 @@ from dataclasses import fields
 from pathlib import Path
 from typing import Any
 
-from .generators import TARGETS, constraints, dead_key_fields
+from .generators import TARGETS, constraints, dead_key_fields, key_fields
 from .keys import READING_ORDER, position
 from .model import (
     LEVELS,
@@ -103,6 +103,7 @@ def _build(data: dict[str, Any], origin: str) -> Layout:
             raise LayoutError(f"{origin}: [layout.{table}] is not usable: {error}") from None
 
     claimed = dead_key_fields()
+    claimed_key = key_fields()
 
     keys: list[Key] = []
     for index, entry in enumerate(data.get("key", [])):
@@ -117,10 +118,17 @@ def _build(data: dict[str, Any], origin: str) -> Layout:
             for level in LEVELS
             if level in entry
         }
-        unknown = set(entry) - {"id", "caps", *LEVELS}
+        unknown = set(entry) - {"id", "caps", *LEVELS, *claimed_key}
         if unknown:
             raise LayoutError(f"{where} ({key_id}): unknown field(s) {sorted(unknown)}")
-        keys.append(Key(id=key_id, outputs=outputs, caps_override=entry.get("caps")))
+        keys.append(
+            Key(
+                id=key_id,
+                outputs=outputs,
+                caps_override=entry.get("caps"),
+                extra={field: entry[field] for field in claimed_key if field in entry},
+            )
+        )
 
     dead_keys: list[DeadKey] = []
     for index, entry in enumerate(data.get("dead_key", [])):
@@ -169,14 +177,31 @@ def _toml_string(value: str) -> str:
     return f'"{escaped}"'
 
 
+def _fields_for_level(claimed: dict[str, str], level: str) -> list[str]:
+    """The claimed key fields that belong under ``level``.
+
+    A field belongs to the longest level name it is prefixed with, so
+    ``altgr_shift_doc`` lands under ``altgr_shift`` rather than under ``altgr``
+    as well.
+    """
+    out: list[str] = []
+    for field in claimed:
+        owners = [name for name in LEVELS if field.startswith(f"{name}_")]
+        if owners and max(owners, key=len) == level:
+            out.append(field)
+    return out
+
+
 def _toml_value(value: object) -> str:
-    """Serialise one config field. Targets only use strings and integers."""
+    """Serialise one field. Targets use strings, integers and lists of strings."""
     if isinstance(value, str):
         return _toml_string(value)
     if isinstance(value, bool):
         return str(value).lower()
     if isinstance(value, int):
         return str(value)
+    if isinstance(value, list):
+        return "[" + ", ".join(_toml_value(item) for item in value) + "]"
     raise LayoutError(f"cannot write {value!r} to TOML")
 
 
@@ -221,6 +246,7 @@ def dumps(layout: Layout) -> str:
         add(f'id = "{key.id}"')
         if key.caps_override is not None:
             add(f"caps = {str(key.caps_override).lower()}")
+        claimed_key = key_fields()
         for level in LEVELS:
             output = key.outputs.get(level)
             if output is None:
@@ -228,6 +254,10 @@ def dumps(layout: Layout) -> str:
             value = _toml_string(encode_char(output.code_point))
             rendered = f"{{ dead = {value} }}" if output.dead else value
             add(f"{level} = {rendered}  # {output.name}")
+            # The prose that justifies this mapping sits directly beneath it.
+            for field in _fields_for_level(claimed_key, level):
+                if key.extra.get(field):
+                    add(f"{field} = {_toml_value(key.extra[field])}")
 
     add("")
     add("")

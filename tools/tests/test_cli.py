@@ -23,7 +23,7 @@ GENERATED_XKB = "dist/linux/symbols/us_intl_sci"
 def test_generate_reports_every_file_as_unchanged(sandbox, capsys):
     assert main(["--root", str(sandbox), "generate"]) == 0
     out = capsys.readouterr().out
-    assert out.count("unchanged") == 6
+    assert out.count("unchanged") == 7
     assert KLC_NAME in out
 
 
@@ -68,7 +68,7 @@ def test_generate_check_leaves_a_deleted_file_deleted(sandbox):
 def test_sync_reports_one_outcome_per_generated_file(sandbox):
     layout = source.load(sandbox / LAYOUT_SOURCE)
     outcomes = build.sync(sandbox, layout, write=False)
-    assert {outcome.relative for outcome in outcomes} == set(build.render_all(layout))
+    assert {outcome.relative for outcome in outcomes} == set(build.render_all(layout, sandbox))
     assert not any(outcome.is_stale for outcome in outcomes)
 
 
@@ -80,15 +80,16 @@ def test_check_passes_on_the_real_repository(repo_root):
 
 
 def test_check_fails_and_names_the_defect(sandbox, capsys):
-    edit(sandbox / "README.md", "U+2032", "U+2033")
+    edit(sandbox / "README.md", "(#quick-start-guide)", "(#nowhere)")
     assert main(["--root", str(sandbox), "check"]) == 1
-    assert "readme-keymap" in capsys.readouterr().out
+    assert "readme-anchor" in capsys.readouterr().out
 
 
 def test_strict_turns_a_warning_into_a_failure(sandbox, capsys):
-    # A second trailing newline is the repository's one warning-level finding.
-    readme = sandbox / "README.md"
-    readme.write_bytes(readme.read_bytes() + b"\n")
+    # A second trailing newline is a warning-level hygiene finding. It has to
+    # be on a file nothing generates, or it would be an error for being stale.
+    extra = sandbox / "CONTRIBUTING.md"
+    extra.write_bytes(extra.read_bytes() + b"\n")
 
     assert main(["--root", str(sandbox), "check"]) == 0
     assert main(["--root", str(sandbox), "check", "--strict"]) == 1
@@ -102,10 +103,10 @@ def test_check_reports_a_broken_layout_source_rather_than_raising(sandbox, capsy
 
 
 def test_json_output_is_parseable(sandbox, capsys):
-    edit(sandbox / "README.md", "U+2032", "U+2033")
+    edit(sandbox / "README.md", "(#quick-start-guide)", "(#nowhere)")
     assert main(["--root", str(sandbox), "check", "--format", "json"]) == 1
     findings = json.loads(capsys.readouterr().out)
-    assert any(finding["check"] == "readme-keymap" for finding in findings)
+    assert any(finding["check"] == "readme-anchor" for finding in findings)
     assert {"check", "path", "line", "severity", "message"} == set(findings[0])
 
 

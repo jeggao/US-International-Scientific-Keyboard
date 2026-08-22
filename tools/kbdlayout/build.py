@@ -34,12 +34,12 @@ class Outcome:
         return self.status == STALE
 
 
-def render_all(layout: Layout) -> dict[str, str | bytes]:
+def render_all(layout: Layout, root: Path) -> dict[str, str | bytes]:
     """Every file this layout generates, keyed by repository-relative path."""
     files: dict[str, str | bytes] = {}
     claimed_by: dict[str, str] = {}
     for name, target in TARGETS.items():
-        for path, content in target.generate(layout).items():
+        for path, content in target.generate(layout, root).items():
             if path in files:
                 raise ValueError(f"{name} generates {path}, which {claimed_by[path]} also claims")
             files[path] = content
@@ -59,7 +59,7 @@ def sync(root: Path, layout: Layout, write: bool = True) -> list[Outcome]:
     back as :data:`STALE`.
     """
     outcomes: list[Outcome] = []
-    for relative, content in sorted(render_all(layout).items()):
+    for relative, content in sorted(render_all(layout, root).items()):
         path = root / relative
         expected = as_bytes(content)
         current = path.read_bytes() if path.exists() else None

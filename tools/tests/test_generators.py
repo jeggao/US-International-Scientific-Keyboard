@@ -5,6 +5,7 @@ before the layout moved into TOML is reproduced byte for byte, which is what
 proves the move lost nothing.
 """
 
+import os
 import re
 import shutil
 import subprocess
@@ -32,7 +33,7 @@ def layout(repo_root):
 
 
 def test_every_generated_file_is_committed_and_current(repo_root, layout):
-    for relative, content in render_all(layout).items():
+    for relative, content in render_all(layout, repo_root).items():
         path = repo_root / relative
         assert path.exists(), f"{relative} has never been generated"
         assert path.read_bytes() == as_bytes(content), f"{relative} is out of date"
@@ -171,6 +172,12 @@ def test_every_dead_key_base_has_a_keysym(layout):
 # --------------------------------------------------------------------------
 
 XKBCOMP = shutil.which("xkbcomp")
+
+#: CI installs xkbcomp and sets this, so that the compile test failing to run
+#: is itself a failure. Without it the test would quietly skip, and deleting
+#: the separate CI job that used to compile the file would have lost the
+#: coverage silently.
+REQUIRE_XKBCOMP = os.environ.get("KBDLAYOUT_REQUIRE_XKBCOMP") == "1"
 KEYMAP = """xkb_keymap {{
     xkb_keycodes  {{ include "evdev+aliases(qwerty)" }};
     xkb_types     {{ include "complete"              }};
@@ -192,8 +199,15 @@ def _compile(tmp_path, symbols: str, include: str | None = None) -> tuple[int, s
     return finished.returncode, finished.stderr + finished.stdout
 
 
-@pytest.mark.skipif(XKBCOMP is None, reason="xkbcomp is not installed")
+@pytest.mark.skipif(
+    XKBCOMP is None and not REQUIRE_XKBCOMP,
+    reason="xkbcomp is not installed (set KBDLAYOUT_REQUIRE_XKBCOMP=1 to demand it)",
+)
 def test_generated_xkb_compiles_as_cleanly_as_the_stock_us_layout(tmp_path, layout):
+    assert XKBCOMP is not None, (
+        "KBDLAYOUT_REQUIRE_XKBCOMP=1 is set but xkbcomp is not installed; "
+        "install x11-xkb-utils and xkb-data"
+    )
     include = tmp_path / "xkb"
     (include / "symbols").mkdir(parents=True)
     linux = layout.config("linux")

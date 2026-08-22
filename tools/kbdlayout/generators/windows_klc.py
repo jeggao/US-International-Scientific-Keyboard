@@ -9,6 +9,7 @@ pins down.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from ..keys import KLC_ORDER, position
@@ -16,6 +17,7 @@ from ..model import LEVELS, Layout, unicode_name
 
 #: The ``[layout.windows]`` table, and the dead key fields this target claims.
 CONFIG_TABLE = "windows"
+KEY_FIELDS: tuple[str, ...] = ()
 DEAD_KEY_FIELDS: tuple[str, ...] = ()
 
 #: MSKLC 1.4 cannot build a dead key whose root is above this code point, and
@@ -300,5 +302,5 @@ def to_bytes(layout: Layout) -> bytes:
     return (BOM + text).encode(ENCODING)
 
 
-def generate(layout: Layout) -> dict[str, str | bytes]:
+def generate(layout: Layout, root: Path) -> dict[str, str | bytes]:
     return {layout.config(CONFIG_TABLE).output_path: to_bytes(layout)}
