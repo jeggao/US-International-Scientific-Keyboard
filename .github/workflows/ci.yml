@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  layout:
+    name: Layout consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Check README.md and assets against the .klc
+        run: python tools/validate.py --strict
+
+  tests:
+    name: Tool tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - run: pytest
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: ruff check
+        run: ruff check tools
+      - name: ruff format
+        run: ruff format --check tools
+      - name: Spell check the prose
+        run: codespell README.md CONTRIBUTING.md tools .github
+
+  notebook:
+    name: Sandbox notebook
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: Validate the notebook format
+        run: python -c "import nbformat, sys; nbformat.validate(nbformat.read('assets/sandbox.ipynb', as_version=4))"
+      - name: Run every cell
+        run: |
+          python - <<'PY'
+          import nbformat
+          from nbclient import NotebookClient
+
+          notebook = nbformat.read("assets/sandbox.ipynb", as_version=4)
+          NotebookClient(notebook, timeout=120, resources={"metadata": {"path": "assets"}}).execute()
+          PY
+
+  klc-encoding:
+    name: .klc encoding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: The layout must stay UTF-16LE with a BOM and CRLF line endings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          data = Path("US International Scientific.klc").read_bytes()
+          assert data[:2] == b"\xff\xfe", "missing UTF-16LE byte order mark"
+          text = data.decode("utf-16")
+          assert "\r\n" in text, "expected CRLF line endings"
+          assert text.replace("\r\n", "").count("\n") == 0, "found a bare LF"
+          assert text.rstrip().endswith("ENDKBD"), "file does not end with ENDKBD"
+          print(f"ok: {len(text.splitlines())} lines")
+          PY
