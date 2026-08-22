@@ -445,7 +445,8 @@ Ordered by value per unit of disruption:
 2. **Add `[project]` and extras** (P2, small). Makes `python -m kbdlayout` work,
    deletes five `sys.path` hacks, and unblocks the CLI consolidation.
 3. **Delete the two duplicated CI jobs, merge three more** (P2, small). Pure
-   subtraction; faster feedback on every pull request.
+   subtraction. The win is one invariant in one place, not speed — the whole
+   suite already finishes in about 45 seconds of wall clock.
 4. **Introduce the `Target` protocol and move the platform constraints out of
    `model.py`** (P1, medium). Makes the documented extension contract true.
 5. **Generate the README tables** (P1, large). The biggest win and the biggest
