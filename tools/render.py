@@ -78,6 +78,9 @@ def find_chromium() -> str | None:
 #: 87 pixels less -- so the shot is taken in a taller window and cropped back.
 VIEWPORT_SLACK = 240
 
+#: How far one colour channel may move before a pixel counts as changed.
+CHANNEL_TOLERANCE = 8
+
 
 def render(svg: str, width: int, height: int, chromium: str) -> bytes:
     """Screenshot an SVG at its natural size."""
@@ -143,9 +146,15 @@ def difference(left: bytes, right: bytes) -> float:
     second = Image.open(io.BytesIO(right)).convert("RGBA")
     if first.size != second.size:
         return 1.0
-    diff = ImageChops.difference(first, second)
-    changed = sum(1 for pixel in diff.getdata() if any(channel > 8 for channel in pixel))
-    return changed / (first.size[0] * first.size[1])
+    # A pixel counts as changed when any channel moves by more than the
+    # threshold. Thresholding each band and combining them keeps this to whole
+    # image operations rather than walking a million Python tuples, and avoids
+    # getdata(), which Pillow is retiring.
+    mask = None
+    for band in ImageChops.difference(first, second).split():
+        marked = band.point(lambda value: 255 if value > CHANNEL_TOLERANCE else 0)
+        mask = marked if mask is None else ImageChops.lighter(mask, marked)
+    return mask.histogram()[255] / (first.size[0] * first.size[1])
 
 
 def main(argv: list[str] | None = None) -> int:

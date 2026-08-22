@@ -1,8 +1,11 @@
 name: CI
 
+# Every branch is built on push, so that the picture job can write the rebuilt
+# picture back to it. Pull requests are built as well, but only when they come
+# from a fork, where the push event never fires -- otherwise every commit on a
+# branch of this repository would be built twice.
 on:
   push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -19,6 +22,9 @@ env:
 jobs:
   generated:
     name: Generated files are current
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,6 +36,9 @@ jobs:
 
   layout:
     name: Layout consistency
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,6 +50,9 @@ jobs:
 
   tests:
     name: Tool tests (Python ${{ matrix.python-version }})
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -60,6 +72,9 @@ jobs:
 
   lint:
     name: Lint
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,6 +93,9 @@ jobs:
 
   notebook:
     name: Sandbox notebook
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -101,6 +119,9 @@ jobs:
 
   windows-klc:
     name: Windows .klc is loadable by MSKLC
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -123,6 +144,9 @@ jobs:
 
   linux-xkb:
     name: Linux XKB compiles
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -150,14 +174,18 @@ jobs:
 
   picture:
     name: Overview picture
+    if: >-
+      github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          # Push the rebuilt picture back to the branch it came from.
-          ref: ${{ github.head_ref || github.ref_name }}
+          # On a push, check the branch out by name so the rebuilt picture can
+          # be committed back to it. Otherwise take the commit as it is.
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -166,15 +194,14 @@ jobs:
       - run: pip install -r tools/requirements-dev.txt
       - name: Install a headless Chromium to rasterise with
         run: playwright install --with-deps chromium
-      - name: Rebuild the picture from the layout
-        run: python tools/render.py
 
-      # A push can write the result back; a pull request from a fork cannot, so
-      # there it only reports.
-      - name: Commit the rebuilt picture
+      # A push can write the result back. Anything else -- a pull request from a
+      # fork, where the token is read-only -- reports instead.
+      - name: Rebuild the picture and commit it if it changed
         if: github.event_name == 'push'
         run: |
           set -euo pipefail
+          python tools/render.py
           if git diff --quiet -- assets/keyboard-layout.png; then
             echo "the picture is already up to date"
             exit 0
@@ -188,6 +215,4 @@ jobs:
           git push || (git pull --rebase && git push)
       - name: Report whether the picture is current
         if: github.event_name != 'push'
-        run: |
-          git checkout -- assets/keyboard-layout.png
-          python tools/render.py --check
+        run: python tools/render.py --check
