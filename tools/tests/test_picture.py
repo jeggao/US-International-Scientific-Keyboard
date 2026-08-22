@@ -85,7 +85,10 @@ def test_the_embedded_font_covers_every_character_drawn(layout):
     import base64
     import io
 
-    from fontTools.ttLib import TTFont
+    ttLib = pytest.importorskip(
+        "fontTools.ttLib", reason="fonttools is an optional extra", exc_type=ImportError
+    )
+    TTFont = ttLib.TTFont
 
     font = TTFont(io.BytesIO(base64.b64decode(WOFF2_BASE64)), fontNumber=0, lazy=True)
     covered: set[int] = set()

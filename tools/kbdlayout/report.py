@@ -124,7 +124,11 @@ class Reporter:
     def sorted_findings(self) -> list[Finding]:
         return sorted(self.findings, key=lambda f: (f.path, f.line, f.check))
 
-    def emit(self, stream=sys.stdout, style: str | None = None) -> None:
+    def emit(self, stream=None, style: str | None = None) -> None:
+        # Resolved here, not in the signature: a default argument would bind
+        # whatever ``sys.stdout`` was at import time and keep writing there
+        # even after something replaced it.
+        stream = sys.stdout if stream is None else stream
         chosen = style or default_style()
         try:
             formatter = FORMATS[chosen]

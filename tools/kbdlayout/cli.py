@@ -18,13 +18,16 @@ from . import build, source
 from .checks import run_checks
 from .generators import picture
 from .model import Layout, LayoutError
-from .project import ProjectError, find_repository_root, layout_path
+from .project import LAYOUT_SOURCE, ProjectError, find_repository_root, layout_path
 from .report import FORMATS
 
 
 def _load(args: argparse.Namespace) -> tuple[Path, Layout]:
     root = (args.root or find_repository_root()).resolve()
-    return root, source.load(layout_path(root))
+    path = layout_path(root)
+    if not path.exists():
+        raise ProjectError(f"{root} has no {LAYOUT_SOURCE}")
+    return root, source.load(path)
 
 
 # ---------------------------------------------------------------- check ----

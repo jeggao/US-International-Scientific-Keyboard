@@ -6,25 +6,14 @@ not a check.
 """
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
+from conftest import KLC_NAME, edit, edit_klc
 
 from kbdlayout import source
 from kbdlayout.checks import CHECKS, run_checks
 from kbdlayout.project import LAYOUT_SOURCE
-
-KLC_NAME = "US International Scientific.klc"
-
-
-@pytest.fixture
-def sandbox(tmp_path, repo_root):
-    for name in (KLC_NAME, "README.md"):
-        shutil.copy2(repo_root / name, tmp_path / name)
-    for directory in ("assets", "layout", "dist"):
-        shutil.copytree(repo_root / directory, tmp_path / directory)
-    return tmp_path
 
 
 def run(root: Path) -> list[str]:
@@ -36,18 +25,6 @@ def run(root: Path) -> list[str]:
     """
     layout = source.load(root / LAYOUT_SOURCE)
     return [f.format_text() for f in run_checks(root, layout).findings]
-
-
-def edit(path: Path, old: str, new: str) -> None:
-    text = path.read_text(encoding="utf-8")
-    assert old in text, f"{old!r} not found in {path.name}"
-    path.write_text(text.replace(old, new, 1), encoding="utf-8")
-
-
-def edit_klc(path: Path, old: str, new: str) -> None:
-    text = path.read_bytes().decode("utf-16")
-    assert old in text, f"{old!r} not found in the .klc"
-    path.write_bytes(("﻿" + text.lstrip("﻿").replace(old, new, 1)).encode("utf-16-le"))
 
 
 def test_repository_is_clean(repo_root):
@@ -177,8 +154,25 @@ def test_a_corrupted_picture_source_is_reported_as_stale(sandbox):
 
 
 def test_a_picture_of_the_wrong_size_is_reported(sandbox):
-    from PIL import Image
+    Image = pytest.importorskip(
+        "PIL.Image", reason="pillow is an optional extra", exc_type=ImportError
+    )
 
     path = sandbox / "assets/keyboard-layout.png"
     Image.open(path).crop((0, 0, 100, 100)).save(path)
     assert any("assets-picture" in f for f in run(sandbox))
+
+
+def test_the_generated_dist_files_are_covered_by_the_hygiene_check(repo_root):
+    """They have no recognisable suffix, so the old extension allowlist skipped them."""
+    from kbdlayout.checks.repo import iter_text_files
+
+    covered = {str(path.relative_to(repo_root)) for path, _data in iter_text_files(repo_root)}
+    assert {
+        "dist/linux/symbols/us_intl_sci",
+        "dist/linux/us_intl_sci.XCompose",
+        "dist/macos/US-International Scientific.keylayout",
+    } <= covered
+    # ...and the files that are deliberately not LF text are still left alone.
+    assert KLC_NAME not in covered
+    assert "assets/keyboard-layout.png" not in covered
