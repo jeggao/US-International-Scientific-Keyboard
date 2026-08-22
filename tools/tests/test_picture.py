@@ -118,3 +118,17 @@ def test_a_combining_mark_is_drawn_on_a_dotted_circle(layout):
                     assert index > 0 and text[index - 1] == "◌", text
                     found += 1
     assert found, "the picture should draw at least one combining mark"
+
+
+def test_render_fails_when_there_is_no_browser(monkeypatch, repo_root, capsys):
+    """A green picture job has to mean the picture was actually rendered."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("render", repo_root / "tools" / "render.py")
+    render = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(render)
+
+    monkeypatch.setattr(render, "find_chromium", lambda: None)
+    assert render.main(["--root", str(repo_root)]) == 1
+    assert render.main(["--root", str(repo_root), "--check"]) == 1
+    assert "no Chromium found" in capsys.readouterr().err

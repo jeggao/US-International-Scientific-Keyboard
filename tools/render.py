@@ -184,8 +184,15 @@ def main(argv: list[str] | None = None) -> int:
 
     chromium = find_chromium()
     if chromium is None:
-        print("no chromium found; cannot rebuild the picture", file=sys.stderr)
-        return 0 if not args.check else 1
+        # Reporting success here would make a green CI job mean nothing: the
+        # picture would go unrendered and unchecked, and no one would know.
+        print(
+            "no Chromium found, so the picture cannot be rebuilt. Install one with\n"
+            "  pip install playwright && playwright install chromium\n"
+            "or leave the picture to CI, which rebuilds it on every push.",
+            file=sys.stderr,
+        )
+        return 1
     print(f"rendering with {chromium}")
 
     width, height = picture.size(layout)
