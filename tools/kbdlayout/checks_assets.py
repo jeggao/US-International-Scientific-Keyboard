@@ -1,7 +1,7 @@
 """Checks for the files under ``assets/``.
 
 ``keyboard-layout.json`` is the keyboard-layout-editor.com source for the
-overview picture, so its key captions have to agree with the ``.klc``.
+overview picture, so its key captions have to agree with the layout source.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import unicodedata
 from pathlib import Path
 
 from . import markdown as md
-from .klc import Klc, unicode_name
+from .model import LEVEL_NAMES, Key, Layout, unicode_name
 from .report import Reporter
 
 #: Label indices used by this layout's keyboard-layout-editor source. The legend
@@ -42,7 +42,7 @@ WORD_LABELS = {
 }
 
 
-def check(assets_dir: Path, klc: Klc, reporter: Reporter) -> None:
+def check(assets_dir: Path, layout: Layout, reporter: Reporter) -> None:
     layout_json = assets_dir / "keyboard-layout.json"
     if not layout_json.exists():
         reporter.add("assets", assets_dir, 0, "assets/keyboard-layout.json is missing")
@@ -54,7 +54,7 @@ def check(assets_dir: Path, klc: Klc, reporter: Reporter) -> None:
         return
     _check_shape(layout_json, data, reporter)
     _check_palette(layout_json, data, reporter)
-    _check_labels(layout_json, data, klc, reporter)
+    _check_labels(layout_json, data, layout, reporter)
 
 
 def _iter_labels(data) -> list[str]:
@@ -128,59 +128,58 @@ def _nearest_palette_colour(colour: str) -> str | None:
     return best if best_distance is not None and best_distance <= 24 else None
 
 
-def _check_labels(path: Path, data, klc: Klc, reporter: Reporter) -> None:
-    by_shift: dict[str, object] = {}
-    by_normal: dict[str, object] = {}
-    for row in klc.layout:
-        if row.virtual_key in ("OEM_102", "DECIMAL"):
-            continue
-        shift = row.outputs.get(1)
-        normal = row.outputs.get(0)
-        if shift is not None and shift.code_point is not None:
-            by_shift.setdefault(chr(shift.code_point), row)
-        if normal is not None and normal.code_point is not None:
-            by_normal.setdefault(chr(normal.code_point), row)
+#: Keys the picture does not draw: the ISO extra key, which an ANSI keyboard
+#: does not have, and the numeric keypad.
+UNDRAWN_KEYS = frozenset({"LSGT", "KPDL"})
 
-    covered: set[int] = set()
+
+def _check_labels(path: Path, data, layout: Layout, reporter: Reporter) -> None:
+    by_shift: dict[str, Key] = {}
+    by_normal: dict[str, Key] = {}
+    for key in layout.keys:
+        if key.id in UNDRAWN_KEYS:
+            continue
+        shift = key.outputs.get("shift")
+        normal = key.outputs.get("normal")
+        if shift is not None:
+            by_shift.setdefault(shift.char, key)
+        if normal is not None:
+            by_normal.setdefault(normal.char, key)
+
+    covered: set[str] = set()
     for label in _iter_labels(data):
         parts = label.split("\n")
         if len(parts) < 4:
             continue
-        key = parts[LABEL_SHIFT].strip() or parts[LABEL_NORMAL].strip()
-        layout_row = by_shift.get(key) or by_normal.get(key)
-        if layout_row is None:
+        label = parts[LABEL_SHIFT].strip() or parts[LABEL_NORMAL].strip()
+        key = by_shift.get(label) or by_normal.get(label)
+        if key is None:
             continue
-        covered.add(layout_row.scan_code)
-        for index, state in ((LABEL_ALTGR_SHIFT, 7), (LABEL_ALTGR, 6)):
+        covered.add(key.id)
+        for index, level in ((LABEL_ALTGR_SHIFT, "altgr_shift"), (LABEL_ALTGR, "altgr")):
             caption = parts[index] if index < len(parts) else ""
-            output = layout_row.outputs.get(state)
-            expected = output.code_point if output is not None else None
-            if expected is None:
+            output = key.outputs.get(level)
+            if output is None:
                 continue
-            _check_caption(path, key, state, caption, expected, klc, reporter)
+            _check_caption(path, label, level, caption, output.code_point, layout, reporter)
 
-    for row in klc.layout:
-        if row.virtual_key in ("OEM_102", "DECIMAL", "SPACE"):
+    for key in layout.keys:
+        if key.id in UNDRAWN_KEYS or key.id == "SPCE":
             continue
-        if row.scan_code not in covered:
-            reporter.add(
-                "assets-json",
-                path,
-                1,
-                f"key {row.virtual_key} (scan code {row.scan_code:02x}) has no caption",
-            )
+        if key.id not in covered:
+            reporter.add("assets-json", path, 1, f"key {key.id} has no caption in the picture")
 
 
 def _check_caption(
     path: Path,
     key: str,
-    state: int,
+    level: str,
     caption: str,
     code_point: int,
-    klc: Klc,
+    layout: Layout,
     reporter: Reporter,
 ) -> None:
-    dead_key = klc.dead_key(code_point)
+    dead_key = layout.dead_key(code_point)
     allowed = {chr(code_point)}
     if dead_key is not None and dead_key.default is not None:
         allowed.add(chr(dead_key.default))
@@ -192,8 +191,9 @@ def _check_caption(
                 path,
                 1,
                 (
-                    f"key {key!r} shift state {state}: caption {caption!r} names "
-                    f"U+{WORD_LABELS[caption]:04X}, which this key does not produce"
+                    f"key {key!r} in the {LEVEL_NAMES[level]} shift state: caption "
+                    f"{caption!r} names U+{WORD_LABELS[caption]:04X}, which this key "
+                    "does not produce"
                 ),
             )
         return
@@ -205,8 +205,8 @@ def _check_caption(
             path,
             1,
             (
-                f"key {key!r} shift state {state} has no caption but the layout produces "
-                f"U+{code_point:04X} ({unicode_name(code_point)})"
+                f"key {key!r} in the {LEVEL_NAMES[level]} shift state has no caption, but the "
+                f"layout produces U+{code_point:04X} ({unicode_name(code_point)})"
             ),
         )
         return
@@ -216,9 +216,9 @@ def _check_caption(
             path,
             1,
             (
-                f"key {key!r} shift state {state}: caption is the bare combining mark "
-                f"U+{ord(shown):04X}, which renders on top of neighbouring text; use the "
-                "spacing form or prefix it with '◌'"
+                f"key {key!r} in the {LEVEL_NAMES[level]} shift state: caption is the bare "
+                f"combining mark U+{ord(shown):04X}, which renders on top of neighbouring "
+                "text; use the spacing form or prefix it with '◌'"
             ),
         )
         return
@@ -228,7 +228,7 @@ def _check_caption(
             path,
             1,
             (
-                f"key {key!r} shift state {state}: caption {shown!r} does not match the layout "
-                f"(expected one of {sorted(allowed)!r})"
+                f"key {key!r} in the {LEVEL_NAMES[level]} shift state: caption {shown!r} "
+                f"does not match the layout (expected one of {sorted(allowed)!r})"
             ),
         )

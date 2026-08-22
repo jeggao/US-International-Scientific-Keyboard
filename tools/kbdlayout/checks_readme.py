@@ -1,4 +1,9 @@
-"""Cross-checks between ``README.md`` and the ``.klc`` source of truth."""
+"""Cross-checks between ``README.md`` and the layout source.
+
+The documentation restates every key mapping and every dead key in prose and
+tables; these checks make sure it still describes the layout that
+``layout/us-intl-scientific.toml`` defines.
+"""
 
 from __future__ import annotations
 
@@ -7,7 +12,7 @@ import unicodedata
 from pathlib import Path
 
 from . import markdown as md
-from .klc import Klc, unicode_name
+from .model import LEVEL_NAMES, DeadKey, Key, Layout, unicode_name
 from .report import Reporter
 
 KBD_RE = re.compile(r"<kbd>(.*?)</kbd>")
@@ -29,15 +34,15 @@ STRAY_CHARACTERS = {
 _MD_UNESCAPE = {"\\|": "|", "\\\\": "\\", "\\`": "`", "\\<": "<", "\\>": ">", "\\_": "_"}
 
 
-def check(readme_path: Path, klc: Klc, reporter: Reporter) -> None:
+def check(readme_path: Path, layout: Layout, reporter: Reporter) -> None:
     lines = readme_path.read_text(encoding="utf-8").split("\n")
     tables = md.find_tables(lines)
     _check_stray_characters(readme_path, lines, reporter)
     _check_table_shape(readme_path, tables, reporter)
     _check_anchors(readme_path, lines, reporter)
     _check_relative_links(readme_path, lines, reporter)
-    _check_key_tables(readme_path, lines, tables, klc, reporter)
-    _check_dead_key_tables(readme_path, lines, tables, klc, reporter)
+    _check_key_tables(readme_path, lines, tables, layout, reporter)
+    _check_dead_key_tables(readme_path, lines, tables, layout, reporter)
 
 
 def _unescape(text: str) -> str:
@@ -172,34 +177,40 @@ def _heading_above(lines: list[str], line_no: int, prefix: str) -> str:
     return ""
 
 
-def _printable_key_index(klc: Klc) -> tuple[dict[str, object], dict[str, object]]:
-    normal: dict[str, object] = {}
-    shifted: dict[str, object] = {}
-    for row in klc.layout:
-        # OEM_102 duplicates OEM_5 for ISO keyboards and has no separate keycap
-        # in the documentation.
-        if row.virtual_key == "OEM_102":
+#: Keys the documentation does not give a row of its own. LSGT is the extra key
+#: on ISO keyboards, which repeats the backslash key; KPDL is the numeric keypad.
+UNDOCUMENTED_KEYS = frozenset({"LSGT", "KPDL"})
+
+#: The two AltGr shift states the Key Mappings tables document.
+DOCUMENTED_LEVELS = ("altgr", "altgr_shift")
+
+
+def _printable_key_index(layout: Layout) -> tuple[dict[str, Key], dict[str, Key]]:
+    normal: dict[str, Key] = {}
+    shifted: dict[str, Key] = {}
+    for key in layout.keys:
+        if key.id in UNDOCUMENTED_KEYS:
             continue
-        base = row.outputs.get(0)
-        shift = row.outputs.get(1)
-        if base is not None and base.code_point is not None:
-            normal.setdefault(chr(base.code_point), row)
-        if shift is not None and shift.code_point is not None:
-            shifted.setdefault(chr(shift.code_point), row)
+        base = key.outputs.get("normal")
+        shift = key.outputs.get("shift")
+        if base is not None:
+            normal.setdefault(base.char, key)
+        if shift is not None:
+            shifted.setdefault(shift.char, key)
     return normal, shifted
 
 
 def _check_key_tables(
-    path: Path, lines: list[str], tables: list[md.Table], klc: Klc, reporter: Reporter
+    path: Path, lines: list[str], tables: list[md.Table], layout: Layout, reporter: Reporter
 ) -> None:
-    normal, shifted = _printable_key_index(klc)
+    normal, shifted = _printable_key_index(layout)
     documented: set[tuple[int, str]] = set()
 
     for table in tables:
         if not table.rows[0].cells or table.rows[0].cells[0].strip() != "Key":
             continue
         heading = _heading_above(lines, table.start_line, "#### ")
-        state = 7 if "Shift" in heading else 6
+        level = "altgr_shift" if "Shift" in heading else "altgr"
         for row in table.rows[2:]:
             if len(row.cells) != 5:
                 continue
@@ -212,13 +223,13 @@ def _check_key_tables(
                     "readme-keymap", path, row.line_no, f"cannot read key cell {key_cell!r}"
                 )
                 continue
-            documented.add((state, label))
-            layout_row = (
-                (shifted if state == 7 else normal).get(label)
+            documented.add((level, label))
+            key = (
+                (shifted if level == "altgr_shift" else normal).get(label)
                 or normal.get(label)
                 or shifted.get(label)
             )
-            if layout_row is None:
+            if key is None:
                 reporter.add(
                     "readme-keymap",
                     path,
@@ -236,16 +247,16 @@ def _check_key_tables(
                 )
                 continue
             code_point = int(match.group(1), 16)
-            output = layout_row.outputs.get(state)
-            actual = output.code_point if output is not None else None
-            if actual is None:
+            output = key.outputs.get(level)
+            if output is None:
                 reporter.add(
                     "readme-keymap",
                     path,
                     row.line_no,
-                    f"key {label!r} has no character in shift state {state}",
+                    f"key {label!r} produces nothing in the {LEVEL_NAMES[level]} shift state",
                 )
                 continue
+            actual = output.code_point
             if actual != code_point:
                 reporter.add(
                     "readme-keymap",
@@ -268,8 +279,8 @@ def _check_key_tables(
                         f"name of U+{code_point:04X} ({expected_name!r})"
                     ),
                 )
-            _check_char_cell(path, row.line_no, label, char_cell, actual, klc, reporter)
-            is_dead = output is not None and output.is_dead
+            _check_char_cell(path, row.line_no, label, char_cell, actual, layout, reporter)
+            is_dead = output.dead
             has_marker = "**Dead key" in description
             if is_dead and not has_marker:
                 reporter.add(
@@ -286,7 +297,7 @@ def _check_key_tables(
                     f"key {label!r} is documented as a dead key but the layout says otherwise",
                 )
 
-    _check_key_coverage(path, klc, documented, reporter)
+    _check_key_coverage(path, layout, documented, reporter)
 
 
 def _check_char_cell(
@@ -295,7 +306,7 @@ def _check_char_cell(
     label: str,
     char_cell: str,
     code_point: int,
-    klc: Klc,
+    layout: Layout,
     reporter: Reporter,
 ) -> None:
     """The Char column shows a *renderable* stand-in for the character.
@@ -323,7 +334,7 @@ def _check_char_cell(
         )
         return
     allowed = {chr(code_point)}
-    dead_key = klc.dead_key(code_point)
+    dead_key = layout.dead_key(code_point)
     if dead_key is not None and dead_key.default is not None:
         allowed.add(chr(dead_key.default))
     if shown in allowed:
@@ -340,50 +351,51 @@ def _check_char_cell(
 
 
 def _check_key_coverage(
-    path: Path, klc: Klc, documented: set[tuple[int, str]], reporter: Reporter
+    path: Path, layout: Layout, documented: set[tuple[str, str]], reporter: Reporter
 ) -> None:
-    for row in klc.layout:
-        if row.virtual_key in ("OEM_102", "SPACE", "DECIMAL"):
+    for key in layout.keys:
+        # The space bar has a section of prose rather than a table row.
+        if key.id in UNDOCUMENTED_KEYS or key.id == "SPCE":
             continue
-        for state in (6, 7):
-            output = row.outputs.get(state)
-            if output is None or output.code_point is None:
+        for level in DOCUMENTED_LEVELS:
+            output = key.outputs.get(level)
+            if output is None:
                 continue
-            base = row.outputs.get(0 if state == 6 else 1)
-            if base is None or base.code_point is None:
+            base = key.outputs.get("normal" if level == "altgr" else "shift")
+            if base is None:
                 continue
-            label = chr(base.code_point)
-            if (state, label) not in documented:
+            if (level, base.char) not in documented:
                 reporter.add(
                     "readme-keymap",
                     path,
                     1,
                     (
-                        f"key {label!r} in shift state {state} produces U+{output.code_point:04X} "
-                        f"({unicode_name(output.code_point)}) but is not documented"
+                        f"key {base.char!r} with {LEVEL_NAMES[level]} produces "
+                        f"U+{output.code_point:04X} ({unicode_name(output.code_point)}) "
+                        "but is not documented"
                     ),
                 )
 
 
 def _check_dead_key_tables(
-    path: Path, lines: list[str], tables: list[md.Table], klc: Klc, reporter: Reporter
+    path: Path, lines: list[str], tables: list[md.Table], layout: Layout, reporter: Reporter
 ) -> None:
     dead_key_tables = [
         table
         for table in tables
         if table.rows[0].cells and table.rows[0].cells[0].strip() == "Category"
     ]
-    if len(dead_key_tables) != len(klc.dead_keys):
+    if len(dead_key_tables) != len(layout.dead_keys):
         reporter.add(
             "readme-deadkey",
             path,
             dead_key_tables[0].start_line if dead_key_tables else 1,
             (
                 f"README documents {len(dead_key_tables)} dead keys but the layout defines "
-                f"{len(klc.dead_keys)}"
+                f"{len(layout.dead_keys)}"
             ),
         )
-    _check_dead_key_count_prose(path, lines, klc, reporter)
+    _check_dead_key_count_prose(path, lines, layout, reporter)
 
     seen_roots: set[int] = set()
     for table in dead_key_tables:
@@ -406,7 +418,7 @@ def _check_dead_key_tables(
         root = int(match.group(1), 16)
         seen_roots.add(root)
         _check_named_cell(path, root_row.line_no, category, "Root", match, reporter)
-        dead_key = klc.dead_key(root)
+        dead_key = layout.dead_key(root)
         if dead_key is None:
             reporter.add(
                 "readme-deadkey",
@@ -415,10 +427,10 @@ def _check_dead_key_tables(
                 f"[{category}] U+{root:04X} is not a dead key in the layout",
             )
             continue
-        _check_dead_key_trigger(path, table, category, root, klc, reporter)
-        _check_dead_key_mappings(path, table, category, dead_key, klc, reporter)
+        _check_dead_key_trigger(path, table, category, root, layout, reporter)
+        _check_dead_key_mappings(path, table, category, dead_key, reporter)
 
-    for dead_key in klc.dead_keys:
+    for dead_key in layout.dead_keys:
         if dead_key.root not in seen_roots:
             reporter.add(
                 "readme-deadkey",
@@ -428,18 +440,20 @@ def _check_dead_key_tables(
             )
 
 
-def _check_dead_key_count_prose(path: Path, lines: list[str], klc: Klc, reporter: Reporter) -> None:
+def _check_dead_key_count_prose(
+    path: Path, lines: list[str], layout: Layout, reporter: Reporter
+) -> None:
     pattern = re.compile(r"the (\d+) dead keys")
     for index, line in enumerate(lines):
         match = pattern.search(line)
-        if match and int(match.group(1)) != len(klc.dead_keys):
+        if match and int(match.group(1)) != len(layout.dead_keys):
             reporter.add(
                 "readme-deadkey",
                 path,
                 index + 1,
                 (
                     f"prose says {match.group(1)} dead keys but the layout defines "
-                    f"{len(klc.dead_keys)}"
+                    f"{len(layout.dead_keys)}"
                 ),
             )
 
@@ -474,7 +488,7 @@ def _check_named_cell(
 
 
 def _check_dead_key_trigger(
-    path: Path, table: md.Table, category: str, root: int, klc: Klc, reporter: Reporter
+    path: Path, table: md.Table, category: str, root: int, layout: Layout, reporter: Reporter
 ) -> None:
     trigger_row = table.cell("Dead key")
     if trigger_row is None or len(trigger_row.cells) < 2:
@@ -492,15 +506,13 @@ def _check_dead_key_trigger(
         )
         return
     wanted = labels[1]
-    for row in klc.layout:
-        for state in (6, 7):
-            output = row.outputs.get(state)
-            if output is None or output.code_point != root or not output.is_dead:
+    for key in layout.keys:
+        for level in DOCUMENTED_LEVELS:
+            output = key.outputs.get(level)
+            if output is None or output.code_point != root or not output.dead:
                 continue
-            base = row.outputs.get(0 if state == 6 else 1)
-            if base is None or base.code_point is None:
-                continue
-            if chr(base.code_point) == wanted:
+            base = key.outputs.get("normal" if level == "altgr" else "shift")
+            if base is not None and base.char == wanted:
                 return
     reporter.add(
         "readme-deadkey",
@@ -514,7 +526,7 @@ def _check_dead_key_trigger(
 
 
 def _check_dead_key_mappings(
-    path: Path, table: md.Table, category: str, dead_key, klc: Klc, reporter: Reporter
+    path: Path, table: md.Table, category: str, dead_key: DeadKey, reporter: Reporter
 ) -> None:
     bases_row = table.cell("Bases")
     composites_row = table.cell("Composites")

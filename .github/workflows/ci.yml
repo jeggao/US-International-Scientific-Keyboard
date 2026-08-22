@@ -17,6 +17,17 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
+  generated:
+    name: Generated files are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Regenerate every platform file from the layout source
+        run: python tools/generate.py --check
+
   layout:
     name: Layout consistency
     runs-on: ubuntu-latest
@@ -25,7 +36,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - name: Check README.md and assets against the .klc
+      - name: Check README.md and assets against the layout source
         run: python tools/validate.py --strict
 
   tests:
@@ -43,6 +54,8 @@ jobs:
           cache: pip
           cache-dependency-path: tools/requirements-dev.txt
       - run: pip install -r tools/requirements-dev.txt
+      - name: Install the X11 keyboard database so the XKB tests run
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends x11-xkb-utils xkb-data
       - run: pytest
 
   lint:
@@ -86,8 +99,8 @@ jobs:
           NotebookClient(notebook, timeout=120, resources={"metadata": {"path": "assets"}}).execute()
           PY
 
-  klc-encoding:
-    name: .klc encoding
+  windows-klc:
+    name: Windows .klc is loadable by MSKLC
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,3 +120,30 @@ jobs:
           assert text.rstrip().endswith("ENDKBD"), "file does not end with ENDKBD"
           print(f"ok: {len(text.splitlines())} lines")
           PY
+
+  linux-xkb:
+    name: Linux XKB compiles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install the X11 keyboard database
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends x11-xkb-utils xkb-data
+      - name: Compile the generated symbols file, and compare with the stock us layout
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.xkb/symbols"
+          cp dist/linux/symbols/us_intl_sci "$HOME/.xkb/symbols/"
+          keymap() {
+            printf 'xkb_keymap {\n  xkb_keycodes { include "evdev+aliases(qwerty)" };\n  xkb_types { include "complete" };\n  xkb_compat { include "complete" };\n  xkb_symbols { include "pc+%s" };\n  xkb_geometry { include "pc(pc105)" };\n};\n' "$1"
+          }
+          keymap 'us_intl_sci(sci)' > layout.in
+          keymap 'us' > baseline.in
+          xkbcomp -I"$HOME/.xkb" -xkb -o layout.xkb layout.in > layout.log 2>&1
+          xkbcomp -xkb -o baseline.xkb baseline.in > baseline.log 2>&1
+          # The stock layout emits a page of notes about keys no layout defines;
+          # ours must not add anything of its own to that list.
+          diff <(sort baseline.log) <(sort layout.log)
+          echo "xkbcomp is as quiet for this layout as it is for the stock us layout"

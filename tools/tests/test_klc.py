@@ -1,6 +1,6 @@
 import pytest
 
-from kbdlint import klc as klc_module
+from kbdlayout import klc as klc_module
 
 LAYOUT_ROW = (
     "10\tQ\t\t1\tq\tQ\t-1\t00f7\t0301@\t\t"

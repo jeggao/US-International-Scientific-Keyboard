@@ -1,8 +1,11 @@
 """Parser for Microsoft Keyboard Layout Creator (MSKLC) ``.klc`` source files.
 
-The parser is deliberately tolerant: it records the physical layout of the file
-(line numbers, raw text) alongside the decoded model so that the linting checks
-can point at the exact line that needs to change.
+The ``.klc`` is generated from ``layout/us-intl-scientific.toml`` rather than
+edited, so nothing depends on this parser to build the layout. It exists to read
+the file back: the test suite parses the shipped ``.klc`` and compares it to the
+layout source, which checks the Windows generator by a route that does not go
+through the generator itself. It is also what an import of somebody else's
+``.klc`` would start from.
 """
 
 from __future__ import annotations
@@ -379,7 +382,6 @@ def _parse_layout_row(line_no: int, line: str, shift_states: list[int] | None = 
     cells = parts[3:]
     # The LAYOUT columns follow the order declared by the SHIFTSTATE section.
     states = list(shift_states or [0, 1, 2, 6, 7])[: len(cells)]
-    # A row with the wrong number of columns is reported by checks_klc.
     outputs = {state: _parse_output(cell) for state, cell in zip(states, cells, strict=False)}
     return LayoutRow(
         line_no=line_no,

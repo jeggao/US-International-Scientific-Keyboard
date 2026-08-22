@@ -11,9 +11,15 @@ from pathlib import Path
 
 import pytest
 
-from kbdlint import checks_assets, checks_klc, checks_readme, checks_repo
-from kbdlint import klc as klc_module
-from kbdlint.report import Reporter
+from kbdlayout import (
+    checks_assets,
+    checks_generated,
+    checks_readme,
+    checks_repo,
+    source,
+)
+from kbdlayout.cli import LAYOUT_SOURCE
+from kbdlayout.report import Reporter
 
 KLC_NAME = "US International Scientific.klc"
 
@@ -22,14 +28,15 @@ KLC_NAME = "US International Scientific.klc"
 def sandbox(tmp_path, repo_root):
     for name in (KLC_NAME, "README.md"):
         shutil.copy2(repo_root / name, tmp_path / name)
-    shutil.copytree(repo_root / "assets", tmp_path / "assets")
+    for directory in ("assets", "layout", "dist"):
+        shutil.copytree(repo_root / directory, tmp_path / directory)
     return tmp_path
 
 
 def run(root: Path) -> list[str]:
     reporter = Reporter(root)
-    layout = klc_module.parse(root / KLC_NAME)
-    checks_klc.check(layout, reporter)
+    layout = source.load(root / LAYOUT_SOURCE)
+    checks_generated.check(root, layout, reporter)
     checks_readme.check(root / "README.md", layout, reporter)
     checks_assets.check(root / "assets", layout, reporter)
     checks_repo.check(root, reporter)
@@ -113,43 +120,6 @@ def test_dead_key_count_in_prose(sandbox):
     assert any("prose says 27 dead keys" in f for f in run(sandbox))
 
 
-def test_layout_comment_out_of_date(sandbox):
-    edit_klc(
-        sandbox / KLC_NAME,
-        "// DIGIT ONE, EXCLAMATION MARK",
-        "// DIGIT TWO, EXCLAMATION MARK",
-    )
-    assert any("klc-comment" in f for f in run(sandbox))
-
-
-def test_dead_key_without_a_section(sandbox):
-    edit_klc(sandbox / KLC_NAME, "2032\t00a1", "2032\t00a1@")
-    assert any("has no DEADKEY section" in f for f in run(sandbox))
-
-
-def test_keyname_dead_out_of_sync(sandbox):
-    edit_klc(sandbox / KLC_NAME, '030c\t"COMBINING CARON"', '030c\t"CARON"')
-    assert any("KEYNAME_DEAD for U+030C" in f for f in run(sandbox))
-
-
-def test_description_version_drift(sandbox):
-    edit_klc(
-        sandbox / KLC_NAME,
-        "0409\tUS-International Scientific (1.7.0)",
-        "0409\tUS-International Scientific (1.6.0)",
-    )
-    assert any("klc-version" in f for f in run(sandbox))
-
-
-def test_duplicate_dead_key_base(sandbox):
-    edit_klc(
-        sandbox / KLC_NAME,
-        "006e\t0148\t// n -> ň",
-        "006e\t0148\t// n -> ň\r\n006e\t0148\t// n -> ň",
-    )
-    assert any("maps base U+006E twice" in f for f in run(sandbox))
-
-
 def test_json_caption_disagrees_with_the_layout(sandbox):
     path = sandbox / "assets" / "keyboard-layout.json"
     edit(path, '"Q\\n\\n\u2261\\n\u00f7"', '"Q\\n\\n\u2261\\n\u00d7"')
@@ -179,3 +149,29 @@ def test_missing_final_newline_is_reported(sandbox):
     path = sandbox / "assets" / "keyboard-layout.json"
     path.write_bytes(path.read_bytes().rstrip(b"\n"))
     assert any("does not end with a newline" in f for f in run(sandbox))
+
+
+def test_hand_edited_klc_is_reported_as_stale(sandbox):
+    edit_klc(
+        sandbox / KLC_NAME,
+        "// DIGIT ONE, EXCLAMATION MARK",
+        "// DIGIT TWO, EXCLAMATION MARK",
+    )
+    assert any("generated-stale" in f and KLC_NAME in f for f in run(sandbox))
+
+
+def test_hand_edited_xkb_file_is_reported_as_stale(sandbox):
+    edit(sandbox / "dist/linux/symbols/us_intl_sci", "dead_grave", "dead_acute")
+    assert any("generated-stale" in f for f in run(sandbox))
+
+
+def test_deleted_generated_file_is_reported(sandbox):
+    (sandbox / "dist/linux/us_intl_sci.XCompose").unlink()
+    assert any("generated-missing" in f for f in run(sandbox))
+
+
+def test_changing_the_source_makes_every_target_stale(sandbox):
+    edit(sandbox / LAYOUT_SOURCE, 'altgr = "′"', 'altgr = "U+2033"')
+    findings = run(sandbox)
+    assert any("generated-stale" in f and KLC_NAME in f for f in findings)
+    assert any("generated-stale" in f and "us_intl_sci" in f for f in findings)

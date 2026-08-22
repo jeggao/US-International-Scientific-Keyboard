@@ -1,4 +1,4 @@
-from kbdlint import markdown as md
+from kbdlayout import markdown as md
 
 
 def test_split_cells_unescapes_pipes():

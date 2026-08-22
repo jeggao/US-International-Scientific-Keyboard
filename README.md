@@ -7,6 +7,7 @@ __A very powerful keyboard layout for Windows, tailored for efficient and conven
 
 - [Quick Start Guide](#quick-start-guide)
 - [Update / Uninstallation Guide](#update--uninstallation-guide)
+- [Using the Layout on Linux](#using-the-layout-on-linux)
 - [Must-know Concepts](#must-know-concepts)
 	- [Dead keys](#dead-keys)
 	- [Shift states and AltGr](#shift-states-and-altgr)
@@ -32,7 +33,7 @@ This keyboard layout is easy to install, easy to use, and easy to memorize, whil
 
 > **Note:** This keyboard layout is **not a replacement for proper scientific notation** that can be formatted using rich-text programs like $\LaTeX$, UnicodeMath, or MathML, but rather a method to extend the symbols available in plain text input scenarios, e.g. texting on Discord, using Notepad, or non-technical writing.
 
-This keyboard layout was created using [Microsoft Keyboard Layout Creator 1.4](https://www.microsoft.com/en-us/download/details.aspx?id=102134) (MSKLC 1.4). The layout is based on the common __English (United States) QWERTY keyboard layout__, and some designs are consistent with the __United States-International keyboard layout__. Other ideas were inspired by and improved on the basis of [Michael Goerz's version](https://michaelgoerz.net/notes/the-us-international-scientific-keyboard-layout/index.html) of the "U.S. International - Scientific" keyboard layout for Mac systems. 
+The layout is defined once, in [`layout/us-intl-scientific.toml`](layout/us-intl-scientific.toml), and every file this repository ships is generated from it: the Windows `.klc` that [Microsoft Keyboard Layout Creator 1.4](https://www.microsoft.com/en-us/download/details.aspx?id=102134) (MSKLC 1.4) builds into a `.dll`, and the XKB and Compose files Linux needs. The layout is based on the common __English (United States) QWERTY keyboard layout__, and some designs are consistent with the __United States-International keyboard layout__. Other ideas were inspired by and improved on the basis of [Michael Goerz's version](https://michaelgoerz.net/notes/the-us-international-scientific-keyboard-layout/index.html) of the "U.S. International - Scientific" keyboard layout for Mac systems. 
 
 A detailed comparison chart of this keyboard layout with other layouts can be found in [this section](#comparison-to-other-layouts). A previous version of this layout (v1.5.1) could also be found on the [Keyboard Layout Info website](https://kbdlayout.info/KBDUSS5a/). Special thanks to Mr. Jan Kučera from the Czech Republic for creating the dedicated page and the entire highly useful website! 
 
@@ -66,6 +67,34 @@ To uninstall the keyboard layout, simply revisit the `KBDUSS**` folder, and run 
 > In other words, only a "ghost" placeholder of the layout will remain in the list. In the system files the keyboard layout's `.dll` configuration is deleted, but it is still present in the registry. 
 > 
 > To solve this issue, navigate in the Registry Editor to `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layouts`, and manually delete the registry folder for this layout (usually called `a0000409`). Always back up the registry before making changes, in case of causing serious errors!   
+
+## Using the Layout on Linux
+The same layout is generated for Linux as an [XKB](https://www.x.org/wiki/XKB/) symbols file plus a [Compose](https://en.wikipedia.org/wiki/Compose_key) file, which together give the same four shift states and the same 28 dead keys. Both live in [`dist/linux/`](dist/linux) and are regenerated from the layout source, so they cannot drift away from the Windows build.
+
+To try it out for the current session, without touching anything system-wide:
+
+```sh
+mkdir -p ~/.xkb/symbols
+cp dist/linux/symbols/us_intl_sci ~/.xkb/symbols/
+setxkbmap -I$HOME/.xkb us_intl_sci -print | xkbcomp -I$HOME/.xkb - $DISPLAY
+```
+
+To make the dead keys work, install the Compose file and restart the applications that should pick it up:
+
+```sh
+cp dist/linux/us_intl_sci.XCompose ~/.XCompose
+```
+
+> **Note:** `~/.XCompose` replaces your Compose configuration. The generated file starts with `include "%L"`, so everything your locale already defined still works.
+
+Differences from the Windows build, all of them consequences of how Linux models a keyboard:
+
+- **AltGr only.** On Windows the extra shift states also respond to <kbd>Ctrl</kbd> + <kbd>Alt</kbd>. On Linux only the <kbd>AltGr</kbd> (right <kbd>Alt</kbd>) key switches to level 3.
+- **Dead keys are named.** X11 recognises a fixed set of `dead_*` keysyms. Fourteen of this layout's dead keys are exactly one of them; the other fourteen use their own root character as the keysym instead, which works because nothing else in the layout types those characters. The two exceptions are the <kbd><</kbd> and <kbd>></kbd> dead keys, whose root characters *are* typed normally, so they use their default characters ≤ and ≥ as keysyms — otherwise typing `<=` in a text editor would silently turn into `≤`.
+- **Caps Lock reaches four characters it should not.** X11's four-level key types keep the Caps Lock modifier on the AltGr levels, so with Caps Lock on, <kbd>AltGr</kbd> + <kbd>w</kbd>, <kbd>i</kbd>, <kbd>s</kbd> and <kbd>f</kbd> give Ε, I, SS and Ϝ instead of ϵ, ı, ß and ϝ. Every other character is unaffected, because it has no upper-case form. The generated [symbols file](dist/linux/symbols/us_intl_sci) lists these four in its header.
+- **The numeric keypad is left alone**, because on Linux its decimal separator is a user preference rather than part of a layout.
+
+Everything else — every character on every key, and every dead key composition, including what happens when a dead key is followed by a character it has no mapping for — is the same on both platforms, and the test suite checks that it stays that way.
 
 ## Must-know Concepts
 The US International Scientific keyboard layout utilizes two important concepts to achieve its unparalleled functionality: **dead keys** and the **AltGr shift state**. These concepts, common in European keyboard layouts, are explained below for those unfamiliar with them. 
@@ -565,13 +594,14 @@ For convenience and ease of memory, the 28 dead keys in the US International Sci
 |Other non-alphabetical languages|![-](assets/minus.svg)|![-](assets/minus.svg)|![-](assets/minus.svg)|![-](assets/minus.svg)|
 
 ## Contributing
-Ideas for new characters are welcome — please open an issue. If you would like to change the layout yourself, [CONTRIBUTING.md](CONTRIBUTING.md) explains how the `.klc` file, this documentation and the overview picture are kept in step, and how to run the consistency checks:
+Ideas for new characters are welcome — please open an issue. If you would like to change the layout yourself, edit [`layout/us-intl-scientific.toml`](layout/us-intl-scientific.toml) and regenerate:
 
 ```sh
-python3 tools/validate.py
+python3 tools/generate.py    # rewrite the Windows and Linux files
+python3 tools/validate.py    # check this documentation still matches
 ```
 
-The same checks run automatically on every pull request.
+[CONTRIBUTING.md](CONTRIBUTING.md) explains the file format, how the pieces fit together, and what it would take to add macOS. The same checks run automatically on every pull request.
 
 ## Notes on MSKLC 1.4
 This project is made possible by the software [Microsoft Keyboard Layout Creator](https://www.microsoft.com/en-us/download/details.aspx?id=102134). Sadly, several bugs or limitations exist in this software that had prevented this project from being more powerful and extensive. 
