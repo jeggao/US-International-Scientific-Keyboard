@@ -147,3 +147,47 @@ jobs:
           # ours must not add anything of its own to that list.
           diff <(sort baseline.log) <(sort layout.log)
           echo "xkbcomp is as quiet for this layout as it is for the stock us layout"
+
+  picture:
+    name: Overview picture
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Push the rebuilt picture back to the branch it came from.
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: Install a headless Chromium to rasterise with
+        run: playwright install --with-deps chromium
+      - name: Rebuild the picture from the layout
+        run: python tools/render.py
+
+      # A push can write the result back; a pull request from a fork cannot, so
+      # there it only reports.
+      - name: Commit the rebuilt picture
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- assets/keyboard-layout.png; then
+            echo "the picture is already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/keyboard-layout.png
+          git commit -m "Rebuild the overview picture from the layout"
+          # A push made with GITHUB_TOKEN does not start another workflow run,
+          # so this cannot loop.
+          git push || (git pull --rebase && git push)
+      - name: Report whether the picture is current
+        if: github.event_name != 'push'
+        run: |
+          git checkout -- assets/keyboard-layout.png
+          python tools/render.py --check

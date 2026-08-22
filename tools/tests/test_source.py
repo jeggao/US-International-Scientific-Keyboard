@@ -21,6 +21,9 @@ symbols_file = "test"
 variant = "test"
 description = "Test"
 
+[layout.macos]
+id = -19999
+
 [[key]]
 id = "AD01"
 normal = "q"

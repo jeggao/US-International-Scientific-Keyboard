@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1696" height="496" viewBox="0 0 1696 496" role="img" aria-label="US-International Scientific keyboard layout">
+  <title>US-International Scientific 1.7.0</title>
+  <defs><style>
+    @font-face {
+      font-family: "Keyboard";
+      src: url(data:font/woff2;base64,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) format("woff2");
+    }
+    text { font-family: "Keyboard", "DejaVu Sans", sans-serif; }
+  </style></defs>
+  <g>
+    <rect x="8" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="16" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="27" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">~</text>
+    <text x="27" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">`</text>
+    <text x="79" y="23" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">˜</text>
+    <text x="79" y="75" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">`</text>
+  </g>
+  <g>
+    <rect x="104" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="112" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="123" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">!</text>
+    <text x="123" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">1</text>
+    <text x="175" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">¡</text>
+    <text x="175" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">′</text>
+  </g>
+  <g>
+    <rect x="200" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="208" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="219" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">@</text>
+    <text x="219" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">2</text>
+    <text x="271" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">√</text>
+    <text x="271" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">″</text>
+  </g>
+  <g>
+    <rect x="296" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="304" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="315" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">#</text>
+    <text x="315" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">3</text>
+    <text x="367" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∛</text>
+    <text x="367" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">‴</text>
+  </g>
+  <g>
+    <rect x="392" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="400" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="411" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">$</text>
+    <text x="411" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">4</text>
+    <text x="463" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">£</text>
+    <text x="463" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">¤</text>
+  </g>
+  <g>
+    <rect x="488" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="496" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="507" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">%</text>
+    <text x="507" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">5</text>
+    <text x="559" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">‰</text>
+    <text x="559" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">€</text>
+  </g>
+  <g>
+    <rect x="584" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="592" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="603" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">^</text>
+    <text x="603" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">6</text>
+    <text x="655" y="23" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">ˆ</text>
+    <text x="655" y="75" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">ˇ</text>
+  </g>
+  <g>
+    <rect x="680" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="688" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="699" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">&amp;</text>
+    <text x="699" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">7</text>
+    <text x="751" y="23" font-size="16" fill="#9b00ff" text-anchor="end" dominant-baseline="hanging">¦ zwj</text>
+    <text x="751" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">◌⃗</text>
+  </g>
+  <g>
+    <rect x="776" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="784" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="795" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">*</text>
+    <text x="795" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">8</text>
+    <text x="847" y="23" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">˙</text>
+    <text x="847" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∞</text>
+  </g>
+  <g>
+    <rect x="872" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="880" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="891" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">(</text>
+    <text x="891" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">9</text>
+    <text x="943" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⟨</text>
+    <text x="943" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∝</text>
+  </g>
+  <g>
+    <rect x="968" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="976" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="987" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">)</text>
+    <text x="987" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">0</text>
+    <text x="1039" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⟩</text>
+    <text x="1039" y="75" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">°</text>
+  </g>
+  <g>
+    <rect x="1064" y="8" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1072" y="12" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1083" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">_</text>
+    <text x="1083" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">-</text>
+    <text x="1135" y="23" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">—</text>
+    <text x="1135" y="75" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">–</text>
+  </g>
+  <g>
+    <rect x="1160" y="8" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="1168" y="12" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="1179" y="23" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">+</text>
+    <text x="1179" y="75" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">=</text>
+    <text x="1231" y="23" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">º</text>
+    <text x="1231" y="75" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">ª</text>
+  </g>
+  <g>
+    <rect x="1256" y="8" width="186" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1264" y="12" width="170" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1275" y="23" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Backspace</text>
+  </g>
+  <g>
+    <rect x="1496" y="8" width="186" height="90" rx="10" fill="#ffffff"/>
+    <rect x="1504" y="12" width="170" height="74" rx="7" fill="#ffffff"/>
+    <text x="1515" y="23" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Shift</text>
+    <text x="1663" y="23" font-size="16" fill="#000000" text-anchor="end" dominant-baseline="hanging">AltGr+Shift</text>
+    <text x="1515" y="75" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="auto">Normal</text>
+    <text x="1663" y="75" font-size="16" fill="#000000" text-anchor="end" dominant-baseline="auto">AltGr</text>
+  </g>
+  <g>
+    <rect x="8" y="104" width="138" height="90" rx="10" fill="#cccccc"/>
+    <rect x="16" y="108" width="122" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="27" y="119" font-size="20" fill="#000000" text-anchor="start" dominant-baseline="hanging">Tab</text>
+  </g>
+  <g>
+    <rect x="152" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="160" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="171" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">Q</text>
+    <text x="171" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">q</text>
+    <text x="223" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">≡</text>
+    <text x="223" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">÷</text>
+  </g>
+  <g>
+    <rect x="248" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="256" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="267" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">W</text>
+    <text x="267" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">w</text>
+    <text x="319" y="119" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">Ʃ</text>
+    <text x="319" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">ϵ</text>
+  </g>
+  <g>
+    <rect x="344" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="352" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="363" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">E</text>
+    <text x="363" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">e</text>
+    <text x="415" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∃</text>
+    <text x="415" y="171" font-size="20" fill="#9b00ff" text-anchor="end" dominant-baseline="auto">϶ ∈</text>
+  </g>
+  <g>
+    <rect x="440" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="448" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="459" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">R</text>
+    <text x="459" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">r</text>
+    <text x="511" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">™</text>
+    <text x="511" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">®</text>
+  </g>
+  <g>
+    <rect x="536" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="544" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="555" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">T</text>
+    <text x="555" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">t</text>
+    <text x="607" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">‡</text>
+    <text x="607" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">†</text>
+  </g>
+  <g>
+    <rect x="632" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="640" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="651" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">Y</text>
+    <text x="651" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">y</text>
+    <text x="703" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">¥</text>
+    <text x="703" y="171" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">±</text>
+  </g>
+  <g>
+    <rect x="728" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="736" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="747" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">U</text>
+    <text x="747" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">u</text>
+    <text x="799" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∩</text>
+    <text x="799" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∪</text>
+  </g>
+  <g>
+    <rect x="824" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="832" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="843" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">I</text>
+    <text x="843" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">i</text>
+    <text x="895" y="119" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">ʃ</text>
+    <text x="895" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">ı</text>
+  </g>
+  <g>
+    <rect x="920" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="928" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="939" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">O</text>
+    <text x="939" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">o</text>
+    <text x="991" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∅</text>
+    <text x="991" y="171" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">ϕ</text>
+  </g>
+  <g>
+    <rect x="1016" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1024" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1035" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">P</text>
+    <text x="1035" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">p</text>
+    <text x="1087" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">¶</text>
+    <text x="1087" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">℗</text>
+  </g>
+  <g>
+    <rect x="1112" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1120" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1131" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">{</text>
+    <text x="1131" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">[</text>
+    <text x="1183" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">«</text>
+    <text x="1183" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">‹</text>
+  </g>
+  <g>
+    <rect x="1208" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1216" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1227" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">}</text>
+    <text x="1227" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">]</text>
+    <text x="1279" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">»</text>
+    <text x="1279" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">›</text>
+  </g>
+  <g>
+    <rect x="1304" y="104" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1312" y="108" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1323" y="119" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">|</text>
+    <text x="1323" y="171" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">\</text>
+    <text x="1375" y="119" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">↑</text>
+    <text x="1375" y="171" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">↓</text>
+  </g>
+  <g>
+    <rect x="1448" y="104" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="1456" y="108" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="1467" y="119" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Dead</text>
+  </g>
+  <g>
+    <rect x="1544" y="104" width="90" height="90" rx="10" fill="#98b2d1"/>
+    <rect x="1552" y="108" width="74" height="74" rx="7" fill="#c1dbfb"/>
+    <text x="1563" y="119" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Control</text>
+  </g>
+  <g>
+    <rect x="8" y="200" width="162" height="90" rx="10" fill="#cccccc"/>
+    <rect x="16" y="204" width="146" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="27" y="215" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Caps Lock</text>
+  </g>
+  <g>
+    <rect x="176" y="200" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="184" y="204" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="195" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">A</text>
+    <text x="195" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">a</text>
+    <text x="247" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∀</text>
+    <text x="247" y="267" font-size="20" fill="#9b00ff" text-anchor="end" dominant-baseline="auto">ɐ ⊂</text>
+  </g>
+  <g>
+    <rect x="272" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="280" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="291" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">S</text>
+    <text x="291" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">s</text>
+    <text x="343" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">§</text>
+    <text x="343" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">ß</text>
+  </g>
+  <g>
+    <rect x="368" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="376" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="387" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">D</text>
+    <text x="387" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">d</text>
+    <text x="439" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∆</text>
+    <text x="439" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∂</text>
+  </g>
+  <g>
+    <rect x="464" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="472" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="483" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">F</text>
+    <text x="483" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">f</text>
+    <text x="535" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">Ϝ</text>
+    <text x="535" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">ϝ</text>
+  </g>
+  <g>
+    <rect x="560" y="200" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="568" y="204" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="579" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">G</text>
+    <text x="579" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">g</text>
+    <text x="631" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∇</text>
+    <text x="631" y="267" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">γ</text>
+  </g>
+  <g>
+    <rect x="656" y="200" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="664" y="204" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="675" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">H</text>
+    <text x="675" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">h</text>
+    <text x="727" y="215" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">ℌ</text>
+    <text x="727" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">ℏ</text>
+  </g>
+  <g>
+    <rect x="752" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="760" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="771" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">J</text>
+    <text x="771" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">j</text>
+    <text x="823" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⇐</text>
+    <text x="823" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">←</text>
+  </g>
+  <g>
+    <rect x="848" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="856" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="867" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">K</text>
+    <text x="867" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">k</text>
+    <text x="919" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⇔</text>
+    <text x="919" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">↔</text>
+  </g>
+  <g>
+    <rect x="944" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="952" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="963" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">L</text>
+    <text x="963" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">l</text>
+    <text x="1015" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⇒</text>
+    <text x="1015" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">→</text>
+  </g>
+  <g>
+    <rect x="1040" y="200" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1048" y="204" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1059" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">:</text>
+    <text x="1059" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">;</text>
+    <text x="1111" y="215" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∵</text>
+    <text x="1111" y="267" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∴</text>
+  </g>
+  <g>
+    <rect x="1136" y="200" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="1144" y="204" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="1155" y="215" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">"</text>
+    <text x="1155" y="267" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">'</text>
+    <text x="1207" y="215" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">¨</text>
+    <text x="1207" y="267" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">´</text>
+  </g>
+  <g>
+    <rect x="1232" y="200" width="210" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1240" y="204" width="194" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1251" y="215" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Enter</text>
+  </g>
+  <g>
+    <rect x="8" y="296" width="210" height="90" rx="10" fill="#98b2d1"/>
+    <rect x="16" y="300" width="194" height="74" rx="7" fill="#c1dbfb"/>
+    <text x="27" y="311" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Shift</text>
+  </g>
+  <g>
+    <rect x="224" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="232" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="243" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">Z</text>
+    <text x="243" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">z</text>
+    <text x="295" y="311" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">ℤ</text>
+    <text x="295" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">≠</text>
+  </g>
+  <g>
+    <rect x="320" y="296" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="328" y="300" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="339" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">X</text>
+    <text x="339" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">x</text>
+    <text x="391" y="311" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">≈</text>
+    <text x="391" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">×</text>
+  </g>
+  <g>
+    <rect x="416" y="296" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="424" y="300" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="435" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">C</text>
+    <text x="435" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">c</text>
+    <text x="487" y="311" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">¢</text>
+    <text x="487" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">©</text>
+  </g>
+  <g>
+    <rect x="512" y="296" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="520" y="300" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="531" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">V</text>
+    <text x="531" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">v</text>
+    <text x="583" y="311" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">∧</text>
+    <text x="583" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">∨</text>
+  </g>
+  <g>
+    <rect x="608" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="616" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="627" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">B</text>
+    <text x="627" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">b</text>
+    <text x="679" y="311" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">˘</text>
+    <text x="679" y="363" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">ˉ</text>
+  </g>
+  <g>
+    <rect x="704" y="296" width="90" height="90" rx="10" fill="#cccccc"/>
+    <rect x="712" y="300" width="74" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="723" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">N</text>
+    <text x="723" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">n</text>
+    <text x="775" y="311" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">⊻</text>
+    <text x="775" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">¬</text>
+  </g>
+  <g>
+    <rect x="800" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="808" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="819" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">M</text>
+    <text x="819" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">m</text>
+    <text x="871" y="311" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">ℳ</text>
+    <text x="871" y="363" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="auto">↦</text>
+  </g>
+  <g>
+    <rect x="896" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="904" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="915" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">&lt;</text>
+    <text x="915" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">,</text>
+    <text x="967" y="311" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">≤</text>
+    <text x="967" y="363" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">¸</text>
+  </g>
+  <g>
+    <rect x="992" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="1000" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="1011" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">&gt;</text>
+    <text x="1011" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">.</text>
+    <text x="1063" y="311" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="hanging">≥</text>
+    <text x="1063" y="363" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">·</text>
+  </g>
+  <g>
+    <rect x="1088" y="296" width="90" height="90" rx="10" fill="#e5abab"/>
+    <rect x="1096" y="300" width="74" height="74" rx="7" fill="#ffd6d6"/>
+    <text x="1107" y="311" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="hanging">?</text>
+    <text x="1107" y="363" font-size="30" fill="#000000" text-anchor="start" dominant-baseline="auto">/</text>
+    <text x="1159" y="311" font-size="30" fill="#000000" text-anchor="end" dominant-baseline="hanging">¿</text>
+    <text x="1159" y="363" font-size="30" fill="#ff0000" text-anchor="end" dominant-baseline="auto">⁄</text>
+  </g>
+  <g>
+    <rect x="1184" y="296" width="258" height="90" rx="10" fill="#98b2d1"/>
+    <rect x="1192" y="300" width="242" height="74" rx="7" fill="#c1dbfb"/>
+    <text x="1203" y="311" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Shift</text>
+  </g>
+  <g>
+    <rect x="8" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="16" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="27" y="407" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Ctrl</text>
+  </g>
+  <g>
+    <rect x="128" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="136" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="147" y="407" font-size="20" fill="#000000" text-anchor="start" dominant-baseline="hanging">Win</text>
+  </g>
+  <g>
+    <rect x="248" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="256" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="267" y="407" font-size="20" fill="#000000" text-anchor="start" dominant-baseline="hanging">Alt</text>
+  </g>
+  <g>
+    <rect x="368" y="392" width="594" height="90" rx="10" fill="#cccccc"/>
+    <rect x="376" y="396" width="578" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="387" y="459" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="auto">Space</text>
+    <text x="943" y="407" font-size="16" fill="#000000" text-anchor="end" dominant-baseline="hanging">Zero Width Space</text>
+    <text x="943" y="459" font-size="16" fill="#000000" text-anchor="end" dominant-baseline="auto">No-Break Space</text>
+  </g>
+  <g>
+    <rect x="968" y="392" width="114" height="90" rx="10" fill="#98b2d1"/>
+    <rect x="976" y="396" width="98" height="74" rx="7" fill="#c1dbfb"/>
+    <text x="987" y="407" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">AltGr</text>
+  </g>
+  <g>
+    <rect x="1088" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1096" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1107" y="407" font-size="20" fill="#000000" text-anchor="start" dominant-baseline="hanging">Win</text>
+  </g>
+  <g>
+    <rect x="1208" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1216" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1227" y="407" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Menu</text>
+  </g>
+  <g>
+    <rect x="1328" y="392" width="114" height="90" rx="10" fill="#cccccc"/>
+    <rect x="1336" y="396" width="98" height="74" rx="7" fill="#fcfcfc"/>
+    <text x="1347" y="407" font-size="16" fill="#000000" text-anchor="start" dominant-baseline="hanging">Ctrl</text>
+  </g>
+</svg>

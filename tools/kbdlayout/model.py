@@ -163,6 +163,15 @@ class LinuxTarget:
 
 
 @dataclass
+class MacosTarget:
+    #: macOS identifies a layout by a signed 16-bit number; third-party layouts
+    #: use a negative one. Keep it fixed across releases, or macOS treats the
+    #: layout as a brand new input source.
+    id: int
+    group: int = 126
+
+
+@dataclass
 class Layout:
     name: str
     version: str
@@ -170,6 +179,7 @@ class Layout:
     company: str
     windows: WindowsTarget
     linux: LinuxTarget
+    macos: MacosTarget
     keys: list[Key] = field(default_factory=list)
     dead_keys: list[DeadKey] = field(default_factory=list)
 

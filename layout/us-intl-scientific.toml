@@ -26,6 +26,10 @@ symbols_file = "us_intl_sci"
 variant = "sci"
 description = "English (US, international scientific)"
 
+[layout.macos]
+id = -19001
+group = 126
+
 
 # ---------------------------------------------------------------------------
 # Keys, named by their ISO/IEC 9995 position, in reading order.

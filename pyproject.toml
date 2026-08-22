@@ -22,6 +22,6 @@ ignore = [
 ]
 
 [tool.codespell]
-skip = "./.git,./US International Scientific.klc,./assets/keyboard-layout.json,./dist,./layout"
+skip = "./.git,./US International Scientific.klc,./assets,./dist,./layout,./tools/kbdlayout/generators/_picture_font.py"
 # "Shft" is MSKLC's own abbreviation in the SHIFTSTATE comments of a .klc file.
 ignore-words-list = "shft"

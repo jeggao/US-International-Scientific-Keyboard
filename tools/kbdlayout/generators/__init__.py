@@ -14,12 +14,14 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from ..model import Layout
-from . import linux_xkb, windows_klc
+from . import linux_xkb, macos_keylayout, picture, windows_klc
 
 #: Every supported target, in the order ``tools/generate.py`` writes them.
 GENERATORS: dict[str, Callable[[Layout], dict[str, str | bytes]]] = {
     "windows": windows_klc.generate,
     "linux": linux_xkb.generate,
+    "macos": macos_keylayout.generate,
+    "picture": picture.generate,
 }
 
-__all__ = ["GENERATORS", "linux_xkb", "windows_klc"]
+__all__ = ["GENERATORS", "linux_xkb", "macos_keylayout", "picture", "windows_klc"]

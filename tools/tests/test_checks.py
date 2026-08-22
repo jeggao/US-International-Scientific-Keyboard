@@ -120,24 +120,6 @@ def test_dead_key_count_in_prose(sandbox):
     assert any("prose says 27 dead keys" in f for f in run(sandbox))
 
 
-def test_json_caption_disagrees_with_the_layout(sandbox):
-    path = sandbox / "assets" / "keyboard-layout.json"
-    edit(path, '"Q\\n\\n\u2261\\n\u00f7"', '"Q\\n\\n\u2261\\n\u00d7"')
-    assert any("assets-json" in f for f in run(sandbox))
-
-
-def test_json_palette_typo(sandbox):
-    path = sandbox / "assets" / "keyboard-layout.json"
-    edit(path, '"#e5abab"', '"#e4abab"')
-    assert any("assets-palette" in f for f in run(sandbox))
-
-
-def test_json_must_parse(sandbox):
-    path = sandbox / "assets" / "keyboard-layout.json"
-    path.write_text("[", encoding="utf-8")
-    assert any("invalid JSON" in f for f in run(sandbox))
-
-
 def test_json_is_valid_and_newline_terminated(repo_root):
     """The file is hand-edited, so keep it in a stable, diff-friendly shape."""
     text = (repo_root / "assets" / "keyboard-layout.json").read_text(encoding="utf-8")
@@ -175,3 +157,21 @@ def test_changing_the_source_makes_every_target_stale(sandbox):
     findings = run(sandbox)
     assert any("generated-stale" in f and KLC_NAME in f for f in findings)
     assert any("generated-stale" in f and "us_intl_sci" in f for f in findings)
+
+
+def test_a_hand_edited_picture_source_is_reported_as_stale(sandbox):
+    edit(sandbox / "assets/keyboard-layout.json", "#e5abab", "#e4abab")
+    assert any("generated-stale" in f for f in run(sandbox))
+
+
+def test_a_corrupted_picture_source_is_reported_as_stale(sandbox):
+    (sandbox / "assets/keyboard-layout.json").write_text("[", encoding="utf-8")
+    assert any("generated-stale" in f for f in run(sandbox))
+
+
+def test_a_picture_of_the_wrong_size_is_reported(sandbox):
+    from PIL import Image
+
+    path = sandbox / "assets/keyboard-layout.png"
+    Image.open(path).crop((0, 0, 100, 100)).save(path)
+    assert any("assets-picture" in f for f in run(sandbox))

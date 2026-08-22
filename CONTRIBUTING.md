@@ -16,9 +16,11 @@ either comes out of it or is checked against it:
 | `US International Scientific.klc` | **Generated.** MSKLC 1.4 source, built into the Windows `.dll` | `tools/generate.py` |
 | `dist/linux/symbols/us_intl_sci` | **Generated.** XKB symbols file | `tools/generate.py` |
 | `dist/linux/us_intl_sci.XCompose` | **Generated.** Compose sequences for the dead keys | `tools/generate.py` |
+| `dist/macos/US-International Scientific.keylayout` | **Generated.** The macOS layout | `tools/generate.py` |
+| `assets/keyboard-layout.svg` | **Generated.** The overview picture, self-contained | `tools/generate.py` |
+| `assets/keyboard-layout.json` | **Generated.** The same picture as [keyboard-layout-editor.com](http://www.keyboard-layout-editor.com/) source | `tools/generate.py` |
+| `assets/keyboard-layout.png` | **Built** from the SVG by a headless browser | `tools/render.py`, and CI |
 | `README.md` | Every key mapping and every dead key, with justifications | `tools/validate.py` |
-| `assets/keyboard-layout.json` | [keyboard-layout-editor.com](http://www.keyboard-layout-editor.com/) source for the overview picture | `tools/validate.py` |
-| `assets/keyboard-layout.png` | The overview picture itself, exported from that editor | by hand — see below |
 | `assets/sandbox.ipynb` | A scratch pad for looking at the layout's characters | executed in CI |
 
 Nothing generated should ever be edited by hand: `tools/generate.py --check`
@@ -28,14 +30,18 @@ fails the build if a generated file does not match what the source produces.
 
 ```sh
 $EDITOR layout/us-intl-scientific.toml
-python3 tools/generate.py     # rewrite the Windows and Linux files
+python3 tools/generate.py     # rewrite every platform file and the picture source
+python3 tools/render.py       # redraw assets/keyboard-layout.png
 python3 tools/validate.py     # check the documentation still matches
 ```
 
-Then update the affected table in `README.md`, and — if a key's caption changed —
-`assets/keyboard-layout.json` and the picture exported from it. When the layout
-itself changes, bump `version` in the source; it is what users see on the Windows
-taskbar, and it appears in the `.klc` in two places that have to agree.
+Then update the affected table in `README.md`. When the layout itself changes,
+bump `version` in the source; it is what users see on the Windows taskbar, and it
+appears in the `.klc` in two places that have to agree.
+
+You do not have to run `tools/render.py` yourself — CI rebuilds the picture on
+every push and commits it back if it changed. It is only there so you can see
+the result before pushing.
 
 `tools/validate.py` reports, with file and line number, anything that has
 drifted: a `U+XXXX`, character name or sample character in a README table that
@@ -105,6 +111,28 @@ against the stock `us` layout; they skip themselves when it is not installed
 (`apt install x11-xkb-utils xkb-data`). `.github/workflows/ci.yml` runs
 everything on every push and pull request.
 
+## The picture
+
+`assets/keyboard-layout.png` is what README.md shows, and it is built in two
+steps. `tools/generate.py` draws the layout into `assets/keyboard-layout.svg`,
+which is plain text and therefore diffable and checked for drift like every
+other generated file; `tools/render.py` then rasterises that SVG with a headless
+Chromium.
+
+The SVG carries its own font — a subset of DejaVu Sans covering exactly the
+characters the picture draws, embedded as a data URI — so it renders the same
+whatever fonts the machine happens to have, and the PNG comes out identical on
+any machine with the same browser. If you add a character the subset does not
+cover, `pytest` says so; regenerate it with `python3 tools/subset_font.py`,
+which needs `fonttools`, `brotli` and DejaVu Sans installed.
+
+Which colour a keycap and its labels take is decided in
+`tools/kbdlayout/generators/picture.py` and follows README.md's legend. The one
+judgement in there is when to draw a dead key's root character next to its
+default: only when the root is something the dead key can actually produce and
+is not a diacritic whose spacing form already stands for it, which is why <kbd>&</kbd>,
+<kbd>E</kbd> and <kbd>A</kbd> show a pair and <kbd>H</kbd>, <kbd>Z</kbd> and <kbd>M</kbd> do not.
+
 ## Editing the `.klc` by hand
 
 Don't — it is generated. If you need to import someone else's `.klc`,
@@ -127,32 +155,39 @@ in the layout file is the platform's own vocabulary — Windows scan codes and
 virtual key names, X11 keysyms — because that is a property of keyboards, not of
 this layout.
 
-**macOS** is the obvious next one. A `.keylayout` is a single XML file, and the
-model fits it well: every output is one BMP code point, every dead key base is
-printable ASCII typeable at the unmodified or Shift level, every dead key has a
-default character, and no dead key chains into another. The mapping is
-`<keyMapSet>` for the four shift states, one `<action>` per dead key base, one
-`<when state=…>` per composition and a `<terminators>` entry per dead key. Three
-things need a Mac to settle, and none of them can be answered from this
-repository:
+**macOS** is implemented, in `generators/macos_keylayout.py`, but has never been
+loaded by macOS. What the tests establish is that the file is well formed, that
+every key and every level agrees with the layout, and that all 2,660 dead key
+results match the Linux Compose file character for character. What they cannot
+establish is that macOS accepts the grammar at all.
 
-- **The fallback rule.** What macOS does when a dead key is followed by a base
-  it has no `<when>` for decides whether the terminator should hold each dead
-  key's default character or its root character. Windows and the generated Linux
-  files both emit the root character followed by the base; matching that is the
-  goal.
-- **The virtual key codes.** The graphic keys can be derived from
-  `/usr/share/X11/xkb/keycodes/macintosh`, but the arrow keys there contradict
-  the values Apple documents, and Apple ISO keyboards are a known source of
-  transposition between the two keys either side of the alphabetic block.
-- **The non-graphic keys.** A `.keylayout` describes the whole keyboard, and a
-  key missing from a `keyMap` produces nothing — so Return, Tab, Escape, the
-  function keys and the keypad all have to be included even though this layout
-  does not change them. Lift them from a layout shipped with macOS rather than
-  guessing.
+Two decisions in there are worth knowing about, because both work around
+behaviour Apple's format leaves to the implementation:
 
-Until someone can test on a Mac, this is deliberately not implemented: an
-untested generator that produces a plausible file is worse than no generator.
+- **Every dead key gets an explicit entry for every printable ASCII base**, not
+  only the ones it composes, so an unmapped base produces the root character
+  followed by the base character — what Windows does, and what the generated
+  Compose file does on Linux. That makes the behaviour independent of how macOS
+  treats a missing `when`. `terminators` then holds each dead key's *root*, for
+  the case where a dead key is abandoned by a key outside that range.
+- **`anyControl?` is on the Option key maps**, because README.md tells users the
+  AltGr states are reachable by holding Control and Alt together, and without it
+  Control+Option would fall through to the plain characters.
+
+Three things still want checking on a real Mac:
+
+- The **virtual key codes for the keys this layout does not change** — Return,
+  Tab, Escape, the arrows, the function keys, the keypad. A `.keylayout`
+  describes the whole keyboard, and a key missing from a `keyMap` produces
+  nothing, so they have to be there. The graphic keys are derived from
+  `/usr/share/X11/xkb/keycodes/macintosh` and all 50 agree with Apple's
+  published constants; the rest are the conventional values.
+- The **arrow keys specifically**. That X11 table puts them at 59–62 and the
+  right-hand modifiers at 123–126, while Apple's constants have the arrows at
+  123–126. The generator follows Apple. The modifiers never appear in a `keyMap`
+  either way, so only the arrows are at risk.
+- Whether the file needs a **bundle** rather than a loose `.keylayout` to carry
+  an icon, and whether macOS caches layouts across a reinstall.
 
 ## Showing a combining mark
 

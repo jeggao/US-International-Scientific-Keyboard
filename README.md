@@ -8,6 +8,7 @@ __A very powerful keyboard layout for Windows, tailored for efficient and conven
 - [Quick Start Guide](#quick-start-guide)
 - [Update / Uninstallation Guide](#update--uninstallation-guide)
 - [Using the Layout on Linux](#using-the-layout-on-linux)
+- [Using the Layout on macOS](#using-the-layout-on-macos)
 - [Must-know Concepts](#must-know-concepts)
 	- [Dead keys](#dead-keys)
 	- [Shift states and AltGr](#shift-states-and-altgr)
@@ -33,7 +34,7 @@ This keyboard layout is easy to install, easy to use, and easy to memorize, whil
 
 > **Note:** This keyboard layout is **not a replacement for proper scientific notation** that can be formatted using rich-text programs like $\LaTeX$, UnicodeMath, or MathML, but rather a method to extend the symbols available in plain text input scenarios, e.g. texting on Discord, using Notepad, or non-technical writing.
 
-The layout is defined once, in [`layout/us-intl-scientific.toml`](layout/us-intl-scientific.toml), and every file this repository ships is generated from it: the Windows `.klc` that [Microsoft Keyboard Layout Creator 1.4](https://www.microsoft.com/en-us/download/details.aspx?id=102134) (MSKLC 1.4) builds into a `.dll`, and the XKB and Compose files Linux needs. The layout is based on the common __English (United States) QWERTY keyboard layout__, and some designs are consistent with the __United States-International keyboard layout__. Other ideas were inspired by and improved on the basis of [Michael Goerz's version](https://michaelgoerz.net/notes/the-us-international-scientific-keyboard-layout/index.html) of the "U.S. International - Scientific" keyboard layout for Mac systems. 
+The layout is defined once, in [`layout/us-intl-scientific.toml`](layout/us-intl-scientific.toml), and every file this repository ships is generated from it: the Windows `.klc` that [Microsoft Keyboard Layout Creator 1.4](https://www.microsoft.com/en-us/download/details.aspx?id=102134) (MSKLC 1.4) builds into a `.dll`, the XKB and Compose files Linux needs, the macOS `.keylayout`, and the picture above. The layout is based on the common __English (United States) QWERTY keyboard layout__, and some designs are consistent with the __United States-International keyboard layout__. Other ideas were inspired by and improved on the basis of [Michael Goerz's version](https://michaelgoerz.net/notes/the-us-international-scientific-keyboard-layout/index.html) of the "U.S. International - Scientific" keyboard layout for Mac systems. 
 
 A detailed comparison chart of this keyboard layout with other layouts can be found in [this section](#comparison-to-other-layouts). A previous version of this layout (v1.5.1) could also be found on the [Keyboard Layout Info website](https://kbdlayout.info/KBDUSS5a/). Special thanks to Mr. Jan Kučera from the Czech Republic for creating the dedicated page and the entire highly useful website! 
 
@@ -96,6 +97,20 @@ Differences from the Windows build, all of them consequences of how Linux models
 
 Everything else — every character on every key, and every dead key composition, including what happens when a dead key is followed by a character it has no mapping for — is the same on both platforms, and the test suite checks that it stays that way.
 
+## Using the Layout on macOS
+macOS reads a layout from a single `.keylayout` file, generated to [`dist/macos/`](dist/macos) from the same source as the other two platforms:
+
+```sh
+mkdir -p ~/Library/Keyboard\ Layouts
+cp "dist/macos/US-International Scientific.keylayout" ~/Library/Keyboard\ Layouts/
+```
+
+Log out and back in, then add it under `System Settings > Keyboard > Input Sources > Edit > +`, in the *Others* category.
+
+<kbd>AltGr</kbd> is <kbd>Option</kbd> here, and <kbd>Option</kbd> + <kbd>Shift</kbd> for the fourth shift state; <kbd>Control</kbd> + <kbd>Option</kbd> works too, as it does on Windows. Every character and every dead key composition is the same as on the other platforms, including what a dead key does when it is followed by a character it has no mapping for.
+
+> **Note:** The macOS build has not been tried on a Mac. Its structure and every character in it are checked against the layout by the test suite, but the file has never been loaded by macOS itself. The part most likely to need correcting is the block of keys this layout does not change — <kbd>Return</kbd>, <kbd>Tab</kbd>, the arrows, the function keys — which a `.keylayout` has to describe anyway. If something misbehaves, please open an issue; [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-platform) says which parts are unverified and why.
+
 ## Must-know Concepts
 The US International Scientific keyboard layout utilizes two important concepts to achieve its unparalleled functionality: **dead keys** and the **AltGr shift state**. These concepts, common in European keyboard layouts, are explained below for those unfamiliar with them. 
 
@@ -116,7 +131,7 @@ Shift states with only <kbd>Alt</kbd> or <kbd>Ctrl</kbd> are mostly unused in ke
 In the US International Scientific keyboard layout, the key mappings in the normal shift states are identical to those in the common English (United States) QWERTY keyboard layout. Thus, without <kbd>AltGr</kbd>, it is just a normal layout; this feature is intended to make the transition to this layout extremely easy. All extra functionalities are carefully designed into the AltGr shift states, along with usage of dead keys.  
 
 ## Overview of Key Mappings
-Below is a figure of the US International Scientific keyboard layout, made by [this tool](http://www.keyboard-layout-editor.com/#/) (also [on GitHub](https://github.com/ijprest/keyboard-layout-editor)). This figure may be greatly helpful as a reference to the functionalities of this keyboard layout. 
+Below is a figure of the US International Scientific keyboard layout. It is drawn from the layout source by `python3 tools/render.py`, and rebuilt automatically whenever the layout changes, so it cannot fall out of step with the keys it describes. [`assets/keyboard-layout.json`](assets/keyboard-layout.json) is the same picture in [keyboard-layout-editor](http://www.keyboard-layout-editor.com/#/) form (also [on GitHub](https://github.com/ijprest/keyboard-layout-editor)), for anyone who wants to open it there. This figure may be greatly helpful as a reference to the functionalities of this keyboard layout. 
 
 **Legend**
 
@@ -597,7 +612,8 @@ For convenience and ease of memory, the 28 dead keys in the US International Sci
 Ideas for new characters are welcome — please open an issue. If you would like to change the layout yourself, edit [`layout/us-intl-scientific.toml`](layout/us-intl-scientific.toml) and regenerate:
 
 ```sh
-python3 tools/generate.py    # rewrite the Windows and Linux files
+python3 tools/generate.py    # rewrite the Windows, Linux and macOS files
+python3 tools/render.py      # redraw the picture above
 python3 tools/validate.py    # check this documentation still matches
 ```
 

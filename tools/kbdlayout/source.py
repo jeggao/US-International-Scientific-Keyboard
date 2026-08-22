@@ -25,6 +25,7 @@ from .model import (
     Layout,
     LayoutError,
     LinuxTarget,
+    MacosTarget,
     Output,
     WindowsTarget,
     unicode_name,
@@ -88,6 +89,7 @@ def _build(data: dict[str, Any], origin: str) -> Layout:
 
     windows = WindowsTarget(**meta["windows"])
     linux = LinuxTarget(**meta["linux"])
+    macos = MacosTarget(**meta["macos"])
 
     keys: list[Key] = []
     for index, entry in enumerate(data.get("key", [])):
@@ -136,6 +138,7 @@ def _build(data: dict[str, Any], origin: str) -> Layout:
         company=meta["company"],
         windows=windows,
         linux=linux,
+        macos=macos,
         keys=keys,
         dead_keys=dead_keys,
     )
@@ -182,6 +185,10 @@ def dumps(layout: Layout) -> str:
     add(f"symbols_file = {_toml_string(layout.linux.symbols_file)}")
     add(f"variant = {_toml_string(layout.linux.variant)}")
     add(f"description = {_toml_string(layout.linux.description)}")
+    add("")
+    add("[layout.macos]")
+    add(f"id = {layout.macos.id}")
+    add(f"group = {layout.macos.group}")
     add("")
     add("")
     add("# ---------------------------------------------------------------------------")

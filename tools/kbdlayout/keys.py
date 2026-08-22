@@ -16,6 +16,65 @@ from dataclasses import dataclass
 EVDEV_OFFSET = 8
 
 
+#: Apple's virtual key codes for the keys this layout defines, derived from
+#: the "old" section of /usr/share/X11/xkb/keycodes/macintosh minus the same
+#: evdev offset. All 50 agree with Apple's published kVK_ANSI_* constants.
+#: The non-graphic keys a .keylayout must also carry live in the macOS
+#: generator, because only that platform needs them.
+MACOS_KEY_CODES: dict[str, int] = {
+    "TLDE": 50,
+    "AE01": 18,
+    "AE02": 19,
+    "AE03": 20,
+    "AE04": 21,
+    "AE05": 23,
+    "AE06": 22,
+    "AE07": 26,
+    "AE08": 28,
+    "AE09": 25,
+    "AE10": 29,
+    "AE11": 27,
+    "AE12": 24,
+    "AD01": 12,
+    "AD02": 13,
+    "AD03": 14,
+    "AD04": 15,
+    "AD05": 17,
+    "AD06": 16,
+    "AD07": 32,
+    "AD08": 34,
+    "AD09": 31,
+    "AD10": 35,
+    "AD11": 33,
+    "AD12": 30,
+    "AC01": 0,
+    "AC02": 1,
+    "AC03": 2,
+    "AC04": 3,
+    "AC05": 5,
+    "AC06": 4,
+    "AC07": 38,
+    "AC08": 40,
+    "AC09": 37,
+    "AC10": 41,
+    "AC11": 39,
+    "BKSL": 42,
+    "AB01": 6,
+    "AB02": 7,
+    "AB03": 8,
+    "AB04": 9,
+    "AB05": 11,
+    "AB06": 45,
+    "AB07": 46,
+    "AB08": 43,
+    "AB09": 47,
+    "AB10": 44,
+    "SPCE": 49,
+    "KPDL": 65,
+    "LSGT": 10,
+}
+
+
 @dataclass(frozen=True)
 class KeyPosition:
     """One key position, with the name each platform gives it."""
@@ -31,6 +90,10 @@ class KeyPosition:
     @property
     def x11_keycode(self) -> int:
         return self.scan_code + EVDEV_OFFSET
+
+    @property
+    def macos_key_code(self) -> int:
+        return MACOS_KEY_CODES[self.id]
 
 
 def _row(prefix: str, start: int, entries: list[tuple[str, str]]) -> list[KeyPosition]:

@@ -3,7 +3,10 @@
      state and the code points involved. -->
 
 **Checklist**
+- [ ] `python3 tools/generate.py` has been run, so every platform file matches the layout
 - [ ] `python3 tools/validate.py` passes
-- [ ] If the layout changed: the `KBD` line and the `DESCRIPTIONS` section carry the new version
-- [ ] If the layout changed: `README.md` and `assets/keyboard-layout.json` are updated
-- [ ] If `assets/keyboard-layout.json` changed: `assets/keyboard-layout.png` is re-exported
+- [ ] If the layout changed: the `version` in `layout/us-intl-scientific.toml` is bumped
+- [ ] If the layout changed: the affected table in `README.md` is updated
+
+<!-- The overview picture rebuilds itself: CI runs tools/render.py on every push
+     and commits the result if it changed. -->
