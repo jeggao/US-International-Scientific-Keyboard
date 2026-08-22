@@ -7,6 +7,9 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
+# `pip install -e .` writes this next to the package. Note that `dist/` is NOT
+# ignored: it holds the generated Linux and macOS layouts, which are shipped.
+*.egg-info/
 
 # Jupyter
 .ipynb_checkpoints/
