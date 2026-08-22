@@ -8,8 +8,75 @@ pins down.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
 from ..keys import KLC_ORDER, position
-from ..model import Layout, unicode_name
+from ..model import LEVELS, Layout, unicode_name
+
+#: The ``[layout.windows]`` table, and the dead key fields this target claims.
+CONFIG_TABLE = "windows"
+KEY_FIELDS: tuple[str, ...] = ()
+DEAD_KEY_FIELDS: tuple[str, ...] = ()
+
+#: MSKLC 1.4 cannot build a dead key whose root is above this code point, and
+#: it cannot emit any character outside the Basic Multilingual Plane. Both
+#: limits are documented in README.md ("Notes on MSKLC 1.4"). They belong to
+#: this file format, so only this target enforces them.
+MAX_DEAD_KEY_ROOT = 0x0FFF
+MAX_CODE_POINT = 0xFFFF
+
+
+@dataclass
+class WindowsConfig:
+    dll_name: str
+    locale_name: str
+    locale_id: str
+    language_name: str
+    #: Where the generated ``.klc`` is written. Spelled out rather than derived
+    #: from the layout name: it is a download link people already have.
+    output_path: str
+    klc_version: str = "1.0"
+
+
+def parse_config(table: dict[str, Any]) -> WindowsConfig:
+    return WindowsConfig(**table)
+
+
+def constraints(layout: Layout) -> list[str]:
+    """Every reason MSKLC 1.4 could not build this layout."""
+    problems: list[str] = []
+    for key in layout.keys:
+        for level in LEVELS:
+            output = key.outputs.get(level)
+            if output is None:
+                continue
+            if output.code_point > MAX_CODE_POINT:
+                problems.append(
+                    f"key {key.id} {level} emits U+{output.code_point:04X}, "
+                    "which is outside the Basic Multilingual Plane"
+                )
+            if output.dead and output.code_point > MAX_DEAD_KEY_ROOT:
+                problems.append(
+                    f"key {key.id} {level} is a dead key with root "
+                    f"U+{output.code_point:04X}, above the MSKLC limit of "
+                    f"U+{MAX_DEAD_KEY_ROOT:04X}"
+                )
+    for dead_key in layout.dead_keys:
+        for base, composite in dead_key.entries:
+            if base > MAX_DEAD_KEY_ROOT:
+                problems.append(
+                    f"dead key U+{dead_key.root:04X} has base U+{base:04X}, above the "
+                    f"MSKLC limit of U+{MAX_DEAD_KEY_ROOT:04X}"
+                )
+            if composite > MAX_CODE_POINT:
+                problems.append(
+                    f"dead key U+{dead_key.root:04X} produces U+{composite:04X}, "
+                    "which is outside the Basic Multilingual Plane"
+                )
+    return problems
+
 
 #: The file is UTF-16LE with a byte order mark and CRLF line endings; MSKLC
 #: refuses to open anything else.
@@ -157,20 +224,21 @@ def _layout_row(layout: Layout, key_id: str) -> str | None:
 
 def render(layout: Layout) -> str:
     """Return the ``.klc`` text, with LF newlines and no byte order mark."""
+    windows: WindowsConfig = layout.config(CONFIG_TABLE)
     lines: list[str] = []
     add = lines.append
 
-    add(f'KBD\t{layout.windows.dll_name}\t"{layout.description}"')
+    add(f'KBD\t{windows.dll_name}\t"{layout.description}"')
     add("")
     add(f'COPYRIGHT\t"{layout.copyright}"')
     add("")
     add(f'COMPANY\t"{layout.company}"')
     add("")
-    add(f'LOCALENAME\t"{layout.windows.locale_name}"')
+    add(f'LOCALENAME\t"{windows.locale_name}"')
     add("")
-    add(f'LOCALEID\t"{layout.windows.locale_id}"')
+    add(f'LOCALEID\t"{windows.locale_id}"')
     add("")
-    add(f"VERSION\t{layout.windows.klc_version}")
+    add(f"VERSION\t{windows.klc_version}")
     add("")
     add("SHIFTSTATE")
     add("")
@@ -217,11 +285,11 @@ def render(layout: Layout) -> str:
     add("")
     add("DESCRIPTIONS")
     add("")
-    add(f"{layout.windows.locale_id[-4:]}\t{layout.description}")
+    add(f"{windows.locale_id[-4:]}\t{layout.description}")
     add("")
     add("LANGUAGENAMES")
     add("")
-    add(f"{layout.windows.locale_id[-4:]}\t{layout.windows.language_name}")
+    add(f"{windows.locale_id[-4:]}\t{windows.language_name}")
     add("")
     add("ENDKBD")
     add("")
@@ -234,5 +302,5 @@ def to_bytes(layout: Layout) -> bytes:
     return (BOM + text).encode(ENCODING)
 
 
-def generate(layout: Layout) -> dict[str, str | bytes]:
-    return {f"{layout.name.replace('-', ' ')}.klc": to_bytes(layout)}
+def generate(layout: Layout, root: Path) -> dict[str, str | bytes]:
+    return {layout.config(CONFIG_TABLE).output_path: to_bytes(layout)}

@@ -19,6 +19,7 @@ dll_name = "KBDUSS7"
 locale_name = "en-US"
 locale_id = "00000409"
 language_name = "English (United States)"
+output_path = "US International Scientific.klc"
 klc_version = "1.0"
 
 [layout.linux]
@@ -28,6 +29,7 @@ description = "English (US, international scientific)"
 
 [layout.macos]
 id = -19001
+output_path = "dist/macos/US-International Scientific.keylayout"
 group = 126
 
 
@@ -40,161 +42,207 @@ id = "TLDE"
 normal = "`"  # GRAVE ACCENT
 shift = "~"  # TILDE
 altgr = { dead = "U+0300" }  # COMBINING GRAVE ACCENT
+altgr_doc = "**Dead key: characters with the grave accent diacritic.** Shape similar to U+0060 GRAVE ACCENT (backtick). Retained from USX layout."
 altgr_shift = { dead = "U+0303" }  # COMBINING TILDE
+altgr_shift_doc = "**Dead key: characters with the tilde diacritic, extended to similar math equality symbols.** Shape similar to U+007E TILDE. Retained from USX layout."
 
 [[key]]  # 1
 id = "AE01"
 normal = "1"  # DIGIT ONE
 shift = "!"  # EXCLAMATION MARK
 altgr = "′"  # PRIME
+altgr_doc = "Math: first (1) derivative."
 altgr_shift = "¡"  # INVERTED EXCLAMATION MARK
+altgr_shift_doc = "Punctuation: used to begin exclamations in Spanish languages. Partially retained from USX layout, changed shift state for better accordance with U+0021 EXCLAMATION MARK."
 
 [[key]]  # 2
 id = "AE02"
 normal = "2"  # DIGIT TWO
 shift = "@"  # COMMERCIAL AT
 altgr = "″"  # DOUBLE PRIME
+altgr_doc = "Math: second (2) derivative."
 altgr_shift = "√"  # SQUARE ROOT
+altgr_shift_doc = "Math: second (2) root."
 
 [[key]]  # 3
 id = "AE03"
 normal = "3"  # DIGIT THREE
 shift = "#"  # NUMBER SIGN
 altgr = "‴"  # TRIPLE PRIME
+altgr_doc = "Math: third (3) derivative."
 altgr_shift = "∛"  # CUBE ROOT
+altgr_shift_doc = "Math: third (3) root."
 
 [[key]]  # 4
 id = "AE04"
 normal = "4"  # DIGIT FOUR
 shift = "$"  # DOLLAR SIGN
 altgr = "¤"  # CURRENCY SIGN
+altgr_doc = "Retained from USX layout. Related to the Shift shift state mapping of U+0024 DOLLAR SIGN."
 altgr_shift = "£"  # POUND SIGN
+altgr_shift_doc = "Retained from USX layout. Near other currency characters."
 
 [[key]]  # 5
 id = "AE05"
 normal = "5"  # DIGIT FIVE
 shift = "%"  # PERCENT SIGN
 altgr = "€"  # EURO SIGN
+altgr_doc = "Retained from USX layout. Near other currency characters."
 altgr_shift = "‰"  # PER MILLE SIGN
+altgr_shift_doc = "Shape and usage similar to U+0025 PERCENT SIGN on the same key."
 
 [[key]]  # 6
 id = "AE06"
 normal = "6"  # DIGIT SIX
 shift = "^"  # CIRCUMFLEX ACCENT
 altgr = { dead = "U+030C" }  # COMBINING CARON
+altgr_doc = "**Dead key: characters with the caron diacritic.** Mirror image of U+0302 COMBINING CIRCUMFLEX ACCENT."
 altgr_shift = { dead = "U+0302" }  # COMBINING CIRCUMFLEX ACCENT
+altgr_shift_doc = "**Dead key: characters with the circumflex diacritic.** Shape similar to U+005E CIRCUMFLEX ACCENT on the same key. Retained from USX layout."
 
 [[key]]  # 7
 id = "AE07"
 normal = "7"  # DIGIT SEVEN
 shift = "&"  # AMPERSAND
 altgr = "U+20D7"  # COMBINING RIGHT ARROW ABOVE
+altgr_doc = "Physics: vector notation. Shape of 7 similar to right arrow. Near other combining diacritical marks."
 altgr_shift = { dead = "¦" }  # BROKEN BAR
+altgr_shift_doc = "**Dead key: ligatures, extended to miscellaneous North European letters.** Usage of U+0026 AMPERSAND related to the fact that ligatures are joined characters. **Root character** is U+00A6 BROKEN BAR because 1) there is no valid and representative character in the set of ligatures, 2) it is an important character also covered in the USX layout, and 3) its shape suggests the idea of joining two objects. **Default character** is U+200D ZERO WIDTH JOINER, commonly used to compose composite graphemes, especially in emojis."
 
 [[key]]  # 8
 id = "AE08"
 normal = "8"  # DIGIT EIGHT
 shift = "*"  # ASTERISK
 altgr = "∞"  # INFINITY
+altgr_doc = "Math. Shape similar to a turned 8."
 altgr_shift = { dead = "U+0307" }  # COMBINING DOT ABOVE
+altgr_shift_doc = "**Dead key: characters with the overdot diacritic.** Shape indicates a dot-like mark raised above."
 
 [[key]]  # 9
 id = "AE09"
 normal = "9"  # DIGIT NINE
 shift = "("  # LEFT PARENTHESIS
 altgr = "∝"  # PROPORTIONAL TO
+altgr_doc = "Math. Near U+221E INFINITY. Shape similar to a turned 9, or a turned 8 with an opening."
 altgr_shift = "⟨"  # MATHEMATICAL LEFT ANGLE BRACKET
+altgr_shift_doc = "Physics: Bra-ket notation left bound. Shape and usage similar to U+0028 LEFT PARENTHESIS."
 
 [[key]]  # 0
 id = "AE10"
 normal = "0"  # DIGIT ZERO
 shift = ")"  # RIGHT PARENTHESIS
 altgr = { dead = "U+030A" }  # COMBINING RING ABOVE
+altgr_doc = "**Dead key: characters with a ring above, expanded to related non-math symbols.** Shape similar to 0, also the key is positioned at the top of the keyboard (Thus mapping to key <kbd>0</kbd> is prioritized over <kbd>O</kbd>)."
 altgr_shift = "⟩"  # MATHEMATICAL RIGHT ANGLE BRACKET
+altgr_shift_doc = "Physics: Bra-ket notation right bound. Shape and usage similar to U+0029 RIGHT PARENTHESIS."
 
 [[key]]  # minus
 id = "AE11"
 normal = "-"  # HYPHEN-MINUS
 shift = "_"  # LOW LINE
 altgr = "–"  # EN DASH
+altgr_doc = "Punctuation: commonly used as the dash indicating ranges of numbers. Shorter than U+2014 EM DASH, so mapped to the hyphen which is shorter than the underscore."
 altgr_shift = "—"  # EM DASH
+altgr_shift_doc = "Punctuation: commonly used as the dash indicating breaks in sentences. Longer than U+2013 EN DASH, so mapped to the underscore which is longer than the hyphen."
 
 [[key]]  # equals
 id = "AE12"
 normal = "="  # EQUALS SIGN
 shift = "+"  # PLUS SIGN
 altgr = { dead = "ª" }  # FEMININE ORDINAL INDICATOR
+altgr_doc = "**Dead key: subscript characters.** Conventionally, the hotkey for subscripts is <kbd>Ctrl</kbd> + <kbd>=</kbd> in rich text programs such as MS Word. Also, Unicode provides a full set of subscripts for numbers, which relates to the position of this key (at the top of the keyboard). **Root character and default character** is U+00AA FEMININE ORDINAL INDICATOR in pair with U+00BA MASCULINE ORDINAL INDICATOR, because they are essentially superscripts."
 altgr_shift = { dead = "º" }  # MASCULINE ORDINAL INDICATOR
+altgr_shift_doc = "**Dead key: superscript characters.** Conventionally, the hotkey for superscripts is <kbd>Ctrl</kbd> + <kbd>+</kbd> in rich text programs such as MS Word. Also, Unicode provides a full set of superscripts for numbers, which relates to the position of this key (at the top of the keyboard). **Root character and default character** is U+00BA MASCULINE ORDINAL INDICATOR in pair with U+00AA FEMININE ORDINAL INDICATOR, because they are essentially superscripts."
 
 [[key]]  # Q
 id = "AD01"
 normal = "q"  # LATIN SMALL LETTER Q
 shift = "Q"  # LATIN CAPITAL LETTER Q
 altgr = "÷"  # DIVISION SIGN
+altgr_doc = "Math. The result of division, quotient, starts with the letter \"q\". Has same shift state as U+00D7 MULTIPLICATION SIGN (mapped to key <kbd>x</kbd>), another common math operator."
 altgr_shift = "≡"  # IDENTICAL TO
+altgr_shift_doc = "Math: congruency, equivalence. Related to \"equality\", which has the letter \"q\". This symbol has a stronger mathematical meaning than U+00F7 DIVISION SIGN, and thus is mapped to the shifted shift state."
 
 [[key]]  # W
 id = "AD02"
 normal = "w"  # LATIN SMALL LETTER W
 shift = "W"  # LATIN CAPITAL LETTER W
 altgr = "ϵ"  # GREEK LUNATE EPSILON SYMBOL
+altgr_doc = "Shape similar to a turned \"w\". Key <kbd>e</kbd> is reserved for \"element of\"-related (set membership) symbols."
 altgr_shift = { dead = "Ʃ" }  # LATIN CAPITAL LETTER ESH
+altgr_shift_doc = "**Dead key: n-ary math operators.** Large math operators, such as summation, multiplication, and coproduct. **Root character and default character** is used in the African Alphabet, shape similar to capital letter sigma and turned letter \"W\". This pairs with key <kbd>I</kbd> mapped to U+0283 LATIN SMALL LETTER ESH. Key <kbd>E</kbd> is reserved for U+2203 THERE EXISTS, which resembles the letter \"E\" more."
 
 [[key]]  # E
 id = "AD03"
 normal = "e"  # LATIN SMALL LETTER E
 shift = "E"  # LATIN CAPITAL LETTER E
 altgr = { dead = "϶" }  # GREEK REVERSED LUNATE EPSILON SYMBOL
+altgr_doc = "**Dead key: set membership math symbols.** **Root character** has a shape similar to a reversed \"e\", and is near its mirror image U+03F5 GREEK LUNATE EPSILON SYMBOL. **Default character** is U+2208 ELEMENT OF, which starts with the letter \"e\"."
 altgr_shift = "∃"  # THERE EXISTS
+altgr_shift_doc = "Math: existential quantifier. Shape similar to a reversed letter \"E\"."
 
 [[key]]  # R
 id = "AD04"
 normal = "r"  # LATIN SMALL LETTER R
 shift = "R"  # LATIN CAPITAL LETTER R
 altgr = "®"  # REGISTERED SIGN
+altgr_doc = "Retained from USX layout. Shape includes letter \"R\". Shift state same as ℗ and ©."
 altgr_shift = "™"  # TRADE MARK SIGN
+altgr_shift_doc = "Usage highly related to U+00AE REGISTERED SIGN mapped to the same key."
 
 [[key]]  # T
 id = "AD05"
 normal = "t"  # LATIN SMALL LETTER T
 shift = "T"  # LATIN CAPITAL LETTER T
 altgr = "†"  # DAGGER
+altgr_doc = "Often used for marking footnotes, also used in math/physics for the conjugate (Hermitian) transpose. Shape similar to letter \"t\"."
 altgr_shift = "‡"  # DOUBLE DAGGER
+altgr_shift_doc = "Often used for marking footnotes, also used in chemistry to denote a transition state. Shape similar to letter \"t\" and U+2020 DAGGER mapped to the same key."
 
 [[key]]  # Y
 id = "AD06"
 normal = "y"  # LATIN SMALL LETTER Y
 shift = "Y"  # LATIN CAPITAL LETTER Y
 altgr = { dead = "±" }  # PLUS-MINUS SIGN
+altgr_doc = "**Dead key: math symbols comprised of horizontal and vertical lines, such as relational operators.** Shapes similar to the crossed shape of the letter \"y\", which also notes that the characters in this set could comprise of lines towards all directions. **Root character and default character** is U+00B1 PLUS-MINUS SIGN because it is most commonly used, and is the only character in this set which has a code point that is valid for a dead key."
 altgr_shift = "¥"  # YEN SIGN
+altgr_shift_doc = "Shape similar to letter \"Y\". Near other currency signs."
 
 [[key]]  # U
 id = "AD07"
 normal = "u"  # LATIN SMALL LETTER U
 shift = "U"  # LATIN CAPITAL LETTER U
 altgr = "∪"  # UNION
+altgr_doc = "Math: set notation. Shape similar to letter \"U\"."
 altgr_shift = "∩"  # INTERSECTION
+altgr_shift_doc = "Math: set notation. Mirror image of U+222A UNION mapped to the same key."
 
 [[key]]  # I
 id = "AD08"
 normal = "i"  # LATIN SMALL LETTER I
 shift = "I"  # LATIN CAPITAL LETTER I
 altgr = "ı"  # LATIN SMALL LETTER DOTLESS I
+altgr_doc = "Math: imaginary unit in some fields, eg. engineering. Also used in some languages, eg. Azerbaijani, Turkish. Shape similar to letter \"i\"."
 altgr_shift = { dead = "ʃ" }  # LATIN SMALL LETTER ESH
+altgr_shift_doc = "**Dead key: integral math symbols.** The name \"integral\" begins with the letter \"i\". Also integrals are large math operators, so they are mapped to capital key \"I\". **Root character and default character** is U+0283 LATIN SMALL LETTER ESH because it is a useful Latin letter that resembles an integral, while all integral characters in this set have code points that are invalid for a dead key."
 
 [[key]]  # O
 id = "AD09"
 normal = "o"  # LATIN SMALL LETTER O
 shift = "O"  # LATIN CAPITAL LETTER O
 altgr = { dead = "ϕ" }  # GREEK PHI SYMBOL
+altgr_doc = "**Dead key: circle-related math symbols.** Shapes include a circle, similar to shape of letter \"o\". **Root character and default character** is U+03D5 GREEK PHI SYMBOL, a common Greek variable name in math. Note for Greek language, U+03C6 GREEK SMALL LETTER PHI (φ) is used."
 altgr_shift = "∅"  # EMPTY SET
+altgr_shift_doc = "Math: set notation. Shape similar to letter \"O\" and U+03D5 GREEK PHI SYMBOL mapped to the same key."
 
 [[key]]  # P
 id = "AD10"
 normal = "p"  # LATIN SMALL LETTER P
 shift = "P"  # LATIN CAPITAL LETTER P
 altgr = "℗"  # SOUND RECORDING COPYRIGHT
+altgr_doc = "Also known as published phonorecord sign. Shape includes letter \"P\". Shift state same as ® and ©."
 altgr_shift = "¶"  # PILCROW SIGN
+altgr_shift_doc = "Typography: denotes a paragraph. Name starts with letter \"p\". Shape similar to reversed letter \"P\". Has same shift state as U+00A7 SECTION SIGN."
 
 [[key]]  # left bracket
 id = "AD11"
@@ -202,7 +250,9 @@ normal = "["  # LEFT SQUARE BRACKET
 shift = "{"  # LEFT CURLY BRACKET
 ctrl = "U+001B"  # ESCAPE
 altgr = "‹"  # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+altgr_doc = "Punctuation: left single quotation mark in some European languages. Used in pairs, similar to brackets. Shift state in accordance with single/double quotation marks."
 altgr_shift = "«"  # LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+altgr_shift_doc = "Punctuation: left double quotation mark in some European languages (eg. French guillemets). Used in pairs, similar to braces. Shift state in accordance with single/double quotation marks."
 
 [[key]]  # right bracket
 id = "AD12"
@@ -210,84 +260,108 @@ normal = "]"  # RIGHT SQUARE BRACKET
 shift = "}"  # RIGHT CURLY BRACKET
 ctrl = "U+001D"  # INFORMATION SEPARATOR THREE
 altgr = "›"  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+altgr_doc = "Punctuation: right single quotation mark in some European languages. Justification similar to U+2039 SINGLE LEFT-POINTING ANGLE QUOTATION MARK."
 altgr_shift = "»"  # RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+altgr_shift_doc = "Punctuation: right double quotation mark in some European languages (eg. French guillemets). Justification similar to U+00AB LEFT-POINTING DOUBLE ANGLE QUOTATION MARK."
 
 [[key]]  # A
 id = "AC01"
 normal = "a"  # LATIN SMALL LETTER A
 shift = "A"  # LATIN CAPITAL LETTER A
 altgr = { dead = "ɐ" }  # LATIN SMALL LETTER TURNED A
+altgr_doc = "**Dead key: set inclusion math symbols.** Mainly mapped to this key in accordance with key mappings of set membership symbols and U+2203 THERE EXISTS to key <kbd>E</kbd>. U+2220 ANGLE is also included for its similar shape with these symbols and its name starting with letter \"a\". **Root character** has a shape similar to a turned \"a\". **Default character** is U+2282 SUBSET OF, which is representative."
 altgr_shift = "∀"  # FOR ALL
+altgr_shift_doc = "Math: universal quantifier. Shape similar to a turned letter \"A\"."
 
 [[key]]  # S
 id = "AC02"
 normal = "s"  # LATIN SMALL LETTER S
 shift = "S"  # LATIN CAPITAL LETTER S
 altgr = "ß"  # LATIN SMALL LETTER SHARP S
+altgr_doc = "Common letter in German language. Shape and usage similar to letter \"s\". Retained from USX layout."
 altgr_shift = "§"  # SECTION SIGN
+altgr_shift_doc = "Typography: denotes a section. Shape includes two letter \"S\"s. Retained from USX layout. Has same shift state as U+00B6 PILCROW SIGN."
 
 [[key]]  # D
 id = "AC03"
 normal = "d"  # LATIN SMALL LETTER D
 shift = "D"  # LATIN CAPITAL LETTER D
 altgr = "∂"  # PARTIAL DIFFERENTIAL
+altgr_doc = "Math: calculus. Shape is essentially a variant of letter \"d\"."
 altgr_shift = "∆"  # INCREMENT
+altgr_shift_doc = "Math: indicates the difference of the value of a variable resulting from change. Shape similar to Greek capital letter delta. Related to U+2202 PARTIAL DIFFERENTIAL mapped to the same key."
 
 [[key]]  # F
 id = "AC04"
 normal = "f"  # LATIN SMALL LETTER F
 shift = "F"  # LATIN CAPITAL LETTER F
 altgr = "ϝ"  # GREEK SMALL LETTER DIGAMMA
+altgr_doc = "Math: variable name. Shape similar to letter \"f\". Required to be included in UTR25."
 altgr_shift = "Ϝ"  # GREEK LETTER DIGAMMA
+altgr_shift_doc = "Math: variable name. Shape similar to letter \"F\". Required to be included in UTR25."
 
 [[key]]  # G
 id = "AC05"
 normal = "g"  # LATIN SMALL LETTER G
 shift = "G"  # LATIN CAPITAL LETTER G
 altgr = { dead = "γ" }  # GREEK SMALL LETTER GAMMA
+altgr_doc = "**Dead key: Greek letters, expanded to other math variable letters.** The name \"Greek\" starts with the letter \"g\". The base character mappings for this dead key are based on the Greek QWERTY keyboard layout. **Root character and default character** is U+03B3 GREEK SMALL LETTER GAMMA because it is the Greek version of letter \"g\", and also mapped so in the Greek QWERTY keyboard layout."
 altgr_shift = "∇"  # NABLA
+altgr_shift_doc = "Physics: differential operator. Describes gradient, which starts with letter \"g\". Similar to an inverted Greek capital delta, that also shares the same shift state with this character. Near other Greek letters."
 
 [[key]]  # H
 id = "AC06"
 normal = "h"  # LATIN SMALL LETTER H
 shift = "H"  # LATIN CAPITAL LETTER H
 altgr = "ℏ"  # PLANCK CONSTANT OVER TWO PI
+altgr_doc = "Physics: reduced Planck's constant. Shape similar to letter \"h\"."
 altgr_shift = { dead = "Ħ" }  # LATIN CAPITAL LETTER H WITH STROKE
+altgr_shift_doc = "**Dead key: letters with the mathematical Fraktur (Black-letter or Gothic) font.** Due to Windows limitations, only a few such letters are available. **Root character** is U+0126 LATIN CAPITAL LETTER H WITH STROKE only as a representation of the special font, while all Fraktur letters are not valid as dead key root characters; this character is by intent not mapped to a base character because it is only a placeholder and not a Fraktur letter. **Default character** is U+210C BLACK-LETTER CAPITAL H (ℌ), which is commonly used in physics for Hilbert space."
 
 [[key]]  # J
 id = "AC07"
 normal = "j"  # LATIN SMALL LETTER J
 shift = "J"  # LATIN CAPITAL LETTER J
 altgr = "←"  # LEFTWARDS ARROW
+altgr_doc = "Shape of letter \"J\" points to the left, similar to a mirror image of letter \"L\". Conventionally, many video websites (eg. YouTube) map rewind/pause/forward shortcuts to keys <kbd>J</kbd>, <kbd>K</kbd>, and <kbd>L</kbd>."
 altgr_shift = "⇐"  # LEFTWARDS DOUBLE ARROW
+altgr_shift_doc = "Justification similar to U+2190 LEFTWARDS ARROW. Mapped to shifted state because it is double-stroke, a variant of the single arrow."
 
 [[key]]  # K
 id = "AC08"
 normal = "k"  # LATIN SMALL LETTER K
 shift = "K"  # LATIN CAPITAL LETTER K
 altgr = "↔"  # LEFT RIGHT ARROW
+altgr_doc = "Letter \"K\" positioned between letters \"J\" and \"L\" mapped to the left and right arrows. Shape of letter \"K\" also points to two directions."
 altgr_shift = "⇔"  # LEFT RIGHT DOUBLE ARROW
+altgr_shift_doc = "Justification similar to U+2194 LEFT RIGHT ARROW. Mapped to shifted state because it is double-stroke, a variant of the single arrow."
 
 [[key]]  # L
 id = "AC09"
 normal = "l"  # LATIN SMALL LETTER L
 shift = "L"  # LATIN CAPITAL LETTER L
 altgr = "→"  # RIGHTWARDS ARROW
+altgr_doc = "Shape of letter \"L\" points to the right, similar to a mirror image of letter \"J\". Justification similar to U+2190 LEFTWARDS ARROW."
 altgr_shift = "⇒"  # RIGHTWARDS DOUBLE ARROW
+altgr_shift_doc = "Justification similar to U+2192 RIGHTWARDS ARROW. Mapped to shifted state because it is double-stroke, a variant of the single arrow."
 
 [[key]]  # semicolon
 id = "AC10"
 normal = ";"  # SEMICOLON
 shift = ":"  # COLON
 altgr = "∴"  # THEREFORE
+altgr_doc = "Math: indicates logical consequence in proofs, especially for geometry. Shape has multiple dots, similar to the colon and semicolon. In pair with U+2235 BECAUSE, but normally used after it, thus mapped to the non-shifted shift state."
 altgr_shift = "∵"  # BECAUSE
+altgr_shift_doc = "Math: indicates logical conditions in proofs, especially for geometry. Shape has multiple dots, similar to the colon and semicolon. In pair with U+2234 THEREFORE, but normally used first, thus mapped to the shifted shift state."
 
 [[key]]  # apostrophe
 id = "AC11"
 normal = "'"  # APOSTROPHE
 shift = "\""  # QUOTATION MARK
 altgr = { dead = "U+0301" }  # COMBINING ACUTE ACCENT
+altgr_doc = "**Dead key: characters with the acute accent diacritic.** Shape of apostrophe similar to acute accent. Retained from USX layout."
 altgr_shift = { dead = "U+0308" }  # COMBINING DIAERESIS
+altgr_shift_doc = "**Dead key: characters with the diaeresis diacritic, extended to diacritics with one or multiple dots.** Shape of quotation mark similar to diaeresis accent. Retained from USX layout."
 
 [[key]]  # backslash
 id = "BKSL"
@@ -295,77 +369,99 @@ normal = "\\"  # REVERSE SOLIDUS
 shift = "|"  # VERTICAL LINE
 ctrl = "U+001C"  # INFORMATION SEPARATOR FOUR
 altgr = "↓"  # DOWNWARDS ARROW
+altgr_doc = "Meaning related to U+005C REVERSE SOLIDUS (backslash) that indicates a falling notion. Mirror image of U+2191 UPWARDS ARROW."
 altgr_shift = "↑"  # UPWARDS ARROW
+altgr_shift_doc = "Shape similar to U+007C VERTICAL LINE mapped to this key. Indicates upward motion, which is related to the <kbd>Shift</kbd> key icon. Mirror image of U+2193 DOWNWARDS ARROW."
 
 [[key]]  # Z
 id = "AB01"
 normal = "z"  # LATIN SMALL LETTER Z
 shift = "Z"  # LATIN CAPITAL LETTER Z
 altgr = "≠"  # NOT EQUAL TO
+altgr_doc = "Math. Shape similar to letter \"z\". Has the same shift state as the equals sign (\"=\")."
 altgr_shift = { dead = "Ƶ" }  # LATIN CAPITAL LETTER Z WITH STROKE
+altgr_shift_doc = "**Dead key: letters with the mathematical double-struck font.** Due to Windows limitations, only a few such letters are available. **Root character** is U+01B5 LATIN CAPITAL LETTER Z WITH STROKE only as a representation of the special font, while all double-struck letters are not valid as dead key root characters; this character is by intent not mapped to a base character because it is only a placeholder and not a double-struck letter. **Default character** is U+2124 DOUBLE-STRUCK CAPITAL Z (ℤ), which is commonly used in math for the set of integers."
 
 [[key]]  # X
 id = "AB02"
 normal = "x"  # LATIN SMALL LETTER X
 shift = "X"  # LATIN CAPITAL LETTER X
 altgr = "×"  # MULTIPLICATION SIGN
+altgr_doc = "Math. Shape similar to letter \"x\". Has same shift state as U+00F7 DIVISION SIGN (mapped to key <kbd>q</kbd>), another common math operator."
 altgr_shift = "≈"  # ALMOST EQUAL TO
+altgr_shift_doc = "Math. Denotes approximation, which has the sound of letter \"x\". Has the same shift state as U+2261 IDENTICAL TO, both equality-related symbols."
 
 [[key]]  # C
 id = "AB03"
 normal = "c"  # LATIN SMALL LETTER C
 shift = "C"  # LATIN CAPITAL LETTER C
 altgr = "©"  # COPYRIGHT SIGN
+altgr_doc = "Shape includes letter \"c\". Retained from USX layout. Shift state same as ® and ℗."
 altgr_shift = "¢"  # CENT SIGN
+altgr_shift_doc = "Shape similar to letter \"c\". Similarly in a shifted shift state as the dollar sign. Retained from USX layout."
 
 [[key]]  # V
 id = "AB04"
 normal = "v"  # LATIN SMALL LETTER V
 shift = "V"  # LATIN CAPITAL LETTER V
 altgr = "∨"  # LOGICAL OR
+altgr_doc = "Math: logical operator. Shape similar to letter \"v\"."
 altgr_shift = "∧"  # LOGICAL AND
+altgr_shift_doc = "Math: logical operator, conjunction. Mirror image of U+2228 LOGICAL OR."
 
 [[key]]  # B
 id = "AB05"
 normal = "b"  # LATIN SMALL LETTER B
 shift = "B"  # LATIN CAPITAL LETTER B
 altgr = { dead = "U+0304" }  # COMBINING MACRON
+altgr_doc = "**Dead key: characters with the macron diacritic, extended to overline diacritics.** The shapes of these diacritics are usually called \"bars\" (especially in physics), which starts with letter \"b\". This key was originally intended for only U+0305 COMBINING OVERLINE for use in math and physics (denoting averages), then extended."
 altgr_shift = { dead = "U+0306" }  # COMBINING BREVE
+altgr_shift_doc = "**Dead key: characters with the breve diacritic.** The name \"breve\" starts with the letter \"b\"."
 
 [[key]]  # N
 id = "AB06"
 normal = "n"  # LATIN SMALL LETTER N
 shift = "N"  # LATIN CAPITAL LETTER N
 altgr = "¬"  # NOT SIGN
+altgr_doc = "Math: logical operator. The name \"not\" starts with letter \"n\"."
 altgr_shift = "⊻"  # XOR
+altgr_shift_doc = "Math: logical operator, exclusive disjunction. Expresses an alternative version of OR, so mapped to the same key as U+00AC NOT SIGN; but this does not mean that this is a negated version of OR (XOR is not NOR). Near other logical operators."
 
 [[key]]  # M
 id = "AB07"
 normal = "m"  # LATIN SMALL LETTER M
 shift = "M"  # LATIN CAPITAL LETTER M
 altgr = "↦"  # RIGHTWARDS ARROW FROM BAR
+altgr_doc = "Math: function notation. Commonly called the maplet, which starts with letter \"m\"."
 altgr_shift = { dead = "µ" }  # MICRO SIGN
+altgr_shift_doc = "**Dead key: letters with the mathematical script font.** Due to Windows limitations, only a few such letters are available. **Root character** is U+00B5 MICRO SIGN, whose name starts with letter \"m\". Itself is a deprecated symbol identical to Greek small letter mu (μ), and the latter should always be used. Here it is a placeholder, while all script letters are not valid as dead key root characters; this character is by intent not mapped to a base character because it is only a placeholder and not a script letter. **Default character** is U+2133 SCRIPT CAPITAL M (ℳ), which is the symbol for the M-matrix in physics, and the pre-WWII German Mark."
 
 [[key]]  # comma
 id = "AB08"
 normal = ","  # COMMA
 shift = "<"  # LESS-THAN SIGN
 altgr = { dead = "U+0327" }  # COMBINING CEDILLA
+altgr_doc = "**Dead key: characters with the cedilla or ogonek diacritic.** Shape of cedilla similar to the comma, while shape of ogonek similar to a reversed comma. The two diacritics are mutually exclusive on a letter, thus they are mapped to the same key."
 altgr_shift = { dead = "<" }  # LESS-THAN SIGN
+altgr_shift_doc = "**Dead key: variants of the less-than sign in math.** **Root character** is the plain less-than sign because all of its variants are not valid as dead key root characters. **Default character** is U+2264 LESS-THAN OR EQUAL TO as the most common and simple variant."
 
 [[key]]  # period
 id = "AB09"
 normal = "."  # FULL STOP
 shift = ">"  # GREATER-THAN SIGN
 altgr = { dead = "U+0323" }  # COMBINING DOT BELOW
+altgr_doc = "**Dead key: characters with the underdot diacritic, extended to punctuation with multiple dots.** Shape similar to the period. In accordance with $\\LaTeX$, includes the family of matrix abbreviators `\\cdot`, `\\cdots`, `\\vdots`, etc. **Default character** is the punctuation U+00B7 MIDDLE DOT (·), as there is no modifier letter for the below dot diacritic. Not to be confused with U+22C5 DOT OPERATOR (⋅), which should be used exclusively for dot multiplication in math."
 altgr_shift = { dead = ">" }  # GREATER-THAN SIGN
+altgr_shift_doc = "**Dead key: variants of the greater-than sign in math.** **Root character** is the plain greater-than sign because all of its variants are not valid as dead key root characters. **Default character** is U+2265 GREATER-THAN OR EQUAL TO as the most common and simple variant."
 
 [[key]]  # slash
 id = "AB10"
 normal = "/"  # SOLIDUS
 shift = "?"  # QUESTION MARK
 altgr = { dead = "U+0338" }  # COMBINING LONG SOLIDUS OVERLAY
+altgr_doc = "**Dead key: characters with a stroke.** Shape similar to the solidus. Standard combining character for \"crossing out\" other characters in Unicode. **Default character** is U+2044 FRACTION SLASH, which has a similar shape with the solidus, and also represents the usage of the solidus as the division operator."
 altgr_shift = "¿"  # INVERTED QUESTION MARK
+altgr_shift_doc = "Punctuation: used to begin interrogations in Spanish languages. Partially retained from USX layout, changed shift state for better accordance with U+003F QUESTION MARK."
 
 [[key]]  # space bar
 id = "SPCE"
@@ -398,6 +494,7 @@ altgr_shift = "↑"  # UPWARDS ARROW
 root = "U+0300"  # COMBINING GRAVE ACCENT
 category = "Grave accents"
 xkb_leader = "dead_grave"
+doc_bases = ["aeiouynw AEIOUYNW"]
 map = [
   ["a"     , "à"],  # LATIN SMALL LETTER A WITH GRAVE
   ["w"     , "ẁ"],  # LATIN SMALL LETTER W WITH GRAVE
@@ -422,6 +519,8 @@ map = [
 root = "U+0303"  # COMBINING TILDE
 category = "Tilde diacritic + math equality symbols"
 xkb_leader = "dead_tilde"
+doc_bases = ["aeiouynv AEIOUYNV -="]
+notes = "Two common mathematical equality operators with related shapes are included, respectively U+2243 ASYMPTOTICALLY EQUAL TO, U+2245 APPROXIMATELY EQUAL TO."
 map = [
   ["="     , "≅"],  # APPROXIMATELY EQUAL TO
   ["n"     , "ñ"],  # LATIN SMALL LETTER N WITH TILDE
@@ -448,6 +547,8 @@ map = [
 root = "U+030C"  # COMBINING CARON
 category = "Caron diacritic"
 xkb_leader = "dead_caron"
+doc_bases = ["aeiou cdghjklnrstz AEIOU CDGHKLNRSTZ"]
+notes = "For unknown reasons, Unicode does not include capital letter \"J\" with caron, although its lowercase form is encoded. Certain letters may have a different display for the caron, such as an apostrophe at the upper right corner."
 map = [
   ["n"     , "ň"],  # LATIN SMALL LETTER N WITH CARON
   ["c"     , "č"],  # LATIN SMALL LETTER C WITH CARON
@@ -489,6 +590,7 @@ map = [
 root = "U+0302"  # COMBINING CIRCUMFLEX ACCENT
 category = "Circumflex accents"
 xkb_leader = "dead_circumflex"
+doc_bases = ["aeiouy cghjswz AEIOUY CGHJSWZ"]
 map = [
   ["c"     , "ĉ"],  # LATIN SMALL LETTER C WITH CIRCUMFLEX
   ["a"     , "â"],  # LATIN SMALL LETTER A WITH CIRCUMFLEX
@@ -523,6 +625,8 @@ map = [
 root = "¦"  # BROKEN BAR
 category = "Ligatures + North European letters"
 xkb_leader = "U00A6"
+doc_bases = ["ao ilnd AO ILND 1234567 s tT eE hH 8* 9( 0) &|"]
+notes = "The default character U+200D ZERO WIDTH JOINER is a special invisible whitespace (thus mapped to the space bar) that is the standard combining character for composing multiple graphemes, such as adding skin color in emojis. Also includes all typographical ligatures mapped to number keys in sequence; North European letters long s, thorn, eth, hwair, ou, gha, and eng (the last 3 are mapped to numbers by similar shape); and loosely-related characters U+214B TURNED AMPERSAND (⅋, used in linear logic) and U+00A6 BROKEN BAR (¦, for [legacy](https://en.wikipedia.org/wiki/Vertical_bar#Solid_vertical_bar_vs_broken_bar))."
 map = [
   ["n"     , "ǌ"],  # LATIN SMALL LETTER NJ
   ["a"     , "æ"],  # LATIN SMALL LETTER AE
@@ -565,6 +669,7 @@ map = [
 root = "U+0307"  # COMBINING DOT ABOVE
 category = "Dot above diacritic"
 xkb_leader = "dead_abovedot"
+doc_bases = ["aeoy bcdfghlmnprstwxz AEIOY BCDFGHLMNPRSTWXZ"]
 map = [
   ["C"     , "Ċ"],  # LATIN CAPITAL LETTER C WITH DOT ABOVE
   ["c"     , "ċ"],  # LATIN SMALL LETTER C WITH DOT ABOVE
@@ -614,6 +719,8 @@ map = [
 root = "U+030A"  # COMBINING RING ABOVE
 category = "Ring above diacritic + circle symbols"
 xkb_leader = "dead_abovering"
+doc_bases = ["auwy AU CF oObB.| -x"]
+notes = "Includes related symbols: degree Celsius/Fahrenheit, various circles, and the Plimsoll symbol (U+29B5 CIRCLE WITH HORIZONTAL BAR) for chemical standard state (however it is not a superscript; for raw-text editing, by IUPAC the degrees sign is also accepted), along with U+29BB CIRCLE WITH SUPERIMPOSED X."
 map = [
   ["a"     , "å"],  # LATIN SMALL LETTER A WITH RING ABOVE
   ["u"     , "ů"],  # LATIN SMALL LETTER U WITH RING ABOVE
@@ -638,6 +745,8 @@ map = [
 root = "ª"  # FEMININE ORDINAL INDICATOR
 category = "Subscripts"
 xkb_leader = "U00AA"
+doc_bases = ["0123456789+-=() aehijklmnoprstuvx"]
+notes = "Not all subscript lowercase letters are available in Unicode."
 map = [
   ["="     , "₌"],  # SUBSCRIPT EQUALS SIGN
   ["n"     , "ₙ"],  # LATIN SUBSCRIPT SMALL LETTER N
@@ -678,6 +787,8 @@ map = [
 root = "º"  # MASCULINE ORDINAL INDICATOR
 category = "Superscripts"
 xkb_leader = "U00BA"
+doc_bases = ["0123456789+-=()", "abcdefghijklmnoprstuvwxyz", "ABCDEFGHIJKLMNOPQRTUVW"]
+notes = "All superscript lowercase letters except \"q\" (U+107A5, non-BMP characters are not supported) are available on this keyboard. For superscript capital letters, \"S\", \"X\", \"Y\", and \"Z\" are missing."
 map = [
   ["="     , "⁼"],  # SUPERSCRIPT EQUALS SIGN
   ["b"     , "ᵇ"],  # MODIFIER LETTER SMALL B
@@ -748,6 +859,8 @@ map = [
 root = "Ʃ"  # LATIN CAPITAL LETTER ESH
 category = "N-ary operators"
 xkb_leader = "U01A9"
+doc_bases = ["sSpPuUvV .+x"]
+notes = "S stands for \"sum\" and \"sigma\", P stands for \"product\" and \"pi\". Capital letter mappings represent variants. Default character is a resembling letter, only use if other symbols do not display."
 map = [
   ["S"     , "⅀"],  # DOUBLE-STRUCK N-ARY SUMMATION
   ["p"     , "∏"],  # N-ARY PRODUCT
@@ -767,6 +880,8 @@ map = [
 root = "϶"  # GREEK REVERSED LUNATE EPSILON SYMBOL
 category = "Set membership operators + nonexistential quantifier"
 xkb_leader = "U03F6"
+doc_bases = ["/|\\ eE"]
+notes = "Since ∈ and ∋ are mirror images, the latter is mapped to key <kbd>|</kbd> indicating the plane of symmetry; other mappings follow this logic. Includes U+2204 THERE DOES NOT EXIST (∄) since key <kbd>E</kbd> is mapped to U+2203 THERE EXISTS (∃)."
 map = [
   ["\\"    , "∌"],  # DOES NOT CONTAIN AS MEMBER
   ["/"     , "∉"],  # NOT AN ELEMENT OF
@@ -780,6 +895,8 @@ map = [
 root = "±"  # PLUS-MINUS SIGN
 category = "Relational operators + tack-like symbols"
 xkb_leader = "U00B1"
+doc_bases = ["amtfATF udrl p +-"]
+notes = "The mappings are based on the initial letter of each character's name: assertion, models, true, forces; up, down, right, left; perpendicular. Negations are mapped to capital letters (shifted state). Includes plus-minus and minus-plus signs."
 map = [
   ["m"     , "⊧"],  # MODELS
   ["a"     , "⊦"],  # ASSERTION
@@ -802,6 +919,8 @@ map = [
 root = "ʃ"  # LATIN SMALL LETTER ESH
 category = "Integral operators"
 xkb_leader = "U0283"
+doc_bases = ["1234567890"]
+notes = "Mapping based on integral dimensions. Default character is a resembling letter, only use if other symbols do not display."
 map = [
   ["8"     , "∱"],  # CLOCKWISE INTEGRAL
   ["9"     , "∲"],  # CLOCKWISE CONTOUR INTEGRAL
@@ -820,6 +939,8 @@ map = [
 root = "ϕ"  # GREEK PHI SYMBOL
 category = "Circle-related operators + QED"
 xkb_leader = "U03D5"
+doc_bases = ["+-x/|\\.oO*=_<>X q"]
+notes = "Includes U+2BBE CIRCLED X (⮾) mapped to key <kbd>X</kbd>, and the QED (end-of-proof) symbol mapped to key <kbd>q</kbd>."
 map = [
   ["="     , "⊜"],  # CIRCLED EQUALS
   ["x"     , "⊗"],  # CIRCLED TIMES
@@ -844,6 +965,8 @@ map = [
 root = "ɐ"  # LATIN SMALL LETTER TURNED A
 category = "Set inclusion operators + angle symbol"
 xkb_leader = "U0250"
+doc_bases = ["/[{|}]\\ CaA"]
+notes = "Logic similar to set membership operators. Includes notation for complementary sets and angles (since the key is <kbd>a</kbd>)."
 map = [
   ["\\"    , "⊅"],  # NOT A SUPERSET OF
   ["/"     , "⊄"],  # NOT A SUBSET OF
@@ -862,6 +985,8 @@ map = [
 root = "γ"  # GREEK SMALL LETTER GAMMA
 category = "Greek letters with variants + first 4 Hebrew letters"
 xkb_leader = "dead_greek"
+doc_bases = ["qwertyuiop", "asdfghjkl", "zxcvbnm", "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM", "123456"]
+notes = "These letters are included in the Basic Set of Alphanumeric Characters for mathematical notation (see §2.2 of [UTR25](http://www.unicode.org/reports/tr25/)). For convenience and consistency, the mappings are mostly identical to the standard Greek keyboard layout. Greek diacritics were removed. Key <kbd>w</kbd> is retained as the lowercase final sigma. Keys `QqW` are mapped respectively to U+03F4 (ϴ ↔ Θ), U+03D1 (ϑ ↔ θ), and U+03D6 (ϖ ↔ π), based on their similar shapes. Keys `1234` are the first 4 capital Hebrew letters Alef, Bet, Gimel, and Dalet. Keys `56` are mapped respectively to U+03F0 (ϰ ↔ κ) and U+03F1 (ϱ ↔ ρ) due to the lack of space, yet coincidentally the shapes are relatable (ϰ looks like a distorted turned 5, ϱ looks like a flipped 6), and their Unicode code points are consecutive!"
 map = [
   ["b"     , "β"],  # GREEK SMALL LETTER BETA
   ["n"     , "ν"],  # GREEK SMALL LETTER NU
@@ -928,6 +1053,8 @@ map = [
 root = "Ħ"  # LATIN CAPITAL LETTER H WITH STROKE
 category = "Black-letter (Fraktur) font letters"
 xkb_leader = "U0126"
+doc_bases = ["CHIRZ"]
+notes = "Black-letter capital H is representative for this font family as the symbol for Hilbert space."
 map = [
   ["C"     , "ℭ"],  # BLACK-LETTER CAPITAL C
   ["Z"     , "ℨ"],  # BLACK-LETTER CAPITAL Z
@@ -941,6 +1068,8 @@ map = [
 root = "U+0301"  # COMBINING ACUTE ACCENT
 category = "Acute accent + typographical single quotes"
 xkb_leader = "dead_acute"
+doc_bases = ["aeiouy cgklmnprswz AEIOUY CGKLMNPRSWZ []{}"]
+notes = "Typographical single quotes are included, which have direction. An alternate pair is available for languages such as German."
 map = [
   ["n"     , "ń"],  # LATIN SMALL LETTER N WITH ACUTE
   ["c"     , "ć"],  # LATIN SMALL LETTER C WITH ACUTE
@@ -987,6 +1116,8 @@ map = [
 root = "U+0308"  # COMBINING DIAERESIS
 category = "Diaeresis diacritic + dot diacritics"
 xkb_leader = "dead_diaeresis"
+doc_bases = ["aeiouy htwx AEIOUY HWX 1234 '\"` []{}"]
+notes = "For unknown reasons, Unicode does not include capital letter \"T\" with diaeresis, although its lowercase form is encoded. Combining diacritical marks with 1–4 dots above are included, which are commonly used to indicate time derivatives in physics. Also includes combining double acute and grave accents, and the modifier letter for the former mapped to `\"` (there is no modifier letter for the latter in Unicode). Typographical double quotes are featured, with an alternate pair available for languages such as German."
 map = [
   ["a"     , "ä"],  # LATIN SMALL LETTER A WITH DIAERESIS
   ["e"     , "ë"],  # LATIN SMALL LETTER E WITH DIAERESIS
@@ -1025,6 +1156,8 @@ map = [
 root = "Ƶ"  # LATIN CAPITAL LETTER Z WITH STROKE
 category = "Double-struck font letters + italics"
 xkb_leader = "U01B5"
+doc_bases = ["CHNPQRZ Ddeij"]
+notes = "Includes 5 extra double-struck italic letters defined in Unicode. Double-struck capital Z is representative for this font family as the symbol for the set of integers."
 map = [
   ["j"     , "ⅉ"],  # DOUBLE-STRUCK ITALIC SMALL J
   ["d"     , "ⅆ"],  # DOUBLE-STRUCK ITALIC SMALL D
@@ -1045,6 +1178,8 @@ map = [
 root = "U+0304"  # COMBINING MACRON
 category = "Macron diacritic + bar diacritics"
 xkb_leader = "dead_macron"
+doc_bases = ["aeiouyg AEIOUYG -=_"]
+notes = "Includes related combining diacritical marks: U+0305 COMBINING OVERLINE (denotes averages in math), U+033F COMBINING DOUBLE OVERLINE. Includes U+00AF MACRON, a longer variant of the modifier letter from legacy."
 map = [
   ["-"     , "U+0305"],  # COMBINING OVERLINE
   ["="     , "U+033F"],  # COMBINING DOUBLE OVERLINE
@@ -1070,6 +1205,8 @@ map = [
 root = "U+0306"  # COMBINING BREVE
 category = "Breve diacritic"
 xkb_leader = "dead_breve"
+doc_bases = ["aeioug AEIOUG ^"]
+notes = "Includes combining inverted breve mapped to the circumflex due to similar shape, but there is no modifier letter for this in Unicode."
 map = [
   ["a"     , "ă"],  # LATIN SMALL LETTER A WITH BREVE
   ["g"     , "ğ"],  # LATIN SMALL LETTER G WITH BREVE
@@ -1091,6 +1228,8 @@ map = [
 root = "µ"  # MICRO SIGN
 category = "Script font letters"
 xkb_leader = "U00B5"
+doc_bases = ["eglo BEFHILMPR"]
+notes = "Script capital M is representative for this font family as the symbol for the M-matrix in physics. The root character U+00B5 MICRO SIGN (µ) is supported in many legacy environments, but U+03BC μ is the preferred Unicode character."
 map = [
   ["g"     , "ℊ"],  # SCRIPT SMALL G
   ["l"     , "ℓ"],  # SCRIPT SMALL L
@@ -1112,6 +1251,8 @@ map = [
 root = "U+0327"  # COMBINING CEDILLA
 category = "Cedilla and ogonek diacritics"
 xkb_leader = "dead_cedilla"
+doc_bases = ["aeiou cdghklnrst AEIOU CDGHKLNRST \\|"]
+notes = "Since only consonants can have a cedilla while only vowels can have an ogonek, being mutually exclusive, the two diacritics are included in the same key (With the exception of letters `E` and `e` with cedilla (Ȩȩ), since they are rare and the more common version with ogonek is already included). Certain letters may have a different display for the cedilla, such as having the shape of an apostrophe. Includes the combining diacritical mark and modifier letter for the ogonek, respectively mapped to <kbd>\\\\</kbd> and <kbd>|</kbd> since the ogonek and cedilla are approximately mirror images."
 map = [
   ["|"     , "˛"],  # OGONEK
   ["n"     , "ņ"],  # LATIN SMALL LETTER N WITH CEDILLA
@@ -1152,6 +1293,8 @@ map = [
 root = "<"  # LESS-THAN SIGN
 category = "Less-than operator variants + left ceiling/floor"
 xkb_leader = "U2264"
+doc_bases = ["/-+~=<> [{"]
+notes = "Includes left ceiling/floor brackets."
 map = [
   ["="     , "≦"],  # LESS-THAN OVER EQUAL TO
   ["/"     , "≮"],  # NOT LESS-THAN
@@ -1169,6 +1312,8 @@ map = [
 root = "U+0323"  # COMBINING DOT BELOW
 category = "Underdot diacritic + dot-related symbols"
 xkb_leader = "dead_belowdot"
+doc_bases = ["abdehiklmnorstuvwyz ABDEHIKLMNORSTUVWYZ -/|\\ .\" *"]
+notes = "Ellipsis is mapped to key <kbd>.</kbd> representing the extra dots. This is more convenient than key <kbd>_</kbd> which requires shift. U+00B7 MIDDLE DOT (·) is not for dot multiplication, the preferred character is U+22C5 DOT OPERATOR mapped to `*`. Also includes U+0324 COMBINING DIAERESIS BELOW for two dots below."
 map = [
   ["\\"    , "⋱"],  # DOWN RIGHT DIAGONAL ELLIPSIS
   ["."     , "…"],  # HORIZONTAL ELLIPSIS
@@ -1222,6 +1367,8 @@ map = [
 root = ">"  # GREATER-THAN SIGN
 category = "Greater-than operator variants + right ceiling/floor"
 xkb_leader = "U2265"
+doc_bases = ["/-+~=>< ]}"]
+notes = "Includes right ceiling/floor brackets."
 map = [
   ["="     , "≧"],  # GREATER-THAN OVER EQUAL TO
   ["/"     , "≯"],  # NOT GREATER-THAN
@@ -1239,6 +1386,8 @@ map = [
 root = "U+0338"  # COMBINING LONG SOLIDUS OVERLAY
 category = "Stroked letters + vulgar fractions"
 xkb_leader = "dead_stroke"
+doc_bases = ["abcdefghijkloprtuyz", "ABCDEFGHIJKLOPRTUYZ", "1234567 890 !@#$% ^&() *"]
+notes = "Includes all vulgar fractions provided in Unicode, perfectly mapped to the number row keys. Third fractions are in reverse order, considering fraction ↉ as 0, and to accommodate the remaining two, 8 is two thirds by having two circles in its shape, and 9 is one third by having one circle only. Other fractions are mapped by their value. U+215F FRACTION NUMERATOR ONE (⅟ ) is mapped to `*` representing the blank denominator. Custom vulgar fractions can be composed by superscript numbers, the fraction slash (provided as default case of this dead key), and subscript numbers (e.g. ¹¹³⁄₃₅₅).  This combining diacritical mark (U+0338) is also the standard combining character for \"crossing out\" other characters in Unicode, for example negating math operators: U+003D (=) + U+0338 ⇔ U+2260 (≠)."
 map = [
   ["b"     , "ƀ"],  # LATIN SMALL LETTER B WITH STROKE
   ["z"     , "ƶ"],  # LATIN SMALL LETTER Z WITH STROKE

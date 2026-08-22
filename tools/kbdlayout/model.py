@@ -1,15 +1,24 @@
 """The platform-neutral description of a keyboard layout.
 
 Everything the repository ships -- the Windows ``.klc``, the Linux XKB and
-Compose files, the documentation -- is derived from a :class:`Layout`. Nothing
-in this module knows about any particular platform; that belongs in
-:mod:`kbdlayout.generators`.
+Compose files, the macOS ``.keylayout``, the documentation -- is derived from a
+:class:`Layout`.
+
+Nothing in this module knows about any particular platform, and that is
+enforced rather than hoped for: a target's configuration is an opaque object
+kept in :attr:`Layout.targets`, per-dead-key data a target needs lives in
+:attr:`DeadKey.extra` under a name only that target understands, and every
+constraint that comes from a platform's file format is asked of the target
+itself (see :mod:`kbdlayout.generators`). :meth:`Layout.validate` checks only
+what is true of any keyboard layout on any system.
 """
 
 from __future__ import annotations
 
-import unicodedata
 from dataclasses import dataclass, field
+from typing import Any
+
+from .unicode_names import unicode_name
 
 #: The shift states this project supports, in the order the documentation and
 #: every generated file use them.
@@ -24,43 +33,31 @@ LEVEL_NAMES = {
     "altgr_shift": "AltGr + Shift",
 }
 
-#: MSKLC 1.4 cannot build a dead key whose root is above this code point, and it
-#: cannot emit any character outside the Basic Multilingual Plane. Both limits
-#: are documented in README.md ("Notes on MSKLC 1.4"). They are the tightest of
-#: the three platforms, so the model enforces them for every target.
-MAX_DEAD_KEY_ROOT = 0x0FFF
-MAX_CODE_POINT = 0xFFFF
-
-_CONTROL_NAMES: dict[int, str] = {
-    0x00: "NULL",
-    0x08: "BACKSPACE",
-    0x09: "CHARACTER TABULATION",
-    0x0A: "LINE FEED",
-    0x0D: "CARRIAGE RETURN",
-    0x1B: "ESCAPE",
-    0x1C: "INFORMATION SEPARATOR FOUR",
-    0x1D: "INFORMATION SEPARATOR THREE",
-    0x1E: "INFORMATION SEPARATOR TWO",
-    0x1F: "INFORMATION SEPARATOR ONE",
-    0x7F: "DELETE",
-}
+#: The base characters every platform gives a dead key an explicit answer for.
+#:
+#: This is a cross-platform behavioural contract, not a platform detail: each
+#: back end emits a rule for every one of these, so that a base a dead key does
+#: not compose produces the root character followed by the base character
+#: everywhere, rather than whatever that platform would otherwise fall back to.
+#: It lives here because it is the thing that makes the three builds agree.
+FALLBACK_BASES: tuple[int, ...] = tuple(range(0x20, 0x7F))
 
 
 class LayoutError(ValueError):
     """Raised when a layout description is not usable."""
 
 
-def unicode_name(code_point: int) -> str:
-    """Return the official Unicode name for ``code_point``.
-
-    Control characters have no name of their own; Unicode gives them formal
-    aliases instead, and those are what MSKLC's comments and this project's
-    documentation use.
-    """
-    try:
-        return unicodedata.name(chr(code_point))
-    except ValueError:
-        return _CONTROL_NAMES.get(code_point, f"<U+{code_point:04X}>")
+__all__ = [
+    "FALLBACK_BASES",
+    "LEVELS",
+    "LEVEL_NAMES",
+    "DeadKey",
+    "Key",
+    "Layout",
+    "LayoutError",
+    "Output",
+    "unicode_name",
+]
 
 
 @dataclass(frozen=True)
@@ -91,6 +88,10 @@ class Key:
     #: Set on the few keys whose source file pins the value rather than letting
     #: it be derived from the unmodified/Shift pair.
     caps_override: bool | None = None
+    #: Per-target data this key carries, keyed by the field name the target
+    #: declares. As with :attr:`DeadKey.extra`, the model ascribes it no
+    #: meaning.
+    extra: dict[str, Any] = field(default_factory=dict)
 
     def output(self, level: str) -> Output | None:
         return self.outputs.get(level)
@@ -121,12 +122,11 @@ class DeadKey:
     root: int
     #: The heading this dead key is documented under in README.md.
     category: str = ""
-    #: The X11 keysym this dead key uses on Linux: the key emits it, and every
-    #: Compose sequence for this dead key starts with it. It is a ``dead_*`` name
-    #: where one fits the diacritic, and otherwise the ``U<hex>`` form of a code
-    #: point that nothing else in the layout produces.
-    xkb_leader: str | None = None
     entries: list[tuple[int, int]] = field(default_factory=list)
+    #: Per-target data this dead key carries, keyed by the field name the
+    #: target declares. The model stores it and ascribes it no meaning; only
+    #: the target that declared the field knows what it says.
+    extra: dict[str, Any] = field(default_factory=dict)
 
     @property
     def root_char(self) -> str:
@@ -147,58 +147,50 @@ class DeadKey:
 
 
 @dataclass
-class WindowsTarget:
-    dll_name: str
-    locale_name: str
-    locale_id: str
-    language_name: str
-    klc_version: str = "1.0"
-
-
-@dataclass
-class LinuxTarget:
-    symbols_file: str
-    variant: str
-    description: str
-
-
-@dataclass
-class MacosTarget:
-    #: macOS identifies a layout by a signed 16-bit number; third-party layouts
-    #: use a negative one. Keep it fixed across releases, or macOS treats the
-    #: layout as a brand new input source.
-    id: int
-    group: int = 126
-
-
-@dataclass
 class Layout:
     name: str
     version: str
     copyright: str
     company: str
-    windows: WindowsTarget
-    linux: LinuxTarget
-    macos: MacosTarget
+    #: Each target's parsed configuration, keyed by target name. The model
+    #: never looks inside these; see :meth:`config`.
+    targets: dict[str, Any] = field(default_factory=dict)
     keys: list[Key] = field(default_factory=list)
     dead_keys: list[DeadKey] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        self._reindex()
+
+    def _reindex(self) -> None:
+        """Rebuild the lookup indexes.
+
+        :class:`Key` and :class:`DeadKey` stay mutable, so anything that edits
+        ``keys`` or ``dead_keys`` after construction must call this. The loader
+        builds a layout once and does not, which is why this is not a
+        ``cached_property``.
+        """
+        self._by_key_id = {key.id: key for key in self.keys}
+        self._by_root = {dead_key.root: dead_key for dead_key in self.dead_keys}
 
     @property
     def description(self) -> str:
         """The name Windows shows on the taskbar, and the ``.klc`` description."""
         return f"{self.name} ({self.version})"
 
+    def config(self, target: str) -> Any:
+        """The parsed configuration for one target."""
+        try:
+            return self.targets[target]
+        except KeyError:
+            raise LayoutError(
+                f"the layout has no [layout.{target}] table, which the {target} target needs"
+            ) from None
+
     def key(self, key_id: str) -> Key | None:
-        for key in self.keys:
-            if key.id == key_id:
-                return key
-        return None
+        return self._by_key_id.get(key_id)
 
     def dead_key(self, root: int) -> DeadKey | None:
-        for dead_key in self.dead_keys:
-            if dead_key.root == root:
-                return dead_key
-        return None
+        return self._by_root.get(root)
 
     @property
     def dead_key_roots(self) -> list[int]:
@@ -229,7 +221,7 @@ class Layout:
         self, key_order: list[str] | tuple[str, ...] | None = None
     ) -> list[DeadKey]:
         """The dead keys, ordered by where the keys that start them appear."""
-        by_root = {dead_key.root: dead_key for dead_key in self.dead_keys}
+        by_root = self._by_root
         ordered = [by_root[root] for root in self.declared_dead_roots(key_order) if root in by_root]
         seen = {dead_key.root for dead_key in ordered}
         ordered.extend(d for d in self.dead_keys if d.root not in seen)
@@ -243,27 +235,21 @@ class Layout:
         return None
 
     def validate(self) -> list[str]:
-        """Return every reason this layout could not be built for a platform."""
+        """Every reason this is not a well-formed layout, on any platform.
+
+        Limits that come from one platform's file format are not checked here;
+        each target reports its own (see ``constraints`` in
+        :mod:`kbdlayout.generators`).
+        """
         problems: list[str] = []
         seen_ids: set[str] = set()
         for key in self.keys:
             if key.id in seen_ids:
                 problems.append(f"key {key.id} is defined more than once")
             seen_ids.add(key.id)
-            for level, output in key.outputs.items():
+            for level in key.outputs:
                 if level not in LEVELS:
                     problems.append(f"key {key.id} uses unknown shift state {level!r}")
-                if output.code_point > MAX_CODE_POINT:
-                    problems.append(
-                        f"key {key.id} {level} emits U+{output.code_point:04X}, "
-                        "which is outside the Basic Multilingual Plane"
-                    )
-                if output.dead and output.code_point > MAX_DEAD_KEY_ROOT:
-                    problems.append(
-                        f"key {key.id} {level} is a dead key with root "
-                        f"U+{output.code_point:04X}, above the MSKLC limit of "
-                        f"U+{MAX_DEAD_KEY_ROOT:04X}"
-                    )
 
         declared = set(self.declared_dead_roots())
         defined = self.dead_key_roots
@@ -280,71 +266,13 @@ class Layout:
 
         for dead_key in self.dead_keys:
             seen_bases: set[int] = set()
-            for base, composite in dead_key.entries:
+            for base, _composite in dead_key.entries:
                 if base in seen_bases:
                     problems.append(f"dead key U+{dead_key.root:04X} maps base U+{base:04X} twice")
                 seen_bases.add(base)
-                if base > MAX_DEAD_KEY_ROOT:
-                    problems.append(
-                        f"dead key U+{dead_key.root:04X} has base U+{base:04X}, above the "
-                        f"MSKLC limit of U+{MAX_DEAD_KEY_ROOT:04X}"
-                    )
-                if composite > MAX_CODE_POINT:
-                    problems.append(
-                        f"dead key U+{dead_key.root:04X} produces U+{composite:04X}, "
-                        "which is outside the Basic Multilingual Plane"
-                    )
             if dead_key.default is None:
                 problems.append(
                     f"dead key U+{dead_key.root:04X} has no U+0020 entry, so it has no "
                     "default character"
                 )
-        problems.extend(self._leader_problems())
-        return problems
-
-    def _leader_problems(self) -> list[str]:
-        """Check the Linux keysym each dead key leads its sequences with.
-
-        Compose matches on the keysym alone, so two dead keys sharing one -- or a
-        dead key sharing one with a character the layout types plainly -- makes
-        both unusable. Names are not enough to tell: ``dead_perispomeni`` and
-        ``dead_tilde`` are two names for keysym 0xFE53.
-        """
-        from .keysyms import keysym, keysym_value
-
-        problems: list[str] = []
-        by_value: dict[int, str] = {}
-        for dead_key in self.dead_keys:
-            leader = dead_key.xkb_leader
-            if leader is None:
-                problems.append(
-                    f"dead key U+{dead_key.root:04X} has no xkb_leader, so Linux has no "
-                    "keysym to put on the key"
-                )
-                continue
-            value = keysym_value(leader)
-            if value is None:
-                problems.append(
-                    f"dead key U+{dead_key.root:04X} uses the unknown keysym {leader!r}"
-                )
-                continue
-            if value in by_value:
-                problems.append(
-                    f"dead keys U+{dead_key.root:04X} and {by_value[value]} both resolve to "
-                    f"keysym 0x{value:04X} ({leader!r}); they would be indistinguishable"
-                )
-            by_value[value] = f"U+{dead_key.root:04X}"
-
-        for key in self.keys:
-            for level in ("normal", "shift"):
-                output = key.outputs.get(level)
-                if output is None:
-                    continue
-                value = keysym_value(keysym(output.code_point))
-                if value is not None and value in by_value:
-                    problems.append(
-                        f"key {key.id} types U+{output.code_point:04X} plainly, but that is "
-                        f"also the Linux keysym of dead key {by_value[value]}; the plain "
-                        "character would start a dead key sequence"
-                    )
         return problems

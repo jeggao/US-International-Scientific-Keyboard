@@ -6,10 +6,10 @@ import re
 import pytest
 
 from kbdlayout import source
-from kbdlayout.checks_assets import png_size
-from kbdlayout.cli import LAYOUT_SOURCE
+from kbdlayout.checks.assets import png_size
 from kbdlayout.generators import picture
 from kbdlayout.generators._picture_font import WOFF2_BASE64
+from kbdlayout.project import LAYOUT_SOURCE
 
 
 @pytest.fixture(scope="module")
@@ -85,7 +85,10 @@ def test_the_embedded_font_covers_every_character_drawn(layout):
     import base64
     import io
 
-    from fontTools.ttLib import TTFont
+    ttLib = pytest.importorskip(
+        "fontTools.ttLib", reason="fonttools is an optional extra", exc_type=ImportError
+    )
+    TTFont = ttLib.TTFont
 
     font = TTFont(io.BytesIO(base64.b64decode(WOFF2_BASE64)), fontNumber=0, lazy=True)
     covered: set[int] = set()
@@ -122,13 +125,10 @@ def test_a_combining_mark_is_drawn_on_a_dotted_circle(layout):
 
 def test_render_fails_when_there_is_no_browser(monkeypatch, repo_root, capsys):
     """A green picture job has to mean the picture was actually rendered."""
-    import importlib.util
+    from kbdlayout import rasterise
+    from kbdlayout.cli import main
 
-    spec = importlib.util.spec_from_file_location("render", repo_root / "tools" / "render.py")
-    render = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(render)
-
-    monkeypatch.setattr(render, "find_chromium", lambda: None)
-    assert render.main(["--root", str(repo_root)]) == 1
-    assert render.main(["--root", str(repo_root), "--check"]) == 1
+    monkeypatch.setattr(rasterise, "find_chromium", lambda: None)
+    assert main(["--root", str(repo_root), "render"]) == 1
+    assert main(["--root", str(repo_root), "render", "--check"]) == 1
     assert "no Chromium found" in capsys.readouterr().err

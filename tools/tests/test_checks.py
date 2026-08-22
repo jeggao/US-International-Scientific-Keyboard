@@ -6,93 +6,108 @@ not a check.
 """
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
+from conftest import KLC_NAME, edit, edit_klc
 
-from kbdlayout import (
-    checks_assets,
-    checks_generated,
-    checks_readme,
-    checks_repo,
-    source,
-)
-from kbdlayout.cli import LAYOUT_SOURCE
-from kbdlayout.report import Reporter
-
-KLC_NAME = "US International Scientific.klc"
-
-
-@pytest.fixture
-def sandbox(tmp_path, repo_root):
-    for name in (KLC_NAME, "README.md"):
-        shutil.copy2(repo_root / name, tmp_path / name)
-    for directory in ("assets", "layout", "dist"):
-        shutil.copytree(repo_root / directory, tmp_path / directory)
-    return tmp_path
+from kbdlayout import source
+from kbdlayout.checks import CHECKS, run_checks
+from kbdlayout.model import LayoutError
+from kbdlayout.project import LAYOUT_SOURCE
 
 
 def run(root: Path) -> list[str]:
-    reporter = Reporter(root)
+    """Every finding, using the same orchestration the command line uses.
+
+    Going through :func:`run_checks` rather than calling the check modules by
+    hand is deliberate: a check that is registered but not wired up here would
+    otherwise leave every test in this file passing without running it.
+    """
     layout = source.load(root / LAYOUT_SOURCE)
-    checks_generated.check(root, layout, reporter)
-    checks_readme.check(root / "README.md", layout, reporter)
-    checks_assets.check(root / "assets", layout, reporter)
-    checks_repo.check(root, reporter)
-    return [f.format_text() for f in reporter.findings]
-
-
-def edit(path: Path, old: str, new: str) -> None:
-    text = path.read_text(encoding="utf-8")
-    assert old in text, f"{old!r} not found in {path.name}"
-    path.write_text(text.replace(old, new, 1), encoding="utf-8")
-
-
-def edit_klc(path: Path, old: str, new: str) -> None:
-    text = path.read_bytes().decode("utf-16")
-    assert old in text, f"{old!r} not found in the .klc"
-    path.write_bytes(("﻿" + text.lstrip("﻿").replace(old, new, 1)).encode("utf-16-le"))
+    return [f.format_text() for f in run_checks(root, layout).findings]
 
 
 def test_repository_is_clean(repo_root):
     assert run(repo_root) == []
 
 
-def test_wrong_code_point_in_a_key_table(sandbox):
-    edit(sandbox / "README.md", "|U+2032|PRIME|", "|U+2033|PRIME|")
-    findings = run(sandbox)
-    assert any("U+2033" in f and "readme-keymap" in f for f in findings)
+def test_every_registered_check_runs(repo_root, monkeypatch):
+    """run_checks must call each entry in CHECKS, not a hand-written subset."""
+    called: list[str] = []
+    for name in CHECKS:
+        monkeypatch.setitem(
+            CHECKS, name, lambda _root, _layout, _reporter, n=name: called.append(n)
+        )
+    layout = source.load(repo_root / LAYOUT_SOURCE)
+    run_checks(repo_root, layout)
+    assert called == list(CHECKS)
 
 
-def test_wrong_character_name_in_a_key_table(sandbox):
-    edit(sandbox / "README.md", "|U+221E|INFINITY|", "|U+221E|INFINITY SIGN|")
-    assert any("INFINITY SIGN" in f for f in run(sandbox))
+# The key-mapping and dead-key tables are generated now, so the defects these
+# used to hunt for are reported as staleness -- README.md is a generated file
+# like any other -- or cannot be expressed in the source at all.
 
 
-def test_dead_key_composite_out_of_step(sandbox):
-    edit(sandbox / "README.md", "|Composites|àèìòùỳǹẁ", "|Composites|àèìòùỳǹẁx")
-    findings = run(sandbox)
-    assert any("readme-deadkey" in f for f in findings)
+@pytest.mark.parametrize(
+    "old, new",
+    [
+        pytest.param("|U+2032|PRIME|", "|U+2033|PRIME|", id="code-point"),
+        pytest.param("|U+221E|INFINITY|", "|U+221E|INFINITY SIGN|", id="character-name"),
+        pytest.param("|Composites|àèìòùỳǹẁ", "|Composites|àèìòùỳǹẁx", id="composite"),
+        pytest.param(
+            "|Default|U+00B4 ACUTE ACCENT (´)|",
+            "|Default|U+0060 GRAVE ACCENT (`)|",
+            id="dead-key-default",
+        ),
+        pytest.param("|<kbd>*</kbd>|˙   |", "|<kbd>*</kbd>|̇   |", id="bare-combining-mark"),
+    ],
+)
+def test_a_hand_edited_table_is_reported_as_stale(sandbox, old, new):
+    edit(sandbox / "README.md", old, new)
+    assert any("generated-stale" in f and "README.md" in f for f in run(sandbox))
 
 
-def test_dead_key_default_mismatch(sandbox):
+def test_a_dead_key_base_the_documentation_omits_is_rejected_at_load(sandbox):
+    """doc_bases must cover the mapping, so this cannot reach a generator."""
     edit(
-        sandbox / "README.md",
-        "|Default|U+00B4 ACUTE ACCENT (´)|",
-        "|Default|U+0060 GRAVE ACCENT (`)|",
+        sandbox / LAYOUT_SOURCE,
+        'doc_bases = ["aeiouynw AEIOUYNW"]',
+        'doc_bases = ["aeiouyn AEIOUYNW"]',
     )
-    assert any("default is documented as U+0060" in f for f in run(sandbox))
+    with pytest.raises(LayoutError, match="doc_bases does not list it"):
+        source.load(sandbox / LAYOUT_SOURCE)
 
 
-def test_undocumented_dead_key_base(sandbox):
-    edit(sandbox / "README.md", "|Bases|`CHIRZ`|", "|Bases|`CHIR`|")
-    assert any("is not documented" in f or "do not line up" in f for f in run(sandbox))
+def test_a_documented_base_the_layout_does_not_compose_is_rejected(sandbox):
+    edit(
+        sandbox / LAYOUT_SOURCE,
+        'doc_bases = ["aeiouynw AEIOUYNW"]',
+        'doc_bases = ["aeiouynwq AEIOUYNW"]',
+    )
+    with pytest.raises(LayoutError, match="which it does not compose"):
+        source.load(sandbox / LAYOUT_SOURCE)
 
 
-def test_bare_combining_mark_in_a_key_table(sandbox):
-    edit(sandbox / "README.md", "|<kbd>*</kbd>|˙   |", "|<kbd>*</kbd>|̇   |")
-    assert any("bare combining mark" in f for f in run(sandbox))
+def test_a_key_without_its_reason_is_rejected(sandbox):
+    edit(sandbox / LAYOUT_SOURCE, 'altgr_doc = "Math: first (1) derivative."\n', "")
+    with pytest.raises(LayoutError, match="has no altgr_doc saying why"):
+        source.load(sandbox / LAYOUT_SOURCE)
+
+
+def test_a_dead_key_marker_on_a_plain_key_is_rejected(sandbox):
+    edit(
+        sandbox / LAYOUT_SOURCE,
+        'altgr_doc = "Math: first (1) derivative."',
+        'altgr_doc = "**Dead key: nonsense.**"',
+    )
+    with pytest.raises(LayoutError, match="described as a dead key but is not one"):
+        source.load(sandbox / LAYOUT_SOURCE)
+
+
+def test_a_missing_generated_block_is_reported(sandbox):
+    edit(sandbox / "README.md", "<!-- generated: keys AE altgr -->", "")
+    assert any("generated-unbuildable" in f for f in run(sandbox))
 
 
 def test_stray_zero_width_joiner(sandbox):
@@ -170,8 +185,25 @@ def test_a_corrupted_picture_source_is_reported_as_stale(sandbox):
 
 
 def test_a_picture_of_the_wrong_size_is_reported(sandbox):
-    from PIL import Image
+    Image = pytest.importorskip(
+        "PIL.Image", reason="pillow is an optional extra", exc_type=ImportError
+    )
 
     path = sandbox / "assets/keyboard-layout.png"
     Image.open(path).crop((0, 0, 100, 100)).save(path)
     assert any("assets-picture" in f for f in run(sandbox))
+
+
+def test_the_generated_dist_files_are_covered_by_the_hygiene_check(repo_root):
+    """They have no recognisable suffix, so the old extension allowlist skipped them."""
+    from kbdlayout.checks.repo import iter_text_files
+
+    covered = {str(path.relative_to(repo_root)) for path, _data in iter_text_files(repo_root)}
+    assert {
+        "dist/linux/symbols/us_intl_sci",
+        "dist/linux/us_intl_sci.XCompose",
+        "dist/macos/US-International Scientific.keylayout",
+    } <= covered
+    # ...and the files that are deliberately not LF text are still left alone.
+    assert KLC_NAME not in covered
+    assert "assets/keyboard-layout.png" not in covered
