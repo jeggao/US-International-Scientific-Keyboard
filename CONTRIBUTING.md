@@ -119,6 +119,13 @@ which is plain text and therefore diffable and checked for drift like every
 other generated file; `tools/render.py` then rasterises that SVG with a headless
 Chromium.
 
+When CI does rebuild the picture, it commits the result to the branch itself.
+A push made with the workflow's own token deliberately does not start another
+workflow run -- otherwise the job would trigger itself forever -- so that new
+commit arrives with no checks attached, and the pull request will say it has
+none until something else is pushed. The checks on the commit before it still
+stand; nothing has failed.
+
 The SVG carries its own font — a subset of DejaVu Sans covering exactly the
 characters the picture draws, embedded as a data URI — so it renders the same
 whatever fonts the machine happens to have, and the PNG comes out identical on
