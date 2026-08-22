@@ -1,0 +1,9 @@
+# Text files in this repository use LF endings and are stored as UTF-8...
+* text=auto eol=lf
+
+# ...except the keyboard layout itself. MSKLC 1.4 writes (and only reads)
+# UTF-16LE with a byte order mark and CRLF line endings, so git must never
+# normalise it. It is also unreadable as a diff, hence the explicit -diff.
+*.klc -text -diff
+
+*.png binary

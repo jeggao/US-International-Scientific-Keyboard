@@ -1,1 +1,19 @@
 .obsidian/
+
+# Python tooling under tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MSKLC build output
+*.dll
+*.inf
+*.cat
+*.msi
+setup.exe

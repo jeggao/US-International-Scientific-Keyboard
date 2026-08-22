@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Layout documentation
+    url: https://github.com/jeggao/US-International-Scientific-Keyboard#readme
+    about: Every key mapping and every dead key is documented in the README.
+  - name: Contributing guide
+    url: https://github.com/jeggao/US-International-Scientific-Keyboard/blob/main/CONTRIBUTING.md
+    about: How to change the layout and how to run the consistency checks.

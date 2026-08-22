@@ -1,0 +1,200 @@
+name: CI
+
+# Branch work is built through its pull request, and main through push. The
+# picture job commits the rebuilt picture back to the branch, so it checks the
+# branch out by name rather than the merge commit.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  generated:
+    name: Generated files are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Regenerate every platform file from the layout source
+        run: python tools/generate.py --check
+
+  layout:
+    name: Layout consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Check README.md and assets against the layout source
+        run: python tools/validate.py --strict
+
+  tests:
+    name: Tool tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: Install the X11 keyboard database so the XKB tests run
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends x11-xkb-utils xkb-data
+      - run: pytest
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: ruff check
+        run: ruff check tools
+      - name: ruff format
+        run: ruff format --check tools
+      - name: Spell check the prose
+        run: codespell README.md CONTRIBUTING.md tools .github
+
+  notebook:
+    name: Sandbox notebook
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: Validate the notebook format
+        run: python -c "import nbformat, sys; nbformat.validate(nbformat.read('assets/sandbox.ipynb', as_version=4))"
+      - name: Run every cell
+        run: |
+          python - <<'PY'
+          import nbformat
+          from nbclient import NotebookClient
+
+          notebook = nbformat.read("assets/sandbox.ipynb", as_version=4)
+          NotebookClient(notebook, timeout=120, resources={"metadata": {"path": "assets"}}).execute()
+          PY
+
+  windows-klc:
+    name: Windows .klc is loadable by MSKLC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: The layout must stay UTF-16LE with a BOM and CRLF line endings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          data = Path("US International Scientific.klc").read_bytes()
+          assert data[:2] == b"\xff\xfe", "missing UTF-16LE byte order mark"
+          text = data.decode("utf-16")
+          assert "\r\n" in text, "expected CRLF line endings"
+          assert text.replace("\r\n", "").count("\n") == 0, "found a bare LF"
+          assert text.rstrip().endswith("ENDKBD"), "file does not end with ENDKBD"
+          print(f"ok: {len(text.splitlines())} lines")
+          PY
+
+  linux-xkb:
+    name: Linux XKB compiles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install the X11 keyboard database
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends x11-xkb-utils xkb-data
+      - name: Compile the generated symbols file, and compare with the stock us layout
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.xkb/symbols"
+          cp dist/linux/symbols/us_intl_sci "$HOME/.xkb/symbols/"
+          keymap() {
+            printf 'xkb_keymap {\n  xkb_keycodes { include "evdev+aliases(qwerty)" };\n  xkb_types { include "complete" };\n  xkb_compat { include "complete" };\n  xkb_symbols { include "pc+%s" };\n  xkb_geometry { include "pc(pc105)" };\n};\n' "$1"
+          }
+          keymap 'us_intl_sci(sci)' > layout.in
+          keymap 'us' > baseline.in
+          xkbcomp -I"$HOME/.xkb" -xkb -o layout.xkb layout.in > layout.log 2>&1
+          xkbcomp -xkb -o baseline.xkb baseline.in > baseline.log 2>&1
+          # The stock layout emits a page of notes about keys no layout defines;
+          # ours must not add anything of its own to that list.
+          diff <(sort baseline.log) <(sort layout.log)
+          echo "xkbcomp is as quiet for this layout as it is for the stock us layout"
+
+  picture:
+    name: Overview picture
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # A pull request from this repository, or a push to main, can have the
+      # rebuilt picture committed back, so check the branch out by name. A pull
+      # request from a fork cannot -- its token is read-only -- so it is taken
+      # as it is and only reported on.
+      - name: Check out the branch the picture belongs to
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.head.ref }}
+      - name: Check out the pull request
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - run: pip install -r tools/requirements-dev.txt
+      - name: Install a headless Chromium to rasterise with
+        run: playwright install --with-deps chromium
+
+      - name: Rebuild the picture and commit it if it changed
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          set -euo pipefail
+          python tools/render.py
+          if git diff --quiet -- assets/keyboard-layout.png; then
+            echo "the picture is already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/keyboard-layout.png
+          git commit -m "Rebuild the overview picture from the layout"
+          # A push made with GITHUB_TOKEN does not start another workflow run,
+          # so this cannot loop.
+          git push || (git pull --rebase && git push)
+      - name: Report whether the picture is current
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+        run: python tools/render.py --check

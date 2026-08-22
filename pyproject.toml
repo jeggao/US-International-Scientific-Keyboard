@@ -1,0 +1,27 @@
+# Configuration for the repository's development tooling. The keyboard layout
+# itself is the `.klc` file; everything here supports the checks in `tools/`.
+
+[tool.pytest.ini_options]
+testpaths = ["tools/tests"]
+pythonpath = ["tools"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "RUF"]
+ignore = [
+    # The checks deliberately embed the characters they talk about, including
+    # ambiguous look-alikes; that is the point of this repository.
+    "RUF001",
+    "RUF002",
+    "RUF003",
+]
+
+[tool.codespell]
+skip = "./.git,./US International Scientific.klc,./assets,./dist,./layout,./tools/kbdlayout/generators/_picture_font.py"
+# "Shft" is MSKLC's own abbreviation in the SHIFTSTATE comments of a .klc file.
+ignore-words-list = "shft"

@@ -12,7 +12,7 @@ A clear and concise description of what the problem is. Ex. I'm always frustrate
 
 **Describe the solution you'd like**
 A clear and concise description of what you want to happen.
-To add new Unicode characters, please specify the code points (U+xxxx). Note that characters can only be in the BMP (U+0000..U+FFFF), and dead keys could only be in U+0000..U+0FFF. 
+To add new Unicode characters, please specify the code points (U+xxxx). Note that characters can only be in the BMP (U+0000–U+FFFF), and dead key root characters can only be in U+0000–U+0FFF.
 
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.

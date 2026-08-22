@@ -1,0 +1,1302 @@
+# US-International Scientific keyboard layout, version 1.7.0.
+#
+# This file is the source of truth. Every shipped file -- the Windows .klc, the
+# Linux XKB and Compose files -- is generated from it by tools/generate.py, and
+# README.md is checked against it by tools/validate.py.
+#
+# A character is written either as itself or, when it is invisible or does not
+# survive being pasted around (a space, a control character, a combining mark),
+# as "U+XXXX". A shift state that starts a dead key is written { dead = "..." }.
+
+[layout]
+name = "US-International Scientific"
+version = "1.7.0"
+copyright = "(c) 2023 Daniel S Lai"
+company = "Daniel S Lai"
+
+[layout.windows]
+dll_name = "KBDUSS7"
+locale_name = "en-US"
+locale_id = "00000409"
+language_name = "English (United States)"
+klc_version = "1.0"
+
+[layout.linux]
+symbols_file = "us_intl_sci"
+variant = "sci"
+description = "English (US, international scientific)"
+
+[layout.macos]
+id = -19001
+group = 126
+
+
+# ---------------------------------------------------------------------------
+# Keys, named by their ISO/IEC 9995 position, in reading order.
+# ---------------------------------------------------------------------------
+
+[[key]]  # grave/tilde
+id = "TLDE"
+normal = "`"  # GRAVE ACCENT
+shift = "~"  # TILDE
+altgr = { dead = "U+0300" }  # COMBINING GRAVE ACCENT
+altgr_shift = { dead = "U+0303" }  # COMBINING TILDE
+
+[[key]]  # 1
+id = "AE01"
+normal = "1"  # DIGIT ONE
+shift = "!"  # EXCLAMATION MARK
+altgr = "′"  # PRIME
+altgr_shift = "¡"  # INVERTED EXCLAMATION MARK
+
+[[key]]  # 2
+id = "AE02"
+normal = "2"  # DIGIT TWO
+shift = "@"  # COMMERCIAL AT
+altgr = "″"  # DOUBLE PRIME
+altgr_shift = "√"  # SQUARE ROOT
+
+[[key]]  # 3
+id = "AE03"
+normal = "3"  # DIGIT THREE
+shift = "#"  # NUMBER SIGN
+altgr = "‴"  # TRIPLE PRIME
+altgr_shift = "∛"  # CUBE ROOT
+
+[[key]]  # 4
+id = "AE04"
+normal = "4"  # DIGIT FOUR
+shift = "$"  # DOLLAR SIGN
+altgr = "¤"  # CURRENCY SIGN
+altgr_shift = "£"  # POUND SIGN
+
+[[key]]  # 5
+id = "AE05"
+normal = "5"  # DIGIT FIVE
+shift = "%"  # PERCENT SIGN
+altgr = "€"  # EURO SIGN
+altgr_shift = "‰"  # PER MILLE SIGN
+
+[[key]]  # 6
+id = "AE06"
+normal = "6"  # DIGIT SIX
+shift = "^"  # CIRCUMFLEX ACCENT
+altgr = { dead = "U+030C" }  # COMBINING CARON
+altgr_shift = { dead = "U+0302" }  # COMBINING CIRCUMFLEX ACCENT
+
+[[key]]  # 7
+id = "AE07"
+normal = "7"  # DIGIT SEVEN
+shift = "&"  # AMPERSAND
+altgr = "U+20D7"  # COMBINING RIGHT ARROW ABOVE
+altgr_shift = { dead = "¦" }  # BROKEN BAR
+
+[[key]]  # 8
+id = "AE08"
+normal = "8"  # DIGIT EIGHT
+shift = "*"  # ASTERISK
+altgr = "∞"  # INFINITY
+altgr_shift = { dead = "U+0307" }  # COMBINING DOT ABOVE
+
+[[key]]  # 9
+id = "AE09"
+normal = "9"  # DIGIT NINE
+shift = "("  # LEFT PARENTHESIS
+altgr = "∝"  # PROPORTIONAL TO
+altgr_shift = "⟨"  # MATHEMATICAL LEFT ANGLE BRACKET
+
+[[key]]  # 0
+id = "AE10"
+normal = "0"  # DIGIT ZERO
+shift = ")"  # RIGHT PARENTHESIS
+altgr = { dead = "U+030A" }  # COMBINING RING ABOVE
+altgr_shift = "⟩"  # MATHEMATICAL RIGHT ANGLE BRACKET
+
+[[key]]  # minus
+id = "AE11"
+normal = "-"  # HYPHEN-MINUS
+shift = "_"  # LOW LINE
+altgr = "–"  # EN DASH
+altgr_shift = "—"  # EM DASH
+
+[[key]]  # equals
+id = "AE12"
+normal = "="  # EQUALS SIGN
+shift = "+"  # PLUS SIGN
+altgr = { dead = "ª" }  # FEMININE ORDINAL INDICATOR
+altgr_shift = { dead = "º" }  # MASCULINE ORDINAL INDICATOR
+
+[[key]]  # Q
+id = "AD01"
+normal = "q"  # LATIN SMALL LETTER Q
+shift = "Q"  # LATIN CAPITAL LETTER Q
+altgr = "÷"  # DIVISION SIGN
+altgr_shift = "≡"  # IDENTICAL TO
+
+[[key]]  # W
+id = "AD02"
+normal = "w"  # LATIN SMALL LETTER W
+shift = "W"  # LATIN CAPITAL LETTER W
+altgr = "ϵ"  # GREEK LUNATE EPSILON SYMBOL
+altgr_shift = { dead = "Ʃ" }  # LATIN CAPITAL LETTER ESH
+
+[[key]]  # E
+id = "AD03"
+normal = "e"  # LATIN SMALL LETTER E
+shift = "E"  # LATIN CAPITAL LETTER E
+altgr = { dead = "϶" }  # GREEK REVERSED LUNATE EPSILON SYMBOL
+altgr_shift = "∃"  # THERE EXISTS
+
+[[key]]  # R
+id = "AD04"
+normal = "r"  # LATIN SMALL LETTER R
+shift = "R"  # LATIN CAPITAL LETTER R
+altgr = "®"  # REGISTERED SIGN
+altgr_shift = "™"  # TRADE MARK SIGN
+
+[[key]]  # T
+id = "AD05"
+normal = "t"  # LATIN SMALL LETTER T
+shift = "T"  # LATIN CAPITAL LETTER T
+altgr = "†"  # DAGGER
+altgr_shift = "‡"  # DOUBLE DAGGER
+
+[[key]]  # Y
+id = "AD06"
+normal = "y"  # LATIN SMALL LETTER Y
+shift = "Y"  # LATIN CAPITAL LETTER Y
+altgr = { dead = "±" }  # PLUS-MINUS SIGN
+altgr_shift = "¥"  # YEN SIGN
+
+[[key]]  # U
+id = "AD07"
+normal = "u"  # LATIN SMALL LETTER U
+shift = "U"  # LATIN CAPITAL LETTER U
+altgr = "∪"  # UNION
+altgr_shift = "∩"  # INTERSECTION
+
+[[key]]  # I
+id = "AD08"
+normal = "i"  # LATIN SMALL LETTER I
+shift = "I"  # LATIN CAPITAL LETTER I
+altgr = "ı"  # LATIN SMALL LETTER DOTLESS I
+altgr_shift = { dead = "ʃ" }  # LATIN SMALL LETTER ESH
+
+[[key]]  # O
+id = "AD09"
+normal = "o"  # LATIN SMALL LETTER O
+shift = "O"  # LATIN CAPITAL LETTER O
+altgr = { dead = "ϕ" }  # GREEK PHI SYMBOL
+altgr_shift = "∅"  # EMPTY SET
+
+[[key]]  # P
+id = "AD10"
+normal = "p"  # LATIN SMALL LETTER P
+shift = "P"  # LATIN CAPITAL LETTER P
+altgr = "℗"  # SOUND RECORDING COPYRIGHT
+altgr_shift = "¶"  # PILCROW SIGN
+
+[[key]]  # left bracket
+id = "AD11"
+normal = "["  # LEFT SQUARE BRACKET
+shift = "{"  # LEFT CURLY BRACKET
+ctrl = "U+001B"  # ESCAPE
+altgr = "‹"  # SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+altgr_shift = "«"  # LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+
+[[key]]  # right bracket
+id = "AD12"
+normal = "]"  # RIGHT SQUARE BRACKET
+shift = "}"  # RIGHT CURLY BRACKET
+ctrl = "U+001D"  # INFORMATION SEPARATOR THREE
+altgr = "›"  # SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+altgr_shift = "»"  # RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+
+[[key]]  # A
+id = "AC01"
+normal = "a"  # LATIN SMALL LETTER A
+shift = "A"  # LATIN CAPITAL LETTER A
+altgr = { dead = "ɐ" }  # LATIN SMALL LETTER TURNED A
+altgr_shift = "∀"  # FOR ALL
+
+[[key]]  # S
+id = "AC02"
+normal = "s"  # LATIN SMALL LETTER S
+shift = "S"  # LATIN CAPITAL LETTER S
+altgr = "ß"  # LATIN SMALL LETTER SHARP S
+altgr_shift = "§"  # SECTION SIGN
+
+[[key]]  # D
+id = "AC03"
+normal = "d"  # LATIN SMALL LETTER D
+shift = "D"  # LATIN CAPITAL LETTER D
+altgr = "∂"  # PARTIAL DIFFERENTIAL
+altgr_shift = "∆"  # INCREMENT
+
+[[key]]  # F
+id = "AC04"
+normal = "f"  # LATIN SMALL LETTER F
+shift = "F"  # LATIN CAPITAL LETTER F
+altgr = "ϝ"  # GREEK SMALL LETTER DIGAMMA
+altgr_shift = "Ϝ"  # GREEK LETTER DIGAMMA
+
+[[key]]  # G
+id = "AC05"
+normal = "g"  # LATIN SMALL LETTER G
+shift = "G"  # LATIN CAPITAL LETTER G
+altgr = { dead = "γ" }  # GREEK SMALL LETTER GAMMA
+altgr_shift = "∇"  # NABLA
+
+[[key]]  # H
+id = "AC06"
+normal = "h"  # LATIN SMALL LETTER H
+shift = "H"  # LATIN CAPITAL LETTER H
+altgr = "ℏ"  # PLANCK CONSTANT OVER TWO PI
+altgr_shift = { dead = "Ħ" }  # LATIN CAPITAL LETTER H WITH STROKE
+
+[[key]]  # J
+id = "AC07"
+normal = "j"  # LATIN SMALL LETTER J
+shift = "J"  # LATIN CAPITAL LETTER J
+altgr = "←"  # LEFTWARDS ARROW
+altgr_shift = "⇐"  # LEFTWARDS DOUBLE ARROW
+
+[[key]]  # K
+id = "AC08"
+normal = "k"  # LATIN SMALL LETTER K
+shift = "K"  # LATIN CAPITAL LETTER K
+altgr = "↔"  # LEFT RIGHT ARROW
+altgr_shift = "⇔"  # LEFT RIGHT DOUBLE ARROW
+
+[[key]]  # L
+id = "AC09"
+normal = "l"  # LATIN SMALL LETTER L
+shift = "L"  # LATIN CAPITAL LETTER L
+altgr = "→"  # RIGHTWARDS ARROW
+altgr_shift = "⇒"  # RIGHTWARDS DOUBLE ARROW
+
+[[key]]  # semicolon
+id = "AC10"
+normal = ";"  # SEMICOLON
+shift = ":"  # COLON
+altgr = "∴"  # THEREFORE
+altgr_shift = "∵"  # BECAUSE
+
+[[key]]  # apostrophe
+id = "AC11"
+normal = "'"  # APOSTROPHE
+shift = "\""  # QUOTATION MARK
+altgr = { dead = "U+0301" }  # COMBINING ACUTE ACCENT
+altgr_shift = { dead = "U+0308" }  # COMBINING DIAERESIS
+
+[[key]]  # backslash
+id = "BKSL"
+normal = "\\"  # REVERSE SOLIDUS
+shift = "|"  # VERTICAL LINE
+ctrl = "U+001C"  # INFORMATION SEPARATOR FOUR
+altgr = "↓"  # DOWNWARDS ARROW
+altgr_shift = "↑"  # UPWARDS ARROW
+
+[[key]]  # Z
+id = "AB01"
+normal = "z"  # LATIN SMALL LETTER Z
+shift = "Z"  # LATIN CAPITAL LETTER Z
+altgr = "≠"  # NOT EQUAL TO
+altgr_shift = { dead = "Ƶ" }  # LATIN CAPITAL LETTER Z WITH STROKE
+
+[[key]]  # X
+id = "AB02"
+normal = "x"  # LATIN SMALL LETTER X
+shift = "X"  # LATIN CAPITAL LETTER X
+altgr = "×"  # MULTIPLICATION SIGN
+altgr_shift = "≈"  # ALMOST EQUAL TO
+
+[[key]]  # C
+id = "AB03"
+normal = "c"  # LATIN SMALL LETTER C
+shift = "C"  # LATIN CAPITAL LETTER C
+altgr = "©"  # COPYRIGHT SIGN
+altgr_shift = "¢"  # CENT SIGN
+
+[[key]]  # V
+id = "AB04"
+normal = "v"  # LATIN SMALL LETTER V
+shift = "V"  # LATIN CAPITAL LETTER V
+altgr = "∨"  # LOGICAL OR
+altgr_shift = "∧"  # LOGICAL AND
+
+[[key]]  # B
+id = "AB05"
+normal = "b"  # LATIN SMALL LETTER B
+shift = "B"  # LATIN CAPITAL LETTER B
+altgr = { dead = "U+0304" }  # COMBINING MACRON
+altgr_shift = { dead = "U+0306" }  # COMBINING BREVE
+
+[[key]]  # N
+id = "AB06"
+normal = "n"  # LATIN SMALL LETTER N
+shift = "N"  # LATIN CAPITAL LETTER N
+altgr = "¬"  # NOT SIGN
+altgr_shift = "⊻"  # XOR
+
+[[key]]  # M
+id = "AB07"
+normal = "m"  # LATIN SMALL LETTER M
+shift = "M"  # LATIN CAPITAL LETTER M
+altgr = "↦"  # RIGHTWARDS ARROW FROM BAR
+altgr_shift = { dead = "µ" }  # MICRO SIGN
+
+[[key]]  # comma
+id = "AB08"
+normal = ","  # COMMA
+shift = "<"  # LESS-THAN SIGN
+altgr = { dead = "U+0327" }  # COMBINING CEDILLA
+altgr_shift = { dead = "<" }  # LESS-THAN SIGN
+
+[[key]]  # period
+id = "AB09"
+normal = "."  # FULL STOP
+shift = ">"  # GREATER-THAN SIGN
+altgr = { dead = "U+0323" }  # COMBINING DOT BELOW
+altgr_shift = { dead = ">" }  # GREATER-THAN SIGN
+
+[[key]]  # slash
+id = "AB10"
+normal = "/"  # SOLIDUS
+shift = "?"  # QUESTION MARK
+altgr = { dead = "U+0338" }  # COMBINING LONG SOLIDUS OVERLAY
+altgr_shift = "¿"  # INVERTED QUESTION MARK
+
+[[key]]  # space bar
+id = "SPCE"
+normal = "U+0020"  # SPACE
+shift = "U+0020"  # SPACE
+ctrl = "U+0020"  # SPACE
+altgr = "U+00A0"  # NO-BREAK SPACE
+altgr_shift = "U+200B"  # ZERO WIDTH SPACE
+
+[[key]]  # numeric keypad decimal
+id = "KPDL"
+normal = "."  # FULL STOP
+shift = "."  # FULL STOP
+
+[[key]]  # ISO extra key
+id = "LSGT"
+normal = "\\"  # REVERSE SOLIDUS
+shift = "|"  # VERTICAL LINE
+ctrl = "U+001C"  # INFORMATION SEPARATOR FOUR
+altgr = "↓"  # DOWNWARDS ARROW
+altgr_shift = "↑"  # UPWARDS ARROW
+
+
+# ---------------------------------------------------------------------------
+# Dead keys, in the order the keys above declare them. Each maps U+0020 to its
+# default character.
+# ---------------------------------------------------------------------------
+
+[[dead_key]]  # Grave accents
+root = "U+0300"  # COMBINING GRAVE ACCENT
+category = "Grave accents"
+xkb_leader = "dead_grave"
+map = [
+  ["a"     , "à"],  # LATIN SMALL LETTER A WITH GRAVE
+  ["w"     , "ẁ"],  # LATIN SMALL LETTER W WITH GRAVE
+  ["e"     , "è"],  # LATIN SMALL LETTER E WITH GRAVE
+  ["u"     , "ù"],  # LATIN SMALL LETTER U WITH GRAVE
+  ["i"     , "ì"],  # LATIN SMALL LETTER I WITH GRAVE
+  ["y"     , "ỳ"],  # LATIN SMALL LETTER Y WITH GRAVE
+  ["o"     , "ò"],  # LATIN SMALL LETTER O WITH GRAVE
+  ["A"     , "À"],  # LATIN CAPITAL LETTER A WITH GRAVE
+  ["W"     , "Ẁ"],  # LATIN CAPITAL LETTER W WITH GRAVE
+  ["E"     , "È"],  # LATIN CAPITAL LETTER E WITH GRAVE
+  ["U"     , "Ù"],  # LATIN CAPITAL LETTER U WITH GRAVE
+  ["I"     , "Ì"],  # LATIN CAPITAL LETTER I WITH GRAVE
+  ["Y"     , "Ỳ"],  # LATIN CAPITAL LETTER Y WITH GRAVE
+  ["O"     , "Ò"],  # LATIN CAPITAL LETTER O WITH GRAVE
+  ["N"     , "Ǹ"],  # LATIN CAPITAL LETTER N WITH GRAVE
+  ["n"     , "ǹ"],  # LATIN SMALL LETTER N WITH GRAVE
+  ["U+0020", "`"],  # GRAVE ACCENT
+]
+
+[[dead_key]]  # Tilde diacritic + math equality symbols
+root = "U+0303"  # COMBINING TILDE
+category = "Tilde diacritic + math equality symbols"
+xkb_leader = "dead_tilde"
+map = [
+  ["="     , "≅"],  # APPROXIMATELY EQUAL TO
+  ["n"     , "ñ"],  # LATIN SMALL LETTER N WITH TILDE
+  ["v"     , "ṽ"],  # LATIN SMALL LETTER V WITH TILDE
+  ["a"     , "ã"],  # LATIN SMALL LETTER A WITH TILDE
+  ["e"     , "ẽ"],  # LATIN SMALL LETTER E WITH TILDE
+  ["u"     , "ũ"],  # LATIN SMALL LETTER U WITH TILDE
+  ["i"     , "ĩ"],  # LATIN SMALL LETTER I WITH TILDE
+  ["y"     , "ỹ"],  # LATIN SMALL LETTER Y WITH TILDE
+  ["o"     , "õ"],  # LATIN SMALL LETTER O WITH TILDE
+  ["N"     , "Ñ"],  # LATIN CAPITAL LETTER N WITH TILDE
+  ["V"     , "Ṽ"],  # LATIN CAPITAL LETTER V WITH TILDE
+  ["A"     , "Ã"],  # LATIN CAPITAL LETTER A WITH TILDE
+  ["E"     , "Ẽ"],  # LATIN CAPITAL LETTER E WITH TILDE
+  ["U"     , "Ũ"],  # LATIN CAPITAL LETTER U WITH TILDE
+  ["I"     , "Ĩ"],  # LATIN CAPITAL LETTER I WITH TILDE
+  ["Y"     , "Ỹ"],  # LATIN CAPITAL LETTER Y WITH TILDE
+  ["O"     , "Õ"],  # LATIN CAPITAL LETTER O WITH TILDE
+  ["-"     , "≃"],  # ASYMPTOTICALLY EQUAL TO
+  ["U+0020", "˜"],  # SMALL TILDE
+]
+
+[[dead_key]]  # Caron diacritic
+root = "U+030C"  # COMBINING CARON
+category = "Caron diacritic"
+xkb_leader = "dead_caron"
+map = [
+  ["n"     , "ň"],  # LATIN SMALL LETTER N WITH CARON
+  ["c"     , "č"],  # LATIN SMALL LETTER C WITH CARON
+  ["z"     , "ž"],  # LATIN SMALL LETTER Z WITH CARON
+  ["a"     , "ǎ"],  # LATIN SMALL LETTER A WITH CARON
+  ["j"     , "ǰ"],  # LATIN SMALL LETTER J WITH CARON
+  ["g"     , "ǧ"],  # LATIN SMALL LETTER G WITH CARON
+  ["d"     , "ď"],  # LATIN SMALL LETTER D WITH CARON
+  ["s"     , "š"],  # LATIN SMALL LETTER S WITH CARON
+  ["l"     , "ľ"],  # LATIN SMALL LETTER L WITH CARON
+  ["k"     , "ǩ"],  # LATIN SMALL LETTER K WITH CARON
+  ["e"     , "ě"],  # LATIN SMALL LETTER E WITH CARON
+  ["r"     , "ř"],  # LATIN SMALL LETTER R WITH CARON
+  ["u"     , "ǔ"],  # LATIN SMALL LETTER U WITH CARON
+  ["i"     , "ǐ"],  # LATIN SMALL LETTER I WITH CARON
+  ["t"     , "ť"],  # LATIN SMALL LETTER T WITH CARON
+  ["o"     , "ǒ"],  # LATIN SMALL LETTER O WITH CARON
+  ["N"     , "Ň"],  # LATIN CAPITAL LETTER N WITH CARON
+  ["C"     , "Č"],  # LATIN CAPITAL LETTER C WITH CARON
+  ["Z"     , "Ž"],  # LATIN CAPITAL LETTER Z WITH CARON
+  ["A"     , "Ǎ"],  # LATIN CAPITAL LETTER A WITH CARON
+  ["G"     , "Ǧ"],  # LATIN CAPITAL LETTER G WITH CARON
+  ["D"     , "Ď"],  # LATIN CAPITAL LETTER D WITH CARON
+  ["S"     , "Š"],  # LATIN CAPITAL LETTER S WITH CARON
+  ["L"     , "Ľ"],  # LATIN CAPITAL LETTER L WITH CARON
+  ["K"     , "Ǩ"],  # LATIN CAPITAL LETTER K WITH CARON
+  ["E"     , "Ě"],  # LATIN CAPITAL LETTER E WITH CARON
+  ["R"     , "Ř"],  # LATIN CAPITAL LETTER R WITH CARON
+  ["U"     , "Ǔ"],  # LATIN CAPITAL LETTER U WITH CARON
+  ["I"     , "Ǐ"],  # LATIN CAPITAL LETTER I WITH CARON
+  ["T"     , "Ť"],  # LATIN CAPITAL LETTER T WITH CARON
+  ["O"     , "Ǒ"],  # LATIN CAPITAL LETTER O WITH CARON
+  ["H"     , "Ȟ"],  # LATIN CAPITAL LETTER H WITH CARON
+  ["h"     , "ȟ"],  # LATIN SMALL LETTER H WITH CARON
+  ["U+0020", "ˇ"],  # CARON
+]
+
+[[dead_key]]  # Circumflex accents
+root = "U+0302"  # COMBINING CIRCUMFLEX ACCENT
+category = "Circumflex accents"
+xkb_leader = "dead_circumflex"
+map = [
+  ["c"     , "ĉ"],  # LATIN SMALL LETTER C WITH CIRCUMFLEX
+  ["a"     , "â"],  # LATIN SMALL LETTER A WITH CIRCUMFLEX
+  ["h"     , "ĥ"],  # LATIN SMALL LETTER H WITH CIRCUMFLEX
+  ["j"     , "ĵ"],  # LATIN SMALL LETTER J WITH CIRCUMFLEX
+  ["g"     , "ĝ"],  # LATIN SMALL LETTER G WITH CIRCUMFLEX
+  ["s"     , "ŝ"],  # LATIN SMALL LETTER S WITH CIRCUMFLEX
+  ["w"     , "ŵ"],  # LATIN SMALL LETTER W WITH CIRCUMFLEX
+  ["e"     , "ê"],  # LATIN SMALL LETTER E WITH CIRCUMFLEX
+  ["u"     , "û"],  # LATIN SMALL LETTER U WITH CIRCUMFLEX
+  ["i"     , "î"],  # LATIN SMALL LETTER I WITH CIRCUMFLEX
+  ["y"     , "ŷ"],  # LATIN SMALL LETTER Y WITH CIRCUMFLEX
+  ["o"     , "ô"],  # LATIN SMALL LETTER O WITH CIRCUMFLEX
+  ["C"     , "Ĉ"],  # LATIN CAPITAL LETTER C WITH CIRCUMFLEX
+  ["A"     , "Â"],  # LATIN CAPITAL LETTER A WITH CIRCUMFLEX
+  ["H"     , "Ĥ"],  # LATIN CAPITAL LETTER H WITH CIRCUMFLEX
+  ["J"     , "Ĵ"],  # LATIN CAPITAL LETTER J WITH CIRCUMFLEX
+  ["G"     , "Ĝ"],  # LATIN CAPITAL LETTER G WITH CIRCUMFLEX
+  ["S"     , "Ŝ"],  # LATIN CAPITAL LETTER S WITH CIRCUMFLEX
+  ["W"     , "Ŵ"],  # LATIN CAPITAL LETTER W WITH CIRCUMFLEX
+  ["E"     , "Ê"],  # LATIN CAPITAL LETTER E WITH CIRCUMFLEX
+  ["U"     , "Û"],  # LATIN CAPITAL LETTER U WITH CIRCUMFLEX
+  ["I"     , "Î"],  # LATIN CAPITAL LETTER I WITH CIRCUMFLEX
+  ["Y"     , "Ŷ"],  # LATIN CAPITAL LETTER Y WITH CIRCUMFLEX
+  ["O"     , "Ô"],  # LATIN CAPITAL LETTER O WITH CIRCUMFLEX
+  ["Z"     , "Ẑ"],  # LATIN CAPITAL LETTER Z WITH CIRCUMFLEX
+  ["z"     , "ẑ"],  # LATIN SMALL LETTER Z WITH CIRCUMFLEX
+  ["U+0020", "ˆ"],  # MODIFIER LETTER CIRCUMFLEX ACCENT
+]
+
+[[dead_key]]  # Ligatures + North European letters
+root = "¦"  # BROKEN BAR
+category = "Ligatures + North European letters"
+xkb_leader = "U00A6"
+map = [
+  ["n"     , "ǌ"],  # LATIN SMALL LETTER NJ
+  ["a"     , "æ"],  # LATIN SMALL LETTER AE
+  ["d"     , "ǳ"],  # LATIN SMALL LETTER DZ
+  ["i"     , "ĳ"],  # LATIN SMALL LIGATURE IJ
+  ["t"     , "þ"],  # LATIN SMALL LETTER THORN
+  ["o"     , "œ"],  # LATIN SMALL LIGATURE OE
+  ["|"     , "¦"],  # BROKEN BAR
+  ["N"     , "Ǌ"],  # LATIN CAPITAL LETTER NJ
+  ["A"     , "Æ"],  # LATIN CAPITAL LETTER AE
+  ["D"     , "Ǳ"],  # LATIN CAPITAL LETTER DZ
+  ["I"     , "Ĳ"],  # LATIN CAPITAL LIGATURE IJ
+  ["T"     , "Þ"],  # LATIN CAPITAL LETTER THORN
+  ["O"     , "Œ"],  # LATIN CAPITAL LIGATURE OE
+  ["&"     , "⅋"],  # TURNED AMPERSAND
+  ["l"     , "ǉ"],  # LATIN SMALL LETTER LJ
+  ["L"     , "Ǉ"],  # LATIN CAPITAL LETTER LJ
+  ["e"     , "ð"],  # LATIN SMALL LETTER ETH
+  ["E"     , "Ð"],  # LATIN CAPITAL LETTER ETH
+  ["1"     , "ﬀ"],  # LATIN SMALL LIGATURE FF
+  ["2"     , "ﬁ"],  # LATIN SMALL LIGATURE FI
+  ["3"     , "ﬂ"],  # LATIN SMALL LIGATURE FL
+  ["4"     , "ﬃ"],  # LATIN SMALL LIGATURE FFI
+  ["5"     , "ﬄ"],  # LATIN SMALL LIGATURE FFL
+  ["6"     , "ﬅ"],  # LATIN SMALL LIGATURE LONG S T
+  ["7"     , "ﬆ"],  # LATIN SMALL LIGATURE ST
+  ["H"     , "Ƕ"],  # LATIN CAPITAL LETTER HWAIR
+  ["h"     , "ƕ"],  # LATIN SMALL LETTER HV
+  ["*"     , "Ȣ"],  # LATIN CAPITAL LETTER OU
+  ["8"     , "ȣ"],  # LATIN SMALL LETTER OU
+  ["("     , "Ƣ"],  # LATIN CAPITAL LETTER OI
+  ["9"     , "ƣ"],  # LATIN SMALL LETTER OI
+  [")"     , "Ŋ"],  # LATIN CAPITAL LETTER ENG
+  ["0"     , "ŋ"],  # LATIN SMALL LETTER ENG
+  ["s"     , "ſ"],  # LATIN SMALL LETTER LONG S
+  ["U+0020", "U+200D"],  # ZERO WIDTH JOINER
+]
+
+[[dead_key]]  # Dot above diacritic
+root = "U+0307"  # COMBINING DOT ABOVE
+category = "Dot above diacritic"
+xkb_leader = "dead_abovedot"
+map = [
+  ["C"     , "Ċ"],  # LATIN CAPITAL LETTER C WITH DOT ABOVE
+  ["c"     , "ċ"],  # LATIN SMALL LETTER C WITH DOT ABOVE
+  ["E"     , "Ė"],  # LATIN CAPITAL LETTER E WITH DOT ABOVE
+  ["e"     , "ė"],  # LATIN SMALL LETTER E WITH DOT ABOVE
+  ["G"     , "Ġ"],  # LATIN CAPITAL LETTER G WITH DOT ABOVE
+  ["g"     , "ġ"],  # LATIN SMALL LETTER G WITH DOT ABOVE
+  ["I"     , "İ"],  # LATIN CAPITAL LETTER I WITH DOT ABOVE
+  ["Z"     , "Ż"],  # LATIN CAPITAL LETTER Z WITH DOT ABOVE
+  ["z"     , "ż"],  # LATIN SMALL LETTER Z WITH DOT ABOVE
+  ["A"     , "Ȧ"],  # LATIN CAPITAL LETTER A WITH DOT ABOVE
+  ["a"     , "ȧ"],  # LATIN SMALL LETTER A WITH DOT ABOVE
+  ["O"     , "Ȯ"],  # LATIN CAPITAL LETTER O WITH DOT ABOVE
+  ["o"     , "ȯ"],  # LATIN SMALL LETTER O WITH DOT ABOVE
+  ["B"     , "Ḃ"],  # LATIN CAPITAL LETTER B WITH DOT ABOVE
+  ["b"     , "ḃ"],  # LATIN SMALL LETTER B WITH DOT ABOVE
+  ["D"     , "Ḋ"],  # LATIN CAPITAL LETTER D WITH DOT ABOVE
+  ["d"     , "ḋ"],  # LATIN SMALL LETTER D WITH DOT ABOVE
+  ["F"     , "Ḟ"],  # LATIN CAPITAL LETTER F WITH DOT ABOVE
+  ["f"     , "ḟ"],  # LATIN SMALL LETTER F WITH DOT ABOVE
+  ["H"     , "Ḣ"],  # LATIN CAPITAL LETTER H WITH DOT ABOVE
+  ["h"     , "ḣ"],  # LATIN SMALL LETTER H WITH DOT ABOVE
+  ["M"     , "Ṁ"],  # LATIN CAPITAL LETTER M WITH DOT ABOVE
+  ["m"     , "ṁ"],  # LATIN SMALL LETTER M WITH DOT ABOVE
+  ["N"     , "Ṅ"],  # LATIN CAPITAL LETTER N WITH DOT ABOVE
+  ["n"     , "ṅ"],  # LATIN SMALL LETTER N WITH DOT ABOVE
+  ["P"     , "Ṗ"],  # LATIN CAPITAL LETTER P WITH DOT ABOVE
+  ["p"     , "ṗ"],  # LATIN SMALL LETTER P WITH DOT ABOVE
+  ["R"     , "Ṙ"],  # LATIN CAPITAL LETTER R WITH DOT ABOVE
+  ["r"     , "ṙ"],  # LATIN SMALL LETTER R WITH DOT ABOVE
+  ["S"     , "Ṡ"],  # LATIN CAPITAL LETTER S WITH DOT ABOVE
+  ["s"     , "ṡ"],  # LATIN SMALL LETTER S WITH DOT ABOVE
+  ["T"     , "Ṫ"],  # LATIN CAPITAL LETTER T WITH DOT ABOVE
+  ["t"     , "ṫ"],  # LATIN SMALL LETTER T WITH DOT ABOVE
+  ["W"     , "Ẇ"],  # LATIN CAPITAL LETTER W WITH DOT ABOVE
+  ["w"     , "ẇ"],  # LATIN SMALL LETTER W WITH DOT ABOVE
+  ["X"     , "Ẋ"],  # LATIN CAPITAL LETTER X WITH DOT ABOVE
+  ["x"     , "ẋ"],  # LATIN SMALL LETTER X WITH DOT ABOVE
+  ["Y"     , "Ẏ"],  # LATIN CAPITAL LETTER Y WITH DOT ABOVE
+  ["y"     , "ẏ"],  # LATIN SMALL LETTER Y WITH DOT ABOVE
+  ["L"     , "Ŀ"],  # LATIN CAPITAL LETTER L WITH MIDDLE DOT
+  ["l"     , "ŀ"],  # LATIN SMALL LETTER L WITH MIDDLE DOT
+  ["U+0020", "˙"],  # DOT ABOVE
+]
+
+[[dead_key]]  # Ring above diacritic + circle symbols
+root = "U+030A"  # COMBINING RING ABOVE
+category = "Ring above diacritic + circle symbols"
+xkb_leader = "dead_abovering"
+map = [
+  ["a"     , "å"],  # LATIN SMALL LETTER A WITH RING ABOVE
+  ["u"     , "ů"],  # LATIN SMALL LETTER U WITH RING ABOVE
+  ["o"     , "○"],  # WHITE CIRCLE
+  ["C"     , "℃"],  # DEGREE CELSIUS
+  ["A"     , "Å"],  # LATIN CAPITAL LETTER A WITH RING ABOVE
+  ["F"     , "℉"],  # DEGREE FAHRENHEIT
+  ["U"     , "Ů"],  # LATIN CAPITAL LETTER U WITH RING ABOVE
+  ["O"     , "◯"],  # LARGE CIRCLE
+  ["."     , "◌"],  # DOTTED CIRCLE
+  ["b"     , "●"],  # BLACK CIRCLE
+  ["w"     , "ẘ"],  # LATIN SMALL LETTER W WITH RING ABOVE
+  ["y"     , "ẙ"],  # LATIN SMALL LETTER Y WITH RING ABOVE
+  ["B"     , "⬤"],  # BLACK LARGE CIRCLE
+  ["-"     , "⦵"],  # CIRCLE WITH HORIZONTAL BAR
+  ["x"     , "⦻"],  # CIRCLE WITH SUPERIMPOSED X
+  ["|"     , "◍"],  # CIRCLE WITH VERTICAL FILL
+  ["U+0020", "°"],  # DEGREE SIGN
+]
+
+[[dead_key]]  # Subscripts
+root = "ª"  # FEMININE ORDINAL INDICATOR
+category = "Subscripts"
+xkb_leader = "U00AA"
+map = [
+  ["="     , "₌"],  # SUBSCRIPT EQUALS SIGN
+  ["n"     , "ₙ"],  # LATIN SUBSCRIPT SMALL LETTER N
+  ["v"     , "ᵥ"],  # LATIN SUBSCRIPT SMALL LETTER V
+  ["x"     , "ₓ"],  # LATIN SUBSCRIPT SMALL LETTER X
+  ["m"     , "ₘ"],  # LATIN SUBSCRIPT SMALL LETTER M
+  ["a"     , "ₐ"],  # LATIN SUBSCRIPT SMALL LETTER A
+  ["h"     , "ₕ"],  # LATIN SUBSCRIPT SMALL LETTER H
+  ["s"     , "ₛ"],  # LATIN SUBSCRIPT SMALL LETTER S
+  ["l"     , "ₗ"],  # LATIN SUBSCRIPT SMALL LETTER L
+  ["k"     , "ₖ"],  # LATIN SUBSCRIPT SMALL LETTER K
+  ["e"     , "ₑ"],  # LATIN SUBSCRIPT SMALL LETTER E
+  ["r"     , "ᵣ"],  # LATIN SUBSCRIPT SMALL LETTER R
+  ["p"     , "ₚ"],  # LATIN SUBSCRIPT SMALL LETTER P
+  ["u"     , "ᵤ"],  # LATIN SUBSCRIPT SMALL LETTER U
+  ["i"     , "ᵢ"],  # LATIN SUBSCRIPT SMALL LETTER I
+  ["t"     , "ₜ"],  # LATIN SUBSCRIPT SMALL LETTER T
+  ["o"     , "ₒ"],  # LATIN SUBSCRIPT SMALL LETTER O
+  ["8"     , "₈"],  # SUBSCRIPT EIGHT
+  ["9"     , "₉"],  # SUBSCRIPT NINE
+  ["0"     , "₀"],  # SUBSCRIPT ZERO
+  ["-"     , "₋"],  # SUBSCRIPT MINUS
+  ["6"     , "₆"],  # SUBSCRIPT SIX
+  ["7"     , "₇"],  # SUBSCRIPT SEVEN
+  ["4"     , "₄"],  # SUBSCRIPT FOUR
+  ["5"     , "₅"],  # SUBSCRIPT FIVE
+  ["2"     , "₂"],  # SUBSCRIPT TWO
+  ["3"     , "₃"],  # SUBSCRIPT THREE
+  ["1"     , "₁"],  # SUBSCRIPT ONE
+  ["+"     , "₊"],  # SUBSCRIPT PLUS SIGN
+  ["("     , "₍"],  # SUBSCRIPT LEFT PARENTHESIS
+  [")"     , "₎"],  # SUBSCRIPT RIGHT PARENTHESIS
+  ["j"     , "ⱼ"],  # LATIN SUBSCRIPT SMALL LETTER J
+  ["U+0020", "ª"],  # FEMININE ORDINAL INDICATOR
+]
+
+[[dead_key]]  # Superscripts
+root = "º"  # MASCULINE ORDINAL INDICATOR
+category = "Superscripts"
+xkb_leader = "U00BA"
+map = [
+  ["="     , "⁼"],  # SUPERSCRIPT EQUALS SIGN
+  ["b"     , "ᵇ"],  # MODIFIER LETTER SMALL B
+  ["n"     , "ⁿ"],  # SUPERSCRIPT LATIN SMALL LETTER N
+  ["v"     , "ᵛ"],  # MODIFIER LETTER SMALL V
+  ["x"     , "ˣ"],  # MODIFIER LETTER SMALL X
+  ["m"     , "ᵐ"],  # MODIFIER LETTER SMALL M
+  ["a"     , "ᵃ"],  # MODIFIER LETTER SMALL A
+  ["h"     , "ʰ"],  # MODIFIER LETTER SMALL H
+  ["j"     , "ʲ"],  # MODIFIER LETTER SMALL J
+  ["g"     , "ᵍ"],  # MODIFIER LETTER SMALL G
+  ["d"     , "ᵈ"],  # MODIFIER LETTER SMALL D
+  ["s"     , "ˢ"],  # MODIFIER LETTER SMALL S
+  ["l"     , "ˡ"],  # MODIFIER LETTER SMALL L
+  ["k"     , "ᵏ"],  # MODIFIER LETTER SMALL K
+  ["w"     , "ʷ"],  # MODIFIER LETTER SMALL W
+  ["e"     , "ᵉ"],  # MODIFIER LETTER SMALL E
+  ["r"     , "ʳ"],  # MODIFIER LETTER SMALL R
+  ["p"     , "ᵖ"],  # MODIFIER LETTER SMALL P
+  ["u"     , "ᵘ"],  # MODIFIER LETTER SMALL U
+  ["i"     , "ⁱ"],  # SUPERSCRIPT LATIN SMALL LETTER I
+  ["t"     , "ᵗ"],  # MODIFIER LETTER SMALL T
+  ["y"     , "ʸ"],  # MODIFIER LETTER SMALL Y
+  ["o"     , "ᵒ"],  # MODIFIER LETTER SMALL O
+  ["8"     , "⁸"],  # SUPERSCRIPT EIGHT
+  ["9"     , "⁹"],  # SUPERSCRIPT NINE
+  ["0"     , "⁰"],  # SUPERSCRIPT ZERO
+  ["-"     , "⁻"],  # SUPERSCRIPT MINUS
+  ["6"     , "⁶"],  # SUPERSCRIPT SIX
+  ["7"     , "⁷"],  # SUPERSCRIPT SEVEN
+  ["4"     , "⁴"],  # SUPERSCRIPT FOUR
+  ["5"     , "⁵"],  # SUPERSCRIPT FIVE
+  ["2"     , "²"],  # SUPERSCRIPT TWO
+  ["3"     , "³"],  # SUPERSCRIPT THREE
+  ["1"     , "¹"],  # SUPERSCRIPT ONE
+  ["+"     , "⁺"],  # SUPERSCRIPT PLUS SIGN
+  ["B"     , "ᴮ"],  # MODIFIER LETTER CAPITAL B
+  ["N"     , "ᴺ"],  # MODIFIER LETTER CAPITAL N
+  ["M"     , "ᴹ"],  # MODIFIER LETTER CAPITAL M
+  ["A"     , "ᴬ"],  # MODIFIER LETTER CAPITAL A
+  ["H"     , "ᴴ"],  # MODIFIER LETTER CAPITAL H
+  ["J"     , "ᴶ"],  # MODIFIER LETTER CAPITAL J
+  ["G"     , "ᴳ"],  # MODIFIER LETTER CAPITAL G
+  ["D"     , "ᴰ"],  # MODIFIER LETTER CAPITAL D
+  ["L"     , "ᴸ"],  # MODIFIER LETTER CAPITAL L
+  ["K"     , "ᴷ"],  # MODIFIER LETTER CAPITAL K
+  ["W"     , "ᵂ"],  # MODIFIER LETTER CAPITAL W
+  ["E"     , "ᴱ"],  # MODIFIER LETTER CAPITAL E
+  ["R"     , "ᴿ"],  # MODIFIER LETTER CAPITAL R
+  ["P"     , "ᴾ"],  # MODIFIER LETTER CAPITAL P
+  ["U"     , "ᵁ"],  # MODIFIER LETTER CAPITAL U
+  ["I"     , "ᴵ"],  # MODIFIER LETTER CAPITAL I
+  ["T"     , "ᵀ"],  # MODIFIER LETTER CAPITAL T
+  ["O"     , "ᴼ"],  # MODIFIER LETTER CAPITAL O
+  ["("     , "⁽"],  # SUPERSCRIPT LEFT PARENTHESIS
+  [")"     , "⁾"],  # SUPERSCRIPT RIGHT PARENTHESIS
+  ["V"     , "ⱽ"],  # MODIFIER LETTER CAPITAL V
+  ["C"     , "ꟲ"],  # MODIFIER LETTER CAPITAL C
+  ["F"     , "ꟳ"],  # MODIFIER LETTER CAPITAL F
+  ["Q"     , "ꟴ"],  # MODIFIER LETTER CAPITAL Q
+  ["c"     , "ᶜ"],  # MODIFIER LETTER SMALL C
+  ["f"     , "ᶠ"],  # MODIFIER LETTER SMALL F
+  ["z"     , "ᶻ"],  # MODIFIER LETTER SMALL Z
+  ["U+0020", "º"],  # MASCULINE ORDINAL INDICATOR
+]
+
+[[dead_key]]  # N-ary operators
+root = "Ʃ"  # LATIN CAPITAL LETTER ESH
+category = "N-ary operators"
+xkb_leader = "U01A9"
+map = [
+  ["S"     , "⅀"],  # DOUBLE-STRUCK N-ARY SUMMATION
+  ["p"     , "∏"],  # N-ARY PRODUCT
+  ["P"     , "∐"],  # N-ARY COPRODUCT
+  ["v"     , "⋁"],  # N-ARY LOGICAL OR
+  ["V"     , "⋀"],  # N-ARY LOGICAL AND
+  ["u"     , "⋃"],  # N-ARY UNION
+  ["U"     , "⋂"],  # N-ARY INTERSECTION
+  ["."     , "⨀"],  # N-ARY CIRCLED DOT OPERATOR
+  ["+"     , "⨁"],  # N-ARY CIRCLED PLUS OPERATOR
+  ["x"     , "⨂"],  # N-ARY CIRCLED TIMES OPERATOR
+  ["s"     , "∑"],  # N-ARY SUMMATION
+  ["U+0020", "Ʃ"],  # LATIN CAPITAL LETTER ESH
+]
+
+[[dead_key]]  # Set membership operators + nonexistential quantifier
+root = "϶"  # GREEK REVERSED LUNATE EPSILON SYMBOL
+category = "Set membership operators + nonexistential quantifier"
+xkb_leader = "U03F6"
+map = [
+  ["\\"    , "∌"],  # DOES NOT CONTAIN AS MEMBER
+  ["/"     , "∉"],  # NOT AN ELEMENT OF
+  ["e"     , "϶"],  # GREEK REVERSED LUNATE EPSILON SYMBOL
+  ["|"     , "∋"],  # CONTAINS AS MEMBER
+  ["E"     , "∄"],  # THERE DOES NOT EXIST
+  ["U+0020", "∈"],  # ELEMENT OF
+]
+
+[[dead_key]]  # Relational operators + tack-like symbols
+root = "±"  # PLUS-MINUS SIGN
+category = "Relational operators + tack-like symbols"
+xkb_leader = "U00B1"
+map = [
+  ["m"     , "⊧"],  # MODELS
+  ["a"     , "⊦"],  # ASSERTION
+  ["f"     , "⊩"],  # FORCES
+  ["d"     , "⊤"],  # DOWN TACK
+  ["l"     , "⊣"],  # LEFT TACK
+  ["r"     , "⊢"],  # RIGHT TACK
+  ["p"     , "⟂"],  # PERPENDICULAR
+  ["u"     , "⊥"],  # UP TACK
+  ["t"     , "⊨"],  # TRUE
+  ["-"     , "∓"],  # MINUS-OR-PLUS SIGN
+  ["+"     , "±"],  # PLUS-MINUS SIGN
+  ["A"     , "⊬"],  # DOES NOT PROVE
+  ["F"     , "⊮"],  # DOES NOT FORCE
+  ["T"     , "⊭"],  # NOT TRUE
+  ["U+0020", "±"],  # PLUS-MINUS SIGN
+]
+
+[[dead_key]]  # Integral operators
+root = "ʃ"  # LATIN SMALL LETTER ESH
+category = "Integral operators"
+xkb_leader = "U0283"
+map = [
+  ["8"     , "∱"],  # CLOCKWISE INTEGRAL
+  ["9"     , "∲"],  # CLOCKWISE CONTOUR INTEGRAL
+  ["0"     , "∳"],  # ANTICLOCKWISE CONTOUR INTEGRAL
+  ["6"     , "∯"],  # SURFACE INTEGRAL
+  ["7"     , "∰"],  # VOLUME INTEGRAL
+  ["4"     , "⨌"],  # QUADRUPLE INTEGRAL OPERATOR
+  ["5"     , "∮"],  # CONTOUR INTEGRAL
+  ["2"     , "∬"],  # DOUBLE INTEGRAL
+  ["3"     , "∭"],  # TRIPLE INTEGRAL
+  ["1"     , "∫"],  # INTEGRAL
+  ["U+0020", "ʃ"],  # LATIN SMALL LETTER ESH
+]
+
+[[dead_key]]  # Circle-related operators + QED
+root = "ϕ"  # GREEK PHI SYMBOL
+category = "Circle-related operators + QED"
+xkb_leader = "U03D5"
+map = [
+  ["="     , "⊜"],  # CIRCLED EQUALS
+  ["x"     , "⊗"],  # CIRCLED TIMES
+  ["."     , "⊙"],  # CIRCLED DOT OPERATOR
+  ["/"     , "⊘"],  # CIRCLED DIVISION SLASH
+  ["O"     , "⊚"],  # CIRCLED RING OPERATOR
+  ["-"     , "⊖"],  # CIRCLED MINUS
+  ["+"     , "⊕"],  # CIRCLED PLUS
+  ["*"     , "⊛"],  # CIRCLED ASTERISK OPERATOR
+  ["_"     , "⊝"],  # CIRCLED DASH
+  ["q"     , "∎"],  # END OF PROOF
+  ["o"     , "∘"],  # RING OPERATOR
+  ["|"     , "⦶"],  # CIRCLED VERTICAL BAR
+  ["\\"    , "⦸"],  # CIRCLED REVERSE SOLIDUS
+  ["<"     , "⧀"],  # CIRCLED LESS-THAN
+  [">"     , "⧁"],  # CIRCLED GREATER-THAN
+  ["X"     , "⮾"],  # CIRCLED X
+  ["U+0020", "ϕ"],  # GREEK PHI SYMBOL
+]
+
+[[dead_key]]  # Set inclusion operators + angle symbol
+root = "ɐ"  # LATIN SMALL LETTER TURNED A
+category = "Set inclusion operators + angle symbol"
+xkb_leader = "U0250"
+map = [
+  ["\\"    , "⊅"],  # NOT A SUPERSET OF
+  ["/"     , "⊄"],  # NOT A SUBSET OF
+  ["a"     , "ɐ"],  # LATIN SMALL LETTER TURNED A
+  ["["     , "⊆"],  # SUBSET OF OR EQUAL TO
+  ["]"     , "⊇"],  # SUPERSET OF OR EQUAL TO
+  ["|"     , "⊃"],  # SUPERSET OF
+  ["C"     , "∁"],  # COMPLEMENT
+  ["A"     , "∠"],  # ANGLE
+  ["{"     , "⊈"],  # NEITHER A SUBSET OF NOR EQUAL TO
+  ["}"     , "⊉"],  # NEITHER A SUPERSET OF NOR EQUAL TO
+  ["U+0020", "⊂"],  # SUBSET OF
+]
+
+[[dead_key]]  # Greek letters with variants + first 4 Hebrew letters
+root = "γ"  # GREEK SMALL LETTER GAMMA
+category = "Greek letters with variants + first 4 Hebrew letters"
+xkb_leader = "dead_greek"
+map = [
+  ["b"     , "β"],  # GREEK SMALL LETTER BETA
+  ["n"     , "ν"],  # GREEK SMALL LETTER NU
+  ["v"     , "ω"],  # GREEK SMALL LETTER OMEGA
+  ["c"     , "ψ"],  # GREEK SMALL LETTER PSI
+  ["x"     , "χ"],  # GREEK SMALL LETTER CHI
+  ["z"     , "ζ"],  # GREEK SMALL LETTER ZETA
+  ["m"     , "μ"],  # GREEK SMALL LETTER MU
+  ["a"     , "α"],  # GREEK SMALL LETTER ALPHA
+  ["h"     , "η"],  # GREEK SMALL LETTER ETA
+  ["j"     , "ξ"],  # GREEK SMALL LETTER XI
+  ["g"     , "γ"],  # GREEK SMALL LETTER GAMMA
+  ["f"     , "φ"],  # GREEK SMALL LETTER PHI
+  ["d"     , "δ"],  # GREEK SMALL LETTER DELTA
+  ["s"     , "σ"],  # GREEK SMALL LETTER SIGMA
+  ["l"     , "λ"],  # GREEK SMALL LETTER LAMDA
+  ["k"     , "κ"],  # GREEK SMALL LETTER KAPPA
+  ["w"     , "ς"],  # GREEK SMALL LETTER FINAL SIGMA
+  ["e"     , "ε"],  # GREEK SMALL LETTER EPSILON
+  ["r"     , "ρ"],  # GREEK SMALL LETTER RHO
+  ["p"     , "π"],  # GREEK SMALL LETTER PI
+  ["u"     , "θ"],  # GREEK SMALL LETTER THETA
+  ["i"     , "ι"],  # GREEK SMALL LETTER IOTA
+  ["t"     , "τ"],  # GREEK SMALL LETTER TAU
+  ["y"     , "υ"],  # GREEK SMALL LETTER UPSILON
+  ["o"     , "ο"],  # GREEK SMALL LETTER OMICRON
+  ["q"     , "ϑ"],  # GREEK THETA SYMBOL
+  ["6"     , "ϱ"],  # GREEK RHO SYMBOL
+  ["4"     , "ℸ"],  # DALET SYMBOL
+  ["5"     , "ϰ"],  # GREEK KAPPA SYMBOL
+  ["2"     , "ℶ"],  # BET SYMBOL
+  ["3"     , "ℷ"],  # GIMEL SYMBOL
+  ["1"     , "ℵ"],  # ALEF SYMBOL
+  ["B"     , "Β"],  # GREEK CAPITAL LETTER BETA
+  ["N"     , "Ν"],  # GREEK CAPITAL LETTER NU
+  ["V"     , "Ω"],  # GREEK CAPITAL LETTER OMEGA
+  ["C"     , "Ψ"],  # GREEK CAPITAL LETTER PSI
+  ["X"     , "Χ"],  # GREEK CAPITAL LETTER CHI
+  ["Z"     , "Ζ"],  # GREEK CAPITAL LETTER ZETA
+  ["M"     , "Μ"],  # GREEK CAPITAL LETTER MU
+  ["A"     , "Α"],  # GREEK CAPITAL LETTER ALPHA
+  ["H"     , "Η"],  # GREEK CAPITAL LETTER ETA
+  ["J"     , "Ξ"],  # GREEK CAPITAL LETTER XI
+  ["G"     , "Γ"],  # GREEK CAPITAL LETTER GAMMA
+  ["F"     , "Φ"],  # GREEK CAPITAL LETTER PHI
+  ["D"     , "Δ"],  # GREEK CAPITAL LETTER DELTA
+  ["S"     , "Σ"],  # GREEK CAPITAL LETTER SIGMA
+  ["L"     , "Λ"],  # GREEK CAPITAL LETTER LAMDA
+  ["K"     , "Κ"],  # GREEK CAPITAL LETTER KAPPA
+  ["W"     , "ϖ"],  # GREEK PI SYMBOL
+  ["E"     , "Ε"],  # GREEK CAPITAL LETTER EPSILON
+  ["R"     , "Ρ"],  # GREEK CAPITAL LETTER RHO
+  ["P"     , "Π"],  # GREEK CAPITAL LETTER PI
+  ["U"     , "Θ"],  # GREEK CAPITAL LETTER THETA
+  ["I"     , "Ι"],  # GREEK CAPITAL LETTER IOTA
+  ["T"     , "Τ"],  # GREEK CAPITAL LETTER TAU
+  ["Y"     , "Υ"],  # GREEK CAPITAL LETTER UPSILON
+  ["O"     , "Ο"],  # GREEK CAPITAL LETTER OMICRON
+  ["Q"     , "ϴ"],  # GREEK CAPITAL THETA SYMBOL
+  ["U+0020", "γ"],  # GREEK SMALL LETTER GAMMA
+]
+
+[[dead_key]]  # Black-letter (Fraktur) font letters
+root = "Ħ"  # LATIN CAPITAL LETTER H WITH STROKE
+category = "Black-letter (Fraktur) font letters"
+xkb_leader = "U0126"
+map = [
+  ["C"     , "ℭ"],  # BLACK-LETTER CAPITAL C
+  ["Z"     , "ℨ"],  # BLACK-LETTER CAPITAL Z
+  ["H"     , "ℌ"],  # BLACK-LETTER CAPITAL H
+  ["R"     , "ℜ"],  # BLACK-LETTER CAPITAL R
+  ["I"     , "ℑ"],  # BLACK-LETTER CAPITAL I
+  ["U+0020", "ℌ"],  # BLACK-LETTER CAPITAL H
+]
+
+[[dead_key]]  # Acute accent + typographical single quotes
+root = "U+0301"  # COMBINING ACUTE ACCENT
+category = "Acute accent + typographical single quotes"
+xkb_leader = "dead_acute"
+map = [
+  ["n"     , "ń"],  # LATIN SMALL LETTER N WITH ACUTE
+  ["c"     , "ć"],  # LATIN SMALL LETTER C WITH ACUTE
+  ["z"     , "ź"],  # LATIN SMALL LETTER Z WITH ACUTE
+  ["m"     , "ḿ"],  # LATIN SMALL LETTER M WITH ACUTE
+  ["a"     , "á"],  # LATIN SMALL LETTER A WITH ACUTE
+  ["g"     , "ǵ"],  # LATIN SMALL LETTER G WITH ACUTE
+  ["s"     , "ś"],  # LATIN SMALL LETTER S WITH ACUTE
+  ["l"     , "ĺ"],  # LATIN SMALL LETTER L WITH ACUTE
+  ["k"     , "ḱ"],  # LATIN SMALL LETTER K WITH ACUTE
+  ["w"     , "ẃ"],  # LATIN SMALL LETTER W WITH ACUTE
+  ["e"     , "é"],  # LATIN SMALL LETTER E WITH ACUTE
+  ["r"     , "ŕ"],  # LATIN SMALL LETTER R WITH ACUTE
+  ["p"     , "ṕ"],  # LATIN SMALL LETTER P WITH ACUTE
+  ["u"     , "ú"],  # LATIN SMALL LETTER U WITH ACUTE
+  ["i"     , "í"],  # LATIN SMALL LETTER I WITH ACUTE
+  ["y"     , "ý"],  # LATIN SMALL LETTER Y WITH ACUTE
+  ["o"     , "ó"],  # LATIN SMALL LETTER O WITH ACUTE
+  ["N"     , "Ń"],  # LATIN CAPITAL LETTER N WITH ACUTE
+  ["C"     , "Ć"],  # LATIN CAPITAL LETTER C WITH ACUTE
+  ["Z"     , "Ź"],  # LATIN CAPITAL LETTER Z WITH ACUTE
+  ["M"     , "Ḿ"],  # LATIN CAPITAL LETTER M WITH ACUTE
+  ["A"     , "Á"],  # LATIN CAPITAL LETTER A WITH ACUTE
+  ["G"     , "Ǵ"],  # LATIN CAPITAL LETTER G WITH ACUTE
+  ["S"     , "Ś"],  # LATIN CAPITAL LETTER S WITH ACUTE
+  ["L"     , "Ĺ"],  # LATIN CAPITAL LETTER L WITH ACUTE
+  ["K"     , "Ḱ"],  # LATIN CAPITAL LETTER K WITH ACUTE
+  ["W"     , "Ẃ"],  # LATIN CAPITAL LETTER W WITH ACUTE
+  ["E"     , "É"],  # LATIN CAPITAL LETTER E WITH ACUTE
+  ["R"     , "Ŕ"],  # LATIN CAPITAL LETTER R WITH ACUTE
+  ["P"     , "Ṕ"],  # LATIN CAPITAL LETTER P WITH ACUTE
+  ["U"     , "Ú"],  # LATIN CAPITAL LETTER U WITH ACUTE
+  ["I"     , "Í"],  # LATIN CAPITAL LETTER I WITH ACUTE
+  ["Y"     , "Ý"],  # LATIN CAPITAL LETTER Y WITH ACUTE
+  ["O"     , "Ó"],  # LATIN CAPITAL LETTER O WITH ACUTE
+  ["["     , "‘"],  # LEFT SINGLE QUOTATION MARK
+  ["]"     , "’"],  # RIGHT SINGLE QUOTATION MARK
+  ["{"     , "‚"],  # SINGLE LOW-9 QUOTATION MARK
+  ["}"     , "‛"],  # SINGLE HIGH-REVERSED-9 QUOTATION MARK
+  ["U+0020", "´"],  # ACUTE ACCENT
+]
+
+[[dead_key]]  # Diaeresis diacritic + dot diacritics
+root = "U+0308"  # COMBINING DIAERESIS
+category = "Diaeresis diacritic + dot diacritics"
+xkb_leader = "dead_diaeresis"
+map = [
+  ["a"     , "ä"],  # LATIN SMALL LETTER A WITH DIAERESIS
+  ["e"     , "ë"],  # LATIN SMALL LETTER E WITH DIAERESIS
+  ["u"     , "ü"],  # LATIN SMALL LETTER U WITH DIAERESIS
+  ["i"     , "ï"],  # LATIN SMALL LETTER I WITH DIAERESIS
+  ["y"     , "ÿ"],  # LATIN SMALL LETTER Y WITH DIAERESIS
+  ["o"     , "ö"],  # LATIN SMALL LETTER O WITH DIAERESIS
+  ["4"     , "U+20DC"],  # COMBINING FOUR DOTS ABOVE
+  ["2"     , "U+0308"],  # COMBINING DIAERESIS
+  ["3"     , "U+20DB"],  # COMBINING THREE DOTS ABOVE
+  ["1"     , "U+0307"],  # COMBINING DOT ABOVE
+  ["A"     , "Ä"],  # LATIN CAPITAL LETTER A WITH DIAERESIS
+  ["E"     , "Ë"],  # LATIN CAPITAL LETTER E WITH DIAERESIS
+  ["U"     , "Ü"],  # LATIN CAPITAL LETTER U WITH DIAERESIS
+  ["I"     , "Ï"],  # LATIN CAPITAL LETTER I WITH DIAERESIS
+  ["O"     , "Ö"],  # LATIN CAPITAL LETTER O WITH DIAERESIS
+  ["Y"     , "Ÿ"],  # LATIN CAPITAL LETTER Y WITH DIAERESIS
+  ["H"     , "Ḧ"],  # LATIN CAPITAL LETTER H WITH DIAERESIS
+  ["h"     , "ḧ"],  # LATIN SMALL LETTER H WITH DIAERESIS
+  ["W"     , "Ẅ"],  # LATIN CAPITAL LETTER W WITH DIAERESIS
+  ["w"     , "ẅ"],  # LATIN SMALL LETTER W WITH DIAERESIS
+  ["X"     , "Ẍ"],  # LATIN CAPITAL LETTER X WITH DIAERESIS
+  ["x"     , "ẍ"],  # LATIN SMALL LETTER X WITH DIAERESIS
+  ["t"     , "ẗ"],  # LATIN SMALL LETTER T WITH DIAERESIS
+  ["'"     , "U+030B"],  # COMBINING DOUBLE ACUTE ACCENT
+  ["`"     , "U+030F"],  # COMBINING DOUBLE GRAVE ACCENT
+  ["\""    , "˝"],  # DOUBLE ACUTE ACCENT
+  ["["     , "“"],  # LEFT DOUBLE QUOTATION MARK
+  ["]"     , "”"],  # RIGHT DOUBLE QUOTATION MARK
+  ["{"     , "„"],  # DOUBLE LOW-9 QUOTATION MARK
+  ["}"     , "‟"],  # DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+  ["U+0020", "¨"],  # DIAERESIS
+]
+
+[[dead_key]]  # Double-struck font letters + italics
+root = "Ƶ"  # LATIN CAPITAL LETTER Z WITH STROKE
+category = "Double-struck font letters + italics"
+xkb_leader = "U01B5"
+map = [
+  ["j"     , "ⅉ"],  # DOUBLE-STRUCK ITALIC SMALL J
+  ["d"     , "ⅆ"],  # DOUBLE-STRUCK ITALIC SMALL D
+  ["e"     , "ⅇ"],  # DOUBLE-STRUCK ITALIC SMALL E
+  ["i"     , "ⅈ"],  # DOUBLE-STRUCK ITALIC SMALL I
+  ["N"     , "ℕ"],  # DOUBLE-STRUCK CAPITAL N
+  ["C"     , "ℂ"],  # DOUBLE-STRUCK CAPITAL C
+  ["Z"     , "ℤ"],  # DOUBLE-STRUCK CAPITAL Z
+  ["H"     , "ℍ"],  # DOUBLE-STRUCK CAPITAL H
+  ["D"     , "ⅅ"],  # DOUBLE-STRUCK ITALIC CAPITAL D
+  ["R"     , "ℝ"],  # DOUBLE-STRUCK CAPITAL R
+  ["P"     , "ℙ"],  # DOUBLE-STRUCK CAPITAL P
+  ["Q"     , "ℚ"],  # DOUBLE-STRUCK CAPITAL Q
+  ["U+0020", "ℤ"],  # DOUBLE-STRUCK CAPITAL Z
+]
+
+[[dead_key]]  # Macron diacritic + bar diacritics
+root = "U+0304"  # COMBINING MACRON
+category = "Macron diacritic + bar diacritics"
+xkb_leader = "dead_macron"
+map = [
+  ["-"     , "U+0305"],  # COMBINING OVERLINE
+  ["="     , "U+033F"],  # COMBINING DOUBLE OVERLINE
+  ["_"     , "¯"],  # MACRON
+  ["A"     , "Ā"],  # LATIN CAPITAL LETTER A WITH MACRON
+  ["a"     , "ā"],  # LATIN SMALL LETTER A WITH MACRON
+  ["E"     , "Ē"],  # LATIN CAPITAL LETTER E WITH MACRON
+  ["e"     , "ē"],  # LATIN SMALL LETTER E WITH MACRON
+  ["I"     , "Ī"],  # LATIN CAPITAL LETTER I WITH MACRON
+  ["i"     , "ī"],  # LATIN SMALL LETTER I WITH MACRON
+  ["O"     , "Ō"],  # LATIN CAPITAL LETTER O WITH MACRON
+  ["o"     , "ō"],  # LATIN SMALL LETTER O WITH MACRON
+  ["U"     , "Ū"],  # LATIN CAPITAL LETTER U WITH MACRON
+  ["u"     , "ū"],  # LATIN SMALL LETTER U WITH MACRON
+  ["G"     , "Ḡ"],  # LATIN CAPITAL LETTER G WITH MACRON
+  ["g"     , "ḡ"],  # LATIN SMALL LETTER G WITH MACRON
+  ["Y"     , "Ȳ"],  # LATIN CAPITAL LETTER Y WITH MACRON
+  ["y"     , "ȳ"],  # LATIN SMALL LETTER Y WITH MACRON
+  ["U+0020", "ˉ"],  # MODIFIER LETTER MACRON
+]
+
+[[dead_key]]  # Breve diacritic
+root = "U+0306"  # COMBINING BREVE
+category = "Breve diacritic"
+xkb_leader = "dead_breve"
+map = [
+  ["a"     , "ă"],  # LATIN SMALL LETTER A WITH BREVE
+  ["g"     , "ğ"],  # LATIN SMALL LETTER G WITH BREVE
+  ["e"     , "ĕ"],  # LATIN SMALL LETTER E WITH BREVE
+  ["u"     , "ŭ"],  # LATIN SMALL LETTER U WITH BREVE
+  ["i"     , "ĭ"],  # LATIN SMALL LETTER I WITH BREVE
+  ["o"     , "ŏ"],  # LATIN SMALL LETTER O WITH BREVE
+  ["A"     , "Ă"],  # LATIN CAPITAL LETTER A WITH BREVE
+  ["G"     , "Ğ"],  # LATIN CAPITAL LETTER G WITH BREVE
+  ["E"     , "Ĕ"],  # LATIN CAPITAL LETTER E WITH BREVE
+  ["U"     , "Ŭ"],  # LATIN CAPITAL LETTER U WITH BREVE
+  ["I"     , "Ĭ"],  # LATIN CAPITAL LETTER I WITH BREVE
+  ["O"     , "Ŏ"],  # LATIN CAPITAL LETTER O WITH BREVE
+  ["^"     , "U+0311"],  # COMBINING INVERTED BREVE
+  ["U+0020", "˘"],  # BREVE
+]
+
+[[dead_key]]  # Script font letters
+root = "µ"  # MICRO SIGN
+category = "Script font letters"
+xkb_leader = "U00B5"
+map = [
+  ["g"     , "ℊ"],  # SCRIPT SMALL G
+  ["l"     , "ℓ"],  # SCRIPT SMALL L
+  ["e"     , "ℯ"],  # SCRIPT SMALL E
+  ["o"     , "ℴ"],  # SCRIPT SMALL O
+  ["B"     , "ℬ"],  # SCRIPT CAPITAL B
+  ["M"     , "ℳ"],  # SCRIPT CAPITAL M
+  ["H"     , "ℋ"],  # SCRIPT CAPITAL H
+  ["F"     , "ℱ"],  # SCRIPT CAPITAL F
+  ["L"     , "ℒ"],  # SCRIPT CAPITAL L
+  ["E"     , "ℰ"],  # SCRIPT CAPITAL E
+  ["R"     , "ℛ"],  # SCRIPT CAPITAL R
+  ["P"     , "℘"],  # SCRIPT CAPITAL P
+  ["I"     , "ℐ"],  # SCRIPT CAPITAL I
+  ["U+0020", "ℳ"],  # SCRIPT CAPITAL M
+]
+
+[[dead_key]]  # Cedilla and ogonek diacritics
+root = "U+0327"  # COMBINING CEDILLA
+category = "Cedilla and ogonek diacritics"
+xkb_leader = "dead_cedilla"
+map = [
+  ["|"     , "˛"],  # OGONEK
+  ["n"     , "ņ"],  # LATIN SMALL LETTER N WITH CEDILLA
+  ["c"     , "ç"],  # LATIN SMALL LETTER C WITH CEDILLA
+  ["\\"    , "U+0328"],  # COMBINING OGONEK
+  ["a"     , "ą"],  # LATIN SMALL LETTER A WITH OGONEK
+  ["h"     , "ḩ"],  # LATIN SMALL LETTER H WITH CEDILLA
+  ["g"     , "ģ"],  # LATIN SMALL LETTER G WITH CEDILLA
+  ["d"     , "ḑ"],  # LATIN SMALL LETTER D WITH CEDILLA
+  ["s"     , "ş"],  # LATIN SMALL LETTER S WITH CEDILLA
+  ["l"     , "ļ"],  # LATIN SMALL LETTER L WITH CEDILLA
+  ["k"     , "ķ"],  # LATIN SMALL LETTER K WITH CEDILLA
+  ["e"     , "ę"],  # LATIN SMALL LETTER E WITH OGONEK
+  ["r"     , "ŗ"],  # LATIN SMALL LETTER R WITH CEDILLA
+  ["u"     , "ų"],  # LATIN SMALL LETTER U WITH OGONEK
+  ["i"     , "į"],  # LATIN SMALL LETTER I WITH OGONEK
+  ["t"     , "ţ"],  # LATIN SMALL LETTER T WITH CEDILLA
+  ["o"     , "ǫ"],  # LATIN SMALL LETTER O WITH OGONEK
+  ["N"     , "Ņ"],  # LATIN CAPITAL LETTER N WITH CEDILLA
+  ["C"     , "Ç"],  # LATIN CAPITAL LETTER C WITH CEDILLA
+  ["A"     , "Ą"],  # LATIN CAPITAL LETTER A WITH OGONEK
+  ["H"     , "Ḩ"],  # LATIN CAPITAL LETTER H WITH CEDILLA
+  ["G"     , "Ģ"],  # LATIN CAPITAL LETTER G WITH CEDILLA
+  ["D"     , "Ḑ"],  # LATIN CAPITAL LETTER D WITH CEDILLA
+  ["S"     , "Ş"],  # LATIN CAPITAL LETTER S WITH CEDILLA
+  ["L"     , "Ļ"],  # LATIN CAPITAL LETTER L WITH CEDILLA
+  ["K"     , "Ķ"],  # LATIN CAPITAL LETTER K WITH CEDILLA
+  ["E"     , "Ę"],  # LATIN CAPITAL LETTER E WITH OGONEK
+  ["R"     , "Ŗ"],  # LATIN CAPITAL LETTER R WITH CEDILLA
+  ["U"     , "Ų"],  # LATIN CAPITAL LETTER U WITH OGONEK
+  ["I"     , "Į"],  # LATIN CAPITAL LETTER I WITH OGONEK
+  ["T"     , "Ţ"],  # LATIN CAPITAL LETTER T WITH CEDILLA
+  ["O"     , "Ǫ"],  # LATIN CAPITAL LETTER O WITH OGONEK
+  ["U+0020", "¸"],  # CEDILLA
+]
+
+[[dead_key]]  # Less-than operator variants + left ceiling/floor
+root = "<"  # LESS-THAN SIGN
+category = "Less-than operator variants + left ceiling/floor"
+xkb_leader = "U2264"
+map = [
+  ["="     , "≦"],  # LESS-THAN OVER EQUAL TO
+  ["/"     , "≮"],  # NOT LESS-THAN
+  ["["     , "⌊"],  # LEFT FLOOR
+  ["-"     , "≤"],  # LESS-THAN OR EQUAL TO
+  ["+"     , "≰"],  # NEITHER LESS-THAN NOR EQUAL TO
+  [">"     , "≶"],  # LESS-THAN OR GREATER-THAN
+  ["<"     , "≪"],  # MUCH LESS-THAN
+  ["{"     , "⌈"],  # LEFT CEILING
+  ["~"     , "≲"],  # LESS-THAN OR EQUIVALENT TO
+  ["U+0020", "≤"],  # LESS-THAN OR EQUAL TO
+]
+
+[[dead_key]]  # Underdot diacritic + dot-related symbols
+root = "U+0323"  # COMBINING DOT BELOW
+category = "Underdot diacritic + dot-related symbols"
+xkb_leader = "dead_belowdot"
+map = [
+  ["\\"    , "⋱"],  # DOWN RIGHT DIAGONAL ELLIPSIS
+  ["."     , "…"],  # HORIZONTAL ELLIPSIS
+  ["/"     , "⋰"],  # UP RIGHT DIAGONAL ELLIPSIS
+  ["-"     , "⋯"],  # MIDLINE HORIZONTAL ELLIPSIS
+  ["|"     , "⋮"],  # VERTICAL ELLIPSIS
+  ["B"     , "Ḅ"],  # LATIN CAPITAL LETTER B WITH DOT BELOW
+  ["b"     , "ḅ"],  # LATIN SMALL LETTER B WITH DOT BELOW
+  ["D"     , "Ḍ"],  # LATIN CAPITAL LETTER D WITH DOT BELOW
+  ["d"     , "ḍ"],  # LATIN SMALL LETTER D WITH DOT BELOW
+  ["H"     , "Ḥ"],  # LATIN CAPITAL LETTER H WITH DOT BELOW
+  ["h"     , "ḥ"],  # LATIN SMALL LETTER H WITH DOT BELOW
+  ["K"     , "Ḳ"],  # LATIN CAPITAL LETTER K WITH DOT BELOW
+  ["k"     , "ḳ"],  # LATIN SMALL LETTER K WITH DOT BELOW
+  ["L"     , "Ḷ"],  # LATIN CAPITAL LETTER L WITH DOT BELOW
+  ["l"     , "ḷ"],  # LATIN SMALL LETTER L WITH DOT BELOW
+  ["M"     , "Ṃ"],  # LATIN CAPITAL LETTER M WITH DOT BELOW
+  ["m"     , "ṃ"],  # LATIN SMALL LETTER M WITH DOT BELOW
+  ["N"     , "Ṇ"],  # LATIN CAPITAL LETTER N WITH DOT BELOW
+  ["n"     , "ṇ"],  # LATIN SMALL LETTER N WITH DOT BELOW
+  ["R"     , "Ṛ"],  # LATIN CAPITAL LETTER R WITH DOT BELOW
+  ["r"     , "ṛ"],  # LATIN SMALL LETTER R WITH DOT BELOW
+  ["S"     , "Ṣ"],  # LATIN CAPITAL LETTER S WITH DOT BELOW
+  ["s"     , "ṣ"],  # LATIN SMALL LETTER S WITH DOT BELOW
+  ["T"     , "Ṭ"],  # LATIN CAPITAL LETTER T WITH DOT BELOW
+  ["t"     , "ṭ"],  # LATIN SMALL LETTER T WITH DOT BELOW
+  ["V"     , "Ṿ"],  # LATIN CAPITAL LETTER V WITH DOT BELOW
+  ["v"     , "ṿ"],  # LATIN SMALL LETTER V WITH DOT BELOW
+  ["W"     , "Ẉ"],  # LATIN CAPITAL LETTER W WITH DOT BELOW
+  ["w"     , "ẉ"],  # LATIN SMALL LETTER W WITH DOT BELOW
+  ["Z"     , "Ẓ"],  # LATIN CAPITAL LETTER Z WITH DOT BELOW
+  ["z"     , "ẓ"],  # LATIN SMALL LETTER Z WITH DOT BELOW
+  ["A"     , "Ạ"],  # LATIN CAPITAL LETTER A WITH DOT BELOW
+  ["a"     , "ạ"],  # LATIN SMALL LETTER A WITH DOT BELOW
+  ["E"     , "Ẹ"],  # LATIN CAPITAL LETTER E WITH DOT BELOW
+  ["e"     , "ẹ"],  # LATIN SMALL LETTER E WITH DOT BELOW
+  ["I"     , "Ị"],  # LATIN CAPITAL LETTER I WITH DOT BELOW
+  ["i"     , "ị"],  # LATIN SMALL LETTER I WITH DOT BELOW
+  ["O"     , "Ọ"],  # LATIN CAPITAL LETTER O WITH DOT BELOW
+  ["o"     , "ọ"],  # LATIN SMALL LETTER O WITH DOT BELOW
+  ["U"     , "Ụ"],  # LATIN CAPITAL LETTER U WITH DOT BELOW
+  ["u"     , "ụ"],  # LATIN SMALL LETTER U WITH DOT BELOW
+  ["Y"     , "Ỵ"],  # LATIN CAPITAL LETTER Y WITH DOT BELOW
+  ["y"     , "ỵ"],  # LATIN SMALL LETTER Y WITH DOT BELOW
+  ["\""    , "U+0324"],  # COMBINING DIAERESIS BELOW
+  ["*"     , "⋅"],  # DOT OPERATOR
+  ["U+0020", "·"],  # MIDDLE DOT
+]
+
+[[dead_key]]  # Greater-than operator variants + right ceiling/floor
+root = ">"  # GREATER-THAN SIGN
+category = "Greater-than operator variants + right ceiling/floor"
+xkb_leader = "U2265"
+map = [
+  ["="     , "≧"],  # GREATER-THAN OVER EQUAL TO
+  ["/"     , "≯"],  # NOT GREATER-THAN
+  ["]"     , "⌋"],  # RIGHT FLOOR
+  ["-"     , "≥"],  # GREATER-THAN OR EQUAL TO
+  ["+"     , "≱"],  # NEITHER GREATER-THAN NOR EQUAL TO
+  [">"     , "≫"],  # MUCH GREATER-THAN
+  ["<"     , "≷"],  # GREATER-THAN OR LESS-THAN
+  ["}"     , "⌉"],  # RIGHT CEILING
+  ["~"     , "≳"],  # GREATER-THAN OR EQUIVALENT TO
+  ["U+0020", "≥"],  # GREATER-THAN OR EQUAL TO
+]
+
+[[dead_key]]  # Stroked letters + vulgar fractions
+root = "U+0338"  # COMBINING LONG SOLIDUS OVERLAY
+category = "Stroked letters + vulgar fractions"
+xkb_leader = "dead_stroke"
+map = [
+  ["b"     , "ƀ"],  # LATIN SMALL LETTER B WITH STROKE
+  ["z"     , "ƶ"],  # LATIN SMALL LETTER Z WITH STROKE
+  ["h"     , "ħ"],  # LATIN SMALL LETTER H WITH STROKE
+  ["g"     , "ǥ"],  # LATIN SMALL LETTER G WITH STROKE
+  ["d"     , "đ"],  # LATIN SMALL LETTER D WITH STROKE
+  ["l"     , "ł"],  # LATIN SMALL LETTER L WITH STROKE
+  ["i"     , "ɨ"],  # LATIN SMALL LETTER I WITH STROKE
+  ["t"     , "ŧ"],  # LATIN SMALL LETTER T WITH STROKE
+  ["o"     , "ø"],  # LATIN SMALL LETTER O WITH STROKE
+  ["Z"     , "Ƶ"],  # LATIN CAPITAL LETTER Z WITH STROKE
+  ["H"     , "Ħ"],  # LATIN CAPITAL LETTER H WITH STROKE
+  ["G"     , "Ǥ"],  # LATIN CAPITAL LETTER G WITH STROKE
+  ["D"     , "Đ"],  # LATIN CAPITAL LETTER D WITH STROKE
+  ["L"     , "Ł"],  # LATIN CAPITAL LETTER L WITH STROKE
+  ["I"     , "Ɨ"],  # LATIN CAPITAL LETTER I WITH STROKE
+  ["T"     , "Ŧ"],  # LATIN CAPITAL LETTER T WITH STROKE
+  ["O"     , "Ø"],  # LATIN CAPITAL LETTER O WITH STROKE
+  ["A"     , "Ⱥ"],  # LATIN CAPITAL LETTER A WITH STROKE
+  ["C"     , "Ȼ"],  # LATIN CAPITAL LETTER C WITH STROKE
+  ["c"     , "ȼ"],  # LATIN SMALL LETTER C WITH STROKE
+  ["B"     , "Ƀ"],  # LATIN CAPITAL LETTER B WITH STROKE
+  ["E"     , "Ɇ"],  # LATIN CAPITAL LETTER E WITH STROKE
+  ["e"     , "ɇ"],  # LATIN SMALL LETTER E WITH STROKE
+  ["J"     , "Ɉ"],  # LATIN CAPITAL LETTER J WITH STROKE
+  ["j"     , "ɉ"],  # LATIN SMALL LETTER J WITH STROKE
+  ["R"     , "Ɍ"],  # LATIN CAPITAL LETTER R WITH STROKE
+  ["r"     , "ɍ"],  # LATIN SMALL LETTER R WITH STROKE
+  ["Y"     , "Ɏ"],  # LATIN CAPITAL LETTER Y WITH STROKE
+  ["y"     , "ɏ"],  # LATIN SMALL LETTER Y WITH STROKE
+  ["p"     , "ᵽ"],  # LATIN SMALL LETTER P WITH STROKE
+  ["P"     , "Ᵽ"],  # LATIN CAPITAL LETTER P WITH STROKE
+  ["a"     , "ⱥ"],  # LATIN SMALL LETTER A WITH STROKE
+  ["K"     , "Ꝁ"],  # LATIN CAPITAL LETTER K WITH STROKE
+  ["k"     , "ꝁ"],  # LATIN SMALL LETTER K WITH STROKE
+  ["F"     , "Ꞙ"],  # LATIN CAPITAL LETTER F WITH STROKE
+  ["f"     , "ꞙ"],  # LATIN SMALL LETTER F WITH STROKE
+  ["U"     , "Ꞹ"],  # LATIN CAPITAL LETTER U WITH STROKE
+  ["u"     , "ꞹ"],  # LATIN SMALL LETTER U WITH STROKE
+  ["1"     , "⅛"],  # VULGAR FRACTION ONE EIGHTH
+  ["2"     , "¼"],  # VULGAR FRACTION ONE QUARTER
+  ["3"     , "⅜"],  # VULGAR FRACTION THREE EIGHTHS
+  ["4"     , "½"],  # VULGAR FRACTION ONE HALF
+  ["5"     , "⅝"],  # VULGAR FRACTION FIVE EIGHTHS
+  ["6"     , "¾"],  # VULGAR FRACTION THREE QUARTERS
+  ["7"     , "⅞"],  # VULGAR FRACTION SEVEN EIGHTHS
+  ["8"     , "⅔"],  # VULGAR FRACTION TWO THIRDS
+  ["9"     , "⅓"],  # VULGAR FRACTION ONE THIRD
+  ["0"     , "↉"],  # VULGAR FRACTION ZERO THIRDS
+  ["!"     , "⅕"],  # VULGAR FRACTION ONE FIFTH
+  ["@"     , "⅖"],  # VULGAR FRACTION TWO FIFTHS
+  ["#"     , "⅗"],  # VULGAR FRACTION THREE FIFTHS
+  ["$"     , "⅘"],  # VULGAR FRACTION FOUR FIFTHS
+  ["%"     , "⅚"],  # VULGAR FRACTION FIVE SIXTHS
+  ["^"     , "⅙"],  # VULGAR FRACTION ONE SIXTH
+  ["&"     , "⅐"],  # VULGAR FRACTION ONE SEVENTH
+  ["*"     , "⅟"],  # FRACTION NUMERATOR ONE
+  ["("     , "⅑"],  # VULGAR FRACTION ONE NINTH
+  [")"     , "⅒"],  # VULGAR FRACTION ONE TENTH
+  ["U+0020", "⁄"],  # FRACTION SLASH
+]
